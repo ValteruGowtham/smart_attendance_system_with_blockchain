@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}View Attendance{% endblock %}
+{% block content %}
+
+
+<div class="bg-white p-6 rounded shadow max-w-6xl mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Attendance Records</h2>
+
+    <form method="get" class="mb-6 flex gap-2 items-end">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Search by Registration No. or Faculty UID</label>
+            <input type="text" name="search" value="{{ search }}" placeholder="Enter registration no. or UID" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        </div>
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Search</button>
+        {% if filtered %}
+        <a href="{% url 'view_attendance' %}" class="ml-2 text-sm text-gray-500 underline">Clear</a>
+        {% endif %}
+    </form>
+
+    <div class="mb-6">
+        <h4 class="font-semibold mb-2">Attendance Analytics</h4>
+        <canvas id="attendancePie" width="220" height="220"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+        const attendanceData = JSON.parse('[{{ present_count|add:0 }},{{ absent_count|add:0 }}]');
+        new Chart(document.getElementById('attendancePie').getContext('2d'),{
+            type:'pie',
+            data:{labels:['Present','Absent'],datasets:[{data:attendanceData,backgroundColor:['#34d399','#f87171']}]},
+            options:{responsive:false,plugins:{legend:{position:'bottom'}}}
+        });
+        </script>
+    </div>
+
+    {% if attendances %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Date</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Time</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Faculty</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Student ID</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Branch</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Year</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Section</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Period</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for a in attendances %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2 text-sm">{{ a.date }}</td>
+                    <td class="px-4 py-2 text-sm">{{ a.time }}</td>
+                    <td class="px-4 py-2 text-sm">{{ a.faculty.user.first_name }} {{ a.faculty.user.last_name }}</td>
+                    <td class="px-4 py-2 text-sm">{{ a.student.user.first_name }} {{ a.student.user.last_name }} ({{ a.student.registration_id }})</td>
+                    <td class="px-4 py-2 text-sm">{{ a.branch }}</td>
+                    <td class="px-4 py-2 text-sm">{{ a.year }}</td>
+                    <td class="px-4 py-2 text-sm">{{ a.section }}</td>
+                    <td class="px-4 py-2 text-sm">{{ a.period }}</td>
+                    <td class="px-4 py-2 text-sm">
+                        {% if a.status == 'Present' %}
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Present</span>
+                        {% else %}
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-semibold">Absent</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-gray-500">No attendance records found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
