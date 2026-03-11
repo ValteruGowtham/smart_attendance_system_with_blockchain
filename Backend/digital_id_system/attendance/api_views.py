@@ -14,7 +14,6 @@ from datetime import date, datetime
 import json
 
 from .models import Student, Faculty, Attendance
-from .forms import CreateStudentForm, FacultyForm
 
 
 def api_login_required(view_func):
