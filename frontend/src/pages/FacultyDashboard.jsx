@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { getFacultyDashboard, markAttendance, openAttendanceWindow, closeAttendanceWindow } from '../api/api';
 import Toast from '../components/Toast';
 import {
   HiOutlineCheckCircle,
   HiOutlineVideoCamera,
-  HiOutlineSearch,
-  HiOutlineUser,
   HiOutlineCamera,
-  HiOutlineLightBulb,
+  HiOutlineClock,
+  HiOutlineUserGroup,
+  HiOutlineAcademicCap,
 } from 'react-icons/hi';
 
 export default function FacultyDashboard() {
@@ -100,23 +99,15 @@ export default function FacultyDashboard() {
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          width: { ideal: 640 },
-          height: { ideal: 480 },
-          facingMode: 'user'
-        } 
-      });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+        videoRef.current.play();
       }
       setCameraOn(true);
-      setToast({ msg: 'Camera activated successfully', type: 'success' });
     } catch (err) {
       setToast({ msg: 'Camera access denied: ' + err.message, type: 'error' });
-      setCameraOn(false);
     }
   };
 
@@ -148,8 +139,6 @@ export default function FacultyDashboard() {
       setWindowCutoff(res.data.window_cutoff || '');
       setWindowCutoffIso(res.data.window_cutoff_iso || '');
       setToast({ msg: `Attendance window opened for Period ${res.data.period}. Cutoff: ${res.data.window_cutoff || 'N/A'}`, type: 'success' });
-      
-      // Wait a brief moment for state to settle, then start camera
       setTimeout(() => {
         startCamera();
       }, 300);
@@ -229,60 +218,67 @@ export default function FacultyDashboard() {
     }
   };
 
-  if (!meta) return <div className="text-center py-12 text-gray-400">Loading...</div>;
+  if (!meta) return <div className="min-h-screen flex items-center justify-center"><div className="text-center"><div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div><p className="text-gray-500">Loading dashboard...</p></div></div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
       {/* Hero */}
-      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl shadow-xl p-8 text-white">
+      <div className="bg-gradient-to-r from-emerald-600 to-green-600 rounded-2xl shadow-xl p-8 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Welcome, {meta.faculty_name}! 🎓</h1>
-            <p className="text-blue-100">Manage attendance with AI-powered face recognition</p>
+            <h1 className="text-3xl font-bold mb-2">Welcome, {meta.faculty_name}! 👨‍🏫</h1>
+            <p className="text-emerald-100">Mark attendance with AI-powered face recognition</p>
           </div>
+          <HiOutlineAcademicCap className="w-20 h-20 text-white opacity-20 hidden md:block" />
         </div>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
-          <p className="text-sm text-gray-600 font-medium">Today's Records</p>
+        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
+          <p className="text-sm text-gray-600 font-semibold">Today's Records</p>
           <h3 className="text-3xl font-bold text-gray-800 mt-1">{todayRecords.length}</h3>
         </div>
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
-          <p className="text-sm text-gray-600 font-medium">Quick Actions</p>
-          <h3 className="text-lg font-semibold text-gray-800 mt-1">Mark Attendance</h3>
-        </div>
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
-          <p className="text-sm text-gray-600 font-medium">Search Records</p>
-          <h3 className="text-lg font-semibold text-gray-800 mt-1">View History</h3>
-        </div>
+        {summary && (
+          <>
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
+              <p className="text-sm text-gray-600 font-semibold">Present</p>
+              <h3 className="text-3xl font-bold text-green-600 mt-1">{summary.present}</h3>
+            </div>
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-red-500">
+              <p className="text-sm text-gray-600 font-semibold">Absent</p>
+              <h3 className="text-3xl font-bold text-red-600 mt-1">{summary.absent}</h3>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Form */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center">
-            <HiOutlineCheckCircle className="w-5 h-5 mr-2 text-blue-600" />
-            Mark Attendance - Face Recognition
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+            <HiOutlineCheckCircle className="w-6 h-6 text-emerald-600" />
+            Mark Attendance
           </h3>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <div className="space-y-6">
+            {/* Class Selection */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 { name: 'branch', label: 'Branch', options: meta.branches },
                 { name: 'year', label: 'Year', options: meta.years },
                 { name: 'section', label: 'Section', options: meta.sections },
               ].map((f) => (
                 <div key={f.name}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">{f.label}</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{f.label}</label>
                   <select
                     value={form[f.name]}
                     onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
                     disabled={windowOpen}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
                   >
                     {f.options.map((o) => (
                       <option key={o} value={o}>{o}</option>
@@ -292,48 +288,44 @@ export default function FacultyDashboard() {
               ))}
             </div>
 
+            {/* Period Info */}
             {windowOpen && selectedPeriodTime && (
-              <div className="p-3 rounded-lg bg-indigo-50 border border-indigo-100 text-sm text-indigo-700">
-                Current Period: <span className="font-semibold">{activePeriod}</span>
-                <span className="ml-2">({selectedPeriodTime})</span>
-                {windowCutoff && <span className="ml-3">Cutoff: <span className="font-semibold">{windowCutoff}</span></span>}
-                {windowOpen && timeLeft && (
-                  <span className="ml-3">Time Left: <span className="font-semibold text-red-600">{timeLeft}</span></span>
-                )}
-              </div>
-            )}
-
-            {!windowOpen && (
-              <div className="p-3 rounded-lg bg-blue-50 border border-blue-100 text-sm text-blue-700">
-                Period is auto-detected from current time when attendance window opens.
-              </div>
-            )}
-
-            {lastMarked && (
-              <div className="p-3 rounded-lg bg-green-50 border border-green-100 text-sm text-green-700">
-                Last marked: <span className="font-semibold">{lastMarked}</span>
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <span className="text-sm font-semibold text-emerald-700">Current Period:</span>
+                    <span className="ml-2 font-bold text-emerald-900">{activePeriod}</span>
+                    <span className="ml-2 text-emerald-600">({selectedPeriodTime})</span>
+                  </div>
+                  {windowCutoff && (
+                    <div>
+                      <span className="text-sm font-semibold text-emerald-700">Cutoff:</span>
+                      <span className="ml-2 font-bold text-emerald-900">{windowCutoff}</span>
+                    </div>
+                  )}
+                  {timeLeft && (
+                    <div className="flex items-center gap-2 bg-red-100 px-3 py-1 rounded-full">
+                      <HiOutlineClock className="w-4 h-4 text-red-600" />
+                      <span className="font-bold text-red-600">{timeLeft}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
             {/* Camera Area */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border-2 border-dashed border-blue-200">
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-semibold text-gray-700 flex items-center">
-                  <HiOutlineVideoCamera className="w-5 h-5 mr-2 text-blue-600" />
-                  AI Face Recognition {windowOpen ? '(Window Open - 5 min)' : '(Window Closed)'}
-                </label>
-                {windowOpen && timeLeft && (
-                  <span className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded">
-                    ⏱️ {timeLeft}
-                  </span>
-                )}
-              </div>
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border-2 border-dashed border-gray-300">
+              <label className="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                <HiOutlineVideoCamera className="w-5 h-5 text-emerald-600" />
+                AI Face Recognition {windowOpen ? '(Window Open)' : '(Window Closed)'}
+              </label>
+              
               <div className="flex flex-col items-center">
                 <video
                   ref={videoRef}
                   width="320"
                   height="240"
-                  className="rounded-lg border-4 border-white shadow-lg bg-black"
+                  className="rounded-xl border-4 border-white shadow-lg bg-black"
                   autoPlay
                   playsInline
                   style={{ display: cameraOn ? 'block' : 'none' }}
@@ -346,147 +338,116 @@ export default function FacultyDashboard() {
                 )}
                 <canvas ref={canvasRef} width="320" height="240" style={{ display: 'none' }} />
 
-                {/* Button Container */}
-                <div className="flex flex-wrap gap-3 mt-4 justify-center">
+                <div className="flex flex-wrap gap-3 mt-6 justify-center">
                   {!windowOpen && (
-                    <button type="button" onClick={openWindow} disabled={openingWindow}
-                      className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-lg shadow-md flex items-center transition-all">
-                      <HiOutlineVideoCamera className="w-5 h-5 mr-2" /> {openingWindow ? 'Opening...' : 'Open Attendance Window'}
+                    <button
+                      type="button"
+                      onClick={openWindow}
+                      disabled={openingWindow}
+                      className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+                    >
+                      <HiOutlineVideoCamera className="w-5 h-5" />
+                      {openingWindow ? 'Opening...' : 'Open Window'}
                     </button>
                   )}
 
                   {windowOpen && cameraOn && (
-                    <button type="button" onClick={captureAndSubmit} disabled={submitting}
-                      className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-lg shadow-md flex items-center transition-all disabled:opacity-50">
-                      <HiOutlineCamera className="w-5 h-5 mr-2" /> {submitting ? 'Submitting...' : 'Capture & Mark Present'}
-                    </button>
-                  )}
-
-                  {windowOpen && cameraOn && (
-                    <button type="button" onClick={stopCamera}
-                      className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-3 rounded-lg shadow-md flex items-center transition-all">
-                      <HiOutlineVideoCamera className="w-5 h-5 mr-2" /> Stop Camera
+                    <button
+                      type="button"
+                      onClick={captureAndSubmit}
+                      disabled={submitting}
+                      className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+                    >
+                      <HiOutlineCamera className="w-5 h-5" />
+                      {submitting ? 'Submitting...' : 'Capture & Mark'}
                     </button>
                   )}
 
                   {windowOpen && (
-                    <button type="button" onClick={closeWindow} disabled={closingWindow}
-                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg shadow-md flex items-center transition-all disabled:opacity-50">
-                      <HiOutlineCheckCircle className="w-5 h-5 mr-2" /> {closingWindow ? 'Closing...' : 'Close Window & Mark Absent'}
+                    <button
+                      type="button"
+                      onClick={closeWindow}
+                      disabled={closingWindow}
+                      className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+                    >
+                      <HiOutlineCheckCircle className="w-5 h-5" />
+                      {closingWindow ? 'Closing...' : 'Close & Mark Absent'}
                     </button>
                   )}
                 </div>
-
-                {windowOpen && (
-                  <p className="text-xs text-gray-500 mt-3 text-center">
-                    💡 Tip: Use <span className="font-semibold">Stop Camera</span> to temporarily pause, or <span className="font-semibold">Close Window</span> to end and mark absentees.
-                  </p>
-                )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <HiOutlineSearch className="w-5 h-5 mr-2 text-indigo-600" />
-              Quick Actions
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/admin/attendance" className="flex items-center p-3 rounded-lg hover:bg-indigo-50 transition-colors">
-                  <HiOutlineSearch className="w-5 h-5 mr-3 text-indigo-600" />
-                  <span className="text-sm font-medium">Search Records</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/" className="flex items-center p-3 rounded-lg hover:bg-indigo-50 transition-colors">
-                  <HiOutlineUser className="w-5 h-5 mr-3 text-indigo-600" />
-                  <span className="text-sm font-medium">My Profile</span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-md p-6 text-white">
-            <h3 className="text-lg font-semibold mb-2 flex items-center">
-              <HiOutlineLightBulb className="w-5 h-5 mr-2" /> Pro Tip
-            </h3>
-            <p className="text-sm text-indigo-100">Use face recognition for faster, contactless attendance marking!</p>
-          </div>
+        {/* Today's Records */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
+            <HiOutlineUserGroup className="w-6 h-6 text-emerald-600" />
+            Today's Attendance
+          </h3>
+          
+          {todayRecords.length > 0 ? (
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {todayRecords.map((record, i) => (
+                <div
+                  key={i}
+                  className={`p-3 rounded-xl border-l-4 ${
+                    record.status === 'Present'
+                      ? 'bg-green-50 border-green-500'
+                      : 'bg-red-50 border-red-500'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-gray-900">{record.student_name}</p>
+                      <p className="text-xs text-gray-500">{record.student_id}</p>
+                    </div>
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                      record.status === 'Present'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    }`}>
+                      {record.status === 'Present' ? '✓ Present' : '✗ Absent'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <HiOutlineUserGroup className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 font-medium">No records today</p>
+              <p className="text-sm text-gray-400 mt-1">Open window to mark attendance</p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Summary */}
       {summary && (
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="grid grid-cols-4 gap-4 mb-4">
-            <div className="text-center p-3 bg-green-50 rounded-lg">
-              <p className="text-sm text-gray-600">Present</p>
-              <p className="text-2xl font-bold text-green-600">{summary.present}</p>
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <h3 className="text-xl font-bold mb-4 text-gray-800">Attendance Summary</h3>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-green-50 rounded-xl">
+              <p className="text-sm text-gray-600 font-semibold">Present</p>
+              <p className="text-3xl font-bold text-green-600 mt-1">{summary.present}</p>
             </div>
-            <div className="text-center p-3 bg-red-50 rounded-lg">
-              <p className="text-sm text-gray-600">Absent</p>
-              <p className="text-2xl font-bold text-red-600">{summary.absent}</p>
+            <div className="text-center p-4 bg-red-50 rounded-xl">
+              <p className="text-sm text-gray-600 font-semibold">Absent</p>
+              <p className="text-3xl font-bold text-red-600 mt-1">{summary.absent}</p>
             </div>
-            <div className="text-center p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-gray-600">Total</p>
-              <p className="text-2xl font-bold text-blue-600">{summary.total}</p>
+            <div className="text-center p-4 bg-blue-50 rounded-xl">
+              <p className="text-sm text-gray-600 font-semibold">Total</p>
+              <p className="text-3xl font-bold text-blue-600 mt-1">{summary.total}</p>
             </div>
-            <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <p className="text-sm text-gray-600">Percentage</p>
-              <p className="text-2xl font-bold text-purple-600">{summary.percentage}%</p>
+            <div className="text-center p-4 bg-purple-50 rounded-xl">
+              <p className="text-sm text-gray-600 font-semibold">Percentage</p>
+              <p className="text-3xl font-bold text-purple-600 mt-1">{summary.percentage}%</p>
             </div>
           </div>
         </div>
       )}
-
-      {/* Today's Records */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center justify-between">
-          <span className="flex items-center">
-            <HiOutlineCheckCircle className="w-5 h-5 mr-2 text-blue-600" />
-            Today's Attendance Records
-          </span>
-          <span className="text-sm text-gray-500">{todayRecords.length} records</span>
-        </h3>
-        {todayRecords.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  {['Time', 'Student ID', 'Name', 'Class', 'Period', 'Status'].map((h) => (
-                    <th key={h} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {todayRecords.map((a, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-600">{a.period_time || a.time}</td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{a.student_id}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{a.student_name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{a.class_info}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{a.period}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${a.status === 'Present' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        {a.status === 'Present' ? '✓ Present' : '✗ Absent'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <HiOutlineCheckCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">No attendance records for today yet</p>
-            <p className="text-sm text-gray-400 mt-1">Mark attendance to see records here</p>
-          </div>
-        )}
-      </div>
     </div>
   );
 }
