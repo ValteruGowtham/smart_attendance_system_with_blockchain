@@ -10,7 +10,7 @@ import {
   HiOutlineMenu,
   HiOutlineX,
   HiOutlineChevronDown,
-  HiOutlineDashboard,
+  HiOutlineViewGrid,
   HiOutlineClipboardList,
   HiOutlineUserGroup,
   HiOutlineOfficeBuilding,
@@ -79,7 +79,7 @@ export default function Header() {
   const roleConfig = getRoleConfig();
 
   const adminMenuItems = [
-    { to: '/admin', label: 'Dashboard', icon: <HiOutlineDashboard className="w-4 h-4" /> },
+    { to: '/admin', label: 'Dashboard', icon: <HiOutlineViewGrid className="w-4 h-4" /> },
     { to: '/admin/students', label: 'Students', icon: <HiOutlineUserGroup className="w-4 h-4" /> },
     { to: '/admin/faculty', label: 'Faculty', icon: <HiOutlineAcademicCap className="w-4 h-4" /> },
     { to: '/admin/attendance', label: 'Attendance', icon: <HiOutlineClipboardList className="w-4 h-4" /> },
