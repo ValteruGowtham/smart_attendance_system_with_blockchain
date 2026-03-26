@@ -92,7 +92,7 @@ body {
 }
 
 .animate-scale-in {
-  animation: scale-in 0.3s ease-out;
+  animation: scale-in 0.2s ease-out;
 }
 
 .animate-shimmer {

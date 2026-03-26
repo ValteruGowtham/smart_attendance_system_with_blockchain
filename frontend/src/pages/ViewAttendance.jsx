@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { getAttendance } from '../api/api';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import { HiOutlineSearch, HiOutlineCalendar, HiOutlineClipboardCheck } from 'react-icons/hi';
-import { motion } from 'framer-motion';
+import { HiOutlineSearch, HiOutlineCalendar, HiOutlineClipboardCheck, HiOutlineUser, HiOutlineAcademicCap } from 'react-icons/hi';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -67,11 +66,7 @@ export default function ViewAttendance() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl shadow-xl p-6 text-white"
-      >
+      <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl shadow-xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
@@ -82,18 +77,17 @@ export default function ViewAttendance() {
               <p className="text-amber-100 text-sm">Monitor and analyze attendance across all classes</p>
             </div>
           </div>
+          <div className="text-right hidden md:block">
+            <div className="text-3xl font-bold">{records.length}</div>
+            <div className="text-amber-100 text-sm">Total Records</div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Search and Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Search Form */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-          className="lg:col-span-2"
-        >
+        <div className="lg:col-span-2">
           <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
             <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
               <HiOutlineSearch className="w-5 h-5 text-amber-600" />
@@ -123,132 +117,136 @@ export default function ViewAttendance() {
               )}
             </div>
           </form>
-        </motion.div>
+        </div>
 
         {/* Analytics Card */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-        >
+        <div>
           <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 h-full">
             <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
               <HiOutlineCalendar className="w-5 h-5 text-amber-600" />
-              Attendance Analytics
+              Quick Stats
             </h4>
             {(presentCount > 0 || absentCount > 0) ? (
               <div className="space-y-4">
-                <div className="h-40">
+                <div className="h-36">
                   <Pie data={chartData} options={chartOptions} />
                 </div>
-                <div className="grid grid-cols-3 gap-3 pt-4 border-t border-gray-100">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{presentCount}</div>
+                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-100">
+                  <div className="text-center p-2 bg-green-50 rounded-lg">
+                    <div className="text-xl font-bold text-green-600">{presentCount}</div>
                     <div className="text-xs text-gray-500 font-medium">Present</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-red-600">{absentCount}</div>
+                  <div className="text-center p-2 bg-red-50 rounded-lg">
+                    <div className="text-xl font-bold text-red-600">{absentCount}</div>
                     <div className="text-xs text-gray-500 font-medium">Absent</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-amber-600">{attendanceRate}%</div>
+                  <div className="text-center p-2 bg-amber-50 rounded-lg">
+                    <div className="text-xl font-bold text-amber-600">{attendanceRate}%</div>
                     <div className="text-xs text-gray-500 font-medium">Rate</div>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="h-40 flex items-center justify-center text-gray-400 text-sm">
+              <div className="h-36 flex items-center justify-center text-gray-400 text-sm">
                 No data available
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"
-      >
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+        <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100">
+          <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+            <HiOutlineClipboardCheck className="w-5 h-5 text-amber-600" />
+            All Records
+          </h3>
+        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+            <thead className="bg-gray-50">
               <tr>
-                {['Date', 'Time', 'Faculty', 'Student', 'Class', 'Period', 'Status'].map((h) => (
-                  <th key={h} className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    {h}
-                  </th>
-                ))}
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-32">Date</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-28">Time</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Faculty</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Student</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-48">Class</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-24">Period</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-28">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 bg-white">
               {records.length > 0 ? (
                 records.map((a, i) => (
-                  <motion.tr
+                  <tr
                     key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: Math.min(i * 0.03, 0.5) }}
-                    whileHover={{ backgroundColor: 'rgb(249, 250, 251)' }}
-                    className="transition-colors"
+                    className="hover:bg-gray-50 transition-colors"
+                    style={{ animation: `fade-in 0.3s ease-out ${Math.min(i * 0.03, 0.5)}s both` }}
                   >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
-                          <HiOutlineCalendar className="w-5 h-5 text-blue-600" />
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <HiOutlineCalendar className="w-4 h-4 text-blue-600" />
                         </div>
-                        <div>
-                          <div className="text-sm font-semibold text-gray-900">{a.date}</div>
-                        </div>
+                        <div className="text-sm font-semibold text-gray-900 whitespace-nowrap">{a.date}</div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      <span className="px-3 py-1 bg-gray-100 rounded-full font-medium text-xs">
+                    <td className="px-4 py-3">
+                      <span className="px-2 py-1 bg-gray-100 rounded-md text-xs font-medium text-gray-700 whitespace-nowrap">
                         {a.period_time || a.time}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <div className="font-medium text-gray-900 text-sm">{a.faculty_name}</div>
-                        <div className="text-xs text-gray-500 font-mono">{a.faculty_uid}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <div className="font-medium text-gray-900 text-sm">{a.student_name}</div>
-                        <div className="text-xs text-gray-500 font-mono">{a.student_id}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">
+                        <div className="w-7 h-7 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <HiOutlineUser className="w-3 h-3 text-purple-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">{a.faculty_name}</div>
+                          <div className="text-xs text-gray-500 font-mono">{a.faculty_uid}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <HiOutlineAcademicCap className="w-3 h-3 text-emerald-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">{a.student_name}</div>
+                          <div className="text-xs text-gray-500 font-mono">{a.student_id}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1">
+                        <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-md whitespace-nowrap">
                           {a.branch}
                         </span>
-                        <span className="px-3 py-1 bg-purple-50 text-purple-700 text-xs font-semibold rounded-full">
-                          Year {a.year}
+                        <span className="px-2 py-1 bg-purple-50 text-purple-700 text-xs font-semibold rounded-md whitespace-nowrap">
+                          Y{a.year}
                         </span>
-                        <span className="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-semibold rounded-full">
+                        <span className="px-2 py-1 bg-amber-50 text-amber-700 text-xs font-semibold rounded-md whitespace-nowrap">
                           {a.section}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
-                        Period {a.period}
+                    <td className="px-4 py-3">
+                      <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-md text-center block w-fit">
+                        P{a.period}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 px-4 py-2 rounded-full text-xs font-bold ${
-                        a.status === 'Present' 
-                          ? 'bg-green-100 text-green-700' 
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${
+                        a.status === 'Present'
+                          ? 'bg-green-100 text-green-700'
                           : 'bg-red-100 text-red-700'
                       }`}>
                         {a.status === 'Present' ? '✓' : '✗'} {a.status}
                       </span>
                     </td>
-                  </motion.tr>
+                  </tr>
                 ))
               ) : (
                 <tr>
@@ -268,7 +266,7 @@ export default function ViewAttendance() {
             </tbody>
           </table>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

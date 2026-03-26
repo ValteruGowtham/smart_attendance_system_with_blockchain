@@ -15,15 +15,49 @@ import './index.css';
 
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="text-center py-20 text-gray-400">Loading...</div>;
-  if (!user) return <Navigate to="/login" />;
-  if (roles && !roles.includes(user.role)) return <Navigate to="/" />;
+  
+  console.log('ProtectedRoute - loading:', loading, 'user:', user, 'roles:', roles);
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-500">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!user) {
+    console.log('No user, redirecting to login');
+    return <Navigate to="/login" />;
+  }
+  
+  if (roles && !roles.includes(user.role)) {
+    console.log('User role not allowed:', user.role);
+    return <Navigate to="/" />;
+  }
+  
   return children;
 }
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="text-center py-20 text-gray-400">Loading...</div>;
+  
+  console.log('PublicRoute - loading:', loading, 'user:', user);
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-500">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  
   if (user) {
     if (user.role === 'admin') return <Navigate to="/admin" />;
     if (user.role === 'faculty') return <Navigate to="/faculty/dashboard" />;
@@ -60,6 +94,7 @@ function AppRoutes() {
 }
 
 export default function App() {
+  console.log('App rendering...');
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
       <BrowserRouter>
