@@ -61,15 +61,15 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <div className="bg-gray-50 text-gray-800 min-h-screen">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+      <BrowserRouter>
+        <AuthProvider>
           <Header />
-          <main className="max-w-6xl mx-auto p-6">
+          <main style={{ maxWidth: '6xl', margin: '0 auto', padding: '1.5rem' }}>
             <AppRoutes />
           </main>
-        </div>
-      </AuthProvider>
-    </BrowserRouter>
+        </AuthProvider>
+      </BrowserRouter>
+    </div>
   );
 }
