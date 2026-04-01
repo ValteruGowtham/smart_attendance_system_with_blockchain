@@ -1,0 +1,105 @@
+INFO 2026-03-28 16:26:48,446 autoreload 8660 7896 Watching for file changes with StatReloader
+INFO 2026-03-28 16:29:09,300 autoreload 10536 21300 Watching for file changes with StatReloader
+INFO 2026-03-28 16:29:09,366 server 10536 13648 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-03-28 16:29:09,367 server 10536 13648 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-03-28 16:29:09,368 server 10536 13648 Listening on TCP address 127.0.0.1:8000
+INFO 2026-03-28 16:29:17,274 runserver 10536 13648 [mHTTP POST /api/auth/login/ 200 [0.78, 127.0.0.1:52012][0m
+INFO 2026-03-28 16:29:17,340 runserver 10536 13648 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:63240][0m
+INFO 2026-03-28 16:29:17,379 runserver 10536 13648 [mHTTP GET /api/admin/stats/ 200 [0.03, 127.0.0.1:58074][0m
+INFO 2026-03-28 16:29:31,072 runserver 10536 13648 [mHTTP GET /api/faculty/ 200 [0.02, 127.0.0.1:58588][0m
+INFO 2026-03-28 16:29:31,101 runserver 10536 13648 [mHTTP GET /api/faculty/ 200 [0.02, 127.0.0.1:55391][0m
+INFO 2026-03-28 16:29:34,691 runserver 10536 13648 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:56528][0m
+INFO 2026-03-28 16:29:34,715 runserver 10536 13648 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:52766][0m
+INFO 2026-03-28 16:29:38,405 runserver 10536 13648 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:60146][0m
+INFO 2026-03-28 16:29:43,238 runserver 10536 13648 [mHTTP POST /api/auth/logout/ 200 [0.03, 127.0.0.1:55694][0m
+INFO 2026-03-28 16:29:48,240 runserver 10536 13648 [mHTTP POST /api/auth/login/ 200 [0.77, 127.0.0.1:55629][0m
+INFO 2026-03-28 16:29:48,291 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.01, 127.0.0.1:54589][0m
+INFO 2026-03-28 16:29:48,306 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.01, 127.0.0.1:56752][0m
+INFO 2026-03-28 16:29:59,052 runserver 10536 13648 [mHTTP POST /api/auth/logout/ 200 [0.03, 127.0.0.1:60969][0m
+INFO 2026-03-28 16:30:05,291 runserver 10536 13648 [mHTTP POST /api/auth/login/ 200 [0.65, 127.0.0.1:56236][0m
+INFO 2026-03-28 16:30:05,327 runserver 10536 13648 [mHTTP GET /api/student/dashboard/ 200 [0.02, 127.0.0.1:51460][0m
+INFO 2026-03-28 16:30:05,347 runserver 10536 13648 [mHTTP GET /api/student/dashboard/ 200 [0.02, 127.0.0.1:49914][0m
+INFO 2026-03-28 16:36:53,940 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:64966][0m
+INFO 2026-03-28 16:36:53,982 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.04, 127.0.0.1:64968][0m
+INFO 2026-03-28 16:36:54,008 runserver 10536 13648 [mHTTP GET /api/student/dashboard/ 200 [0.05, 127.0.0.1:64970][0m
+INFO 2026-03-28 16:36:54,071 runserver 10536 13648 [mHTTP GET /api/student/dashboard/ 200 [0.04, 127.0.0.1:64972][0m
+INFO 2026-03-28 16:38:19,684 runserver 10536 13648 [mHTTP POST /api/auth/logout/ 200 [0.04, 127.0.0.1:49671][0m
+INFO 2026-03-28 16:38:24,386 runserver 10536 13648 [mHTTP POST /api/auth/login/ 200 [0.67, 127.0.0.1:54081][0m
+INFO 2026-03-28 16:38:24,463 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.03, 127.0.0.1:63563][0m
+INFO 2026-03-28 16:38:24,508 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.03, 127.0.0.1:59436][0m
+INFO 2026-03-28 16:38:28,730 runserver 10536 13648 [mHTTP POST /api/attendance/window/open/ 200 [0.05, 127.0.0.1:54648][0m
+INFO 2026-03-28 16:38:28,773 runserver 10536 13648 [mHTTP POST /api/attendance/window/close/ 200 [0.03, 127.0.0.1:64974][0m
+INFO 2026-03-28 16:38:35,862 runserver 10536 13648 [mHTTP POST /api/attendance/window/open/ 200 [0.02, 127.0.0.1:59228][0m
+INFO 2026-03-28 16:38:35,901 runserver 10536 13648 [mHTTP POST /api/attendance/window/close/ 200 [0.03, 127.0.0.1:56384][0m
+INFO 2026-03-28 16:38:45,314 runserver 10536 13648 [mHTTP POST /api/attendance/window/open/ 200 [0.02, 127.0.0.1:54882][0m
+INFO 2026-03-28 16:38:45,349 runserver 10536 13648 [mHTTP POST /api/attendance/window/close/ 200 [0.02, 127.0.0.1:60581][0m
+INFO 2026-03-28 16:38:56,205 runserver 10536 13648 [mHTTP POST /api/auth/logout/ 200 [0.02, 127.0.0.1:51239][0m
+INFO 2026-03-28 16:39:02,330 runserver 10536 13648 [mHTTP POST /api/auth/login/ 200 [0.76, 127.0.0.1:57779][0m
+INFO 2026-03-28 16:39:02,380 runserver 10536 13648 [mHTTP GET /api/student/dashboard/ 200 [0.03, 127.0.0.1:52634][0m
+INFO 2026-03-28 16:39:02,400 runserver 10536 13648 [mHTTP GET /api/student/dashboard/ 200 [0.02, 127.0.0.1:62593][0m
+INFO 2026-03-28 16:42:51,168 runserver 10536 13648 [mHTTP POST /api/auth/logout/ 200 [0.03, 127.0.0.1:61635][0m
+INFO 2026-03-28 16:42:55,578 runserver 10536 13648 [mHTTP POST /api/auth/login/ 200 [0.91, 127.0.0.1:58187][0m
+INFO 2026-03-28 16:42:55,673 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.04, 127.0.0.1:61033][0m
+INFO 2026-03-28 16:42:55,731 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.04, 127.0.0.1:57658][0m
+INFO 2026-03-28 16:43:14,558 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:58753][0m
+INFO 2026-03-28 16:43:14,613 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.05, 127.0.0.1:58755][0m
+INFO 2026-03-28 16:43:14,621 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.05, 127.0.0.1:58757][0m
+INFO 2026-03-28 16:43:14,672 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.04, 127.0.0.1:58759][0m
+WARNING 2026-03-28 16:43:29,047 log 10536 16716 Bad Request: /api/attendance/window/open/
+WARNING 2026-03-28 16:43:29,048 runserver 10536 13648 [31;1mHTTP POST /api/attendance/window/open/ 400 [0.02, 127.0.0.1:52107][0m
+INFO 2026-03-28 16:43:33,698 runserver 10536 13648 [mHTTP POST /api/attendance/window/open/ 200 [0.01, 127.0.0.1:51193][0m
+INFO 2026-03-28 16:43:33,738 runserver 10536 13648 [mHTTP POST /api/attendance/window/close/ 200 [0.02, 127.0.0.1:52023][0m
+INFO 2026-03-28 16:43:37,870 runserver 10536 13648 [mHTTP POST /api/attendance/window/open/ 200 [0.03, 127.0.0.1:58019][0m
+INFO 2026-03-28 16:43:37,954 runserver 10536 13648 [mHTTP POST /api/attendance/window/close/ 200 [0.06, 127.0.0.1:62043][0m
+INFO 2026-03-28 16:44:00,823 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:53200][0m
+INFO 2026-03-28 16:44:00,848 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:53202][0m
+INFO 2026-03-28 16:44:00,866 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.03, 127.0.0.1:53204][0m
+INFO 2026-03-28 16:44:00,902 runserver 10536 13648 [mHTTP GET /api/faculty/dashboard/ 200 [0.02, 127.0.0.1:53206][0m
+INFO 2026-03-28 16:44:06,916 runserver 10536 13648 [mHTTP POST /api/auth/logout/ 200 [0.04, 127.0.0.1:54194][0m
+INFO 2026-03-28 16:44:11,611 runserver 10536 13648 [mHTTP POST /api/auth/login/ 200 [0.66, 127.0.0.1:50423][0m
+INFO 2026-03-28 16:44:11,644 runserver 10536 13648 [mHTTP GET /api/student/dashboard/ 200 [0.01, 127.0.0.1:65322][0m
+INFO 2026-03-28 16:44:11,663 runserver 10536 13648 [mHTTP GET /api/student/dashboard/ 200 [0.01, 127.0.0.1:61843][0m
+INFO 2026-03-28 17:03:55,990 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:49329][0m
+INFO 2026-03-28 17:03:56,011 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:49331][0m
+INFO 2026-03-28 17:05:12,329 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:58855][0m
+INFO 2026-03-28 17:05:12,362 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:58857][0m
+INFO 2026-03-28 17:05:36,334 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:63182][0m
+INFO 2026-03-28 17:05:36,351 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:63184][0m
+INFO 2026-03-28 17:05:46,333 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:61830][0m
+INFO 2026-03-28 17:05:46,350 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:61832][0m
+INFO 2026-03-28 17:05:51,863 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.03, 127.0.0.1:51468][0m
+INFO 2026-03-28 17:05:51,897 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.03, 127.0.0.1:51470][0m
+INFO 2026-03-28 17:05:56,339 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:49673][0m
+INFO 2026-03-28 17:05:56,356 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:49678][0m
+INFO 2026-03-28 17:06:04,516 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:57889][0m
+INFO 2026-03-28 17:06:04,569 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.04, 127.0.0.1:57892][0m
+INFO 2026-03-28 17:09:03,545 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:58177][0m
+INFO 2026-03-28 17:09:03,622 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.07, 127.0.0.1:58179][0m
+INFO 2026-03-28 17:09:32,093 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.03, 127.0.0.1:50062][0m
+INFO 2026-03-28 17:09:32,197 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.08, 127.0.0.1:50064][0m
+INFO 2026-03-28 17:10:35,804 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.11, 127.0.0.1:55399][0m
+INFO 2026-03-28 17:10:36,047 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.23, 127.0.0.1:55401][0m
+INFO 2026-03-28 17:10:47,443 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.03, 127.0.0.1:59759][0m
+INFO 2026-03-28 17:10:47,466 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:59761][0m
+INFO 2026-03-28 17:12:19,833 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:62963][0m
+INFO 2026-03-28 17:12:19,864 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:62965][0m
+INFO 2026-03-28 17:12:35,353 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:59249][0m
+INFO 2026-03-28 17:12:35,371 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:56308][0m
+INFO 2026-03-28 17:12:39,356 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.03, 127.0.0.1:61783][0m
+INFO 2026-03-28 17:12:39,387 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:61785][0m
+INFO 2026-03-28 17:12:43,384 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.03, 127.0.0.1:55097][0m
+INFO 2026-03-28 17:12:43,433 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.04, 127.0.0.1:55099][0m
+INFO 2026-03-28 17:12:48,343 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:62405][0m
+INFO 2026-03-28 17:12:48,362 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:62407][0m
+INFO 2026-03-28 17:12:59,756 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.08, 127.0.0.1:50284][0m
+INFO 2026-03-28 17:13:00,112 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.33, 127.0.0.1:50287][0m
+INFO 2026-03-28 17:14:35,907 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.06, 127.0.0.1:64673][0m
+INFO 2026-03-28 17:14:35,990 runserver 10536 13648 [mHTTP GET /api/auth/user/ 200 [0.07, 127.0.0.1:64675][0m
+INFO 2026-04-01 14:02:25,671 autoreload 8688 11564 Watching for file changes with StatReloader
+INFO 2026-04-01 14:02:25,813 server 8688 18668 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-01 14:02:25,815 server 8688 18668 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-01 14:02:25,818 server 8688 18668 Listening on TCP address 127.0.0.1:8000
+INFO 2026-04-01 14:21:01,813 autoreload 16396 13656 Watching for file changes with StatReloader
+INFO 2026-04-01 14:21:01,966 server 16396 3532 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-01 14:21:01,967 server 16396 3532 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-01 14:21:01,968 server 16396 3532 Listening on TCP address 127.0.0.1:8000

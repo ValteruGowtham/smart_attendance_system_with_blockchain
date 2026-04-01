@@ -3,14 +3,25 @@ click==8.1.7
 cmake==3.30.5
 Django==5.1.2
 django-filter==24.3
-numpy==2.2.6
+numpy<2.2.6
 opencv-python==4.12.0.88
 Pillow==10.4.0
 pytz==2024.2
 sqlparse==0.5.1
 django-cors-headers==4.3.1
-torch==2.9.1
-torchvision==0.24.1
-facenet-pytorch==2.6.0
+torch
+torchvision
+facenet-pytorch
 requests==2.32.5
 tqdm==4.67.1
+channels==4.0.0
+channels-redis==4.1.0
+redis==5.0.1
+daphne==4.0.0
+
+# Alert System
+celery==5.3.4
+
+# SMS Services (Optional)
+twilio==8.10.0
+vonage>=3.0.0

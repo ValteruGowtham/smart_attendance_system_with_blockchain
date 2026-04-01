@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 * {
   box-sizing: border-box;
@@ -34,11 +32,6 @@ body {
     opacity: 1;
   }
 }
-.border-green-500 { border-color: #22c55e; }
-.border-purple-500 { border-color: #a855f7; }
-.border-red-500 { border-color: #ef4444; }
-.border-yellow-500 { border-color: #eab308; }
-.border-emerald-500 { border-color: #10b981; }
 
 /* Animations */
 @keyframes slide-in {

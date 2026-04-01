@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HiX, HiCheckCircle, HiExclamationCircle, HiInformationCircle } from 'react-icons/hi';
 
-export default function Toast({ message, type = 'info', onClose }) {
+function Toast({ message, type = 'info', onClose }) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -38,3 +38,28 @@ export default function Toast({ message, type = 'info', onClose }) {
     </div>
   );
 }
+
+export function ToastContainer({ toasts = [], onClose, position = 'top-right' }) {
+  const positionClasses = {
+    'top-right': 'top-4 right-4',
+    'top-left': 'top-4 left-4',
+    'bottom-right': 'bottom-4 right-4',
+    'bottom-left': 'bottom-4 left-4',
+  };
+
+  return (
+    <div className={`fixed ${positionClasses[position]} z-50 pointer-events-none space-y-2`}>
+      {toasts.map(t => (
+        <div key={t.id} className="pointer-events-auto">
+          <Toast
+            message={t.message || t.title}
+            type={t.variant || t.type || 'info'}
+            onClose={() => onClose(t.id)}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default Toast;
