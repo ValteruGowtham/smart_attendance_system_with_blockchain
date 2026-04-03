@@ -24,7 +24,9 @@ urlpatterns = [
 
     # Attendance
     path('attendance/', api_views.api_attendance_list, name='api_attendance_list'),
+    path('attendance/window/open/', api_views.api_attendance_window_open, name='api_attendance_window_open'),
     path('attendance/mark/', api_views.api_mark_attendance, name='api_mark_attendance'),
+    path('attendance/window/close/', api_views.api_attendance_window_close, name='api_attendance_window_close'),
 
     # Dashboards
     path('faculty/dashboard/', api_views.api_faculty_dashboard, name='api_faculty_dashboard'),
