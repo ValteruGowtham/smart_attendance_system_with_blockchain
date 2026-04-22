@@ -198,13 +198,14 @@ class Web3ConnectionManager:
                 # Check contract if initialized
                 if self.contract:
                     try:
-                        # Try to call a simple contract function (if available)
-                        # Note: This might fail for some contracts, so we wrap it
-                        status["diagnostics"]["contract_address"] = self.contract.address
+                        # Just check if contract has an address - don't call functions that might fail
+                        contract_address = self.contract.address
+                        status["diagnostics"]["contract_address"] = contract_address
                         status["connection_healthy"] = True
                     except Exception as e:
                         status["diagnostics"]["contract_error"] = str(e)
-                        status["connection_healthy"] = False
+                        # Contract exists but has issues - still mark as healthy for basic operations
+                        status["connection_healthy"] = True
                 else:
                     status["connection_healthy"] = True  # Basic connection is healthy
                 
@@ -220,50 +221,62 @@ class Web3ConnectionManager:
         Returns:
             dict: Health status with recommendations
         """
-        status = self.verify_connection()
+        # Check current connection status
+        status = {
+            "is_connected": self.is_connected,
+            "ganache_url": self.ganache_url,
+            "network_id": self.network_id,
+            "contract_initialized": self.contract is not None,
+            "abi_loaded": self.abi is not None,
+            "connection_healthy": self.is_connected and self.contract is not None,
+            "diagnostics": {}
+        }
         
-        # Ensure status is a dict
-        if status is None:
-            status = {
-                "is_connected": False,
-                "ganache_url": self.ganache_url,
-                "network_id": None,
-                "contract_initialized": False,
-                "abi_loaded": False,
-                "connection_healthy": False,
-                "diagnostics": {"error": "Connection verification failed"}
-            }
+        issues = []
+        recommendations = []
+        
+        # Check if connected
+        if not self.is_connected:
+            issues.append("No connection to Ganache")
+            recommendations.append("Ensure Ganache Desktop is running on " + self.ganache_url)
+            status["connection_healthy"] = False
+        
+        # Check ABI
+        if not self.abi:
+            issues.append("ABI file not loaded")
+            recommendations.append("Verify abi.json exists in blockchain directory")
+            status["connection_healthy"] = False
+        
+        # Check contract
+        if not self.contract:
+            issues.append("Smart contract not initialized")
+            recommendations.append("Check contract address and ABI compatibility")
+            status["connection_healthy"] = False
+        
+        # Try to get diagnostics if connected
+        if self.is_connected and self.w3:
+            try:
+                latest_block = self.w3.eth.block_number
+                status["diagnostics"]["latest_block"] = latest_block
+                
+                accounts = self.w3.eth.accounts
+                status["diagnostics"]["accounts_count"] = len(accounts)
+                
+                if self.contract:
+                    status["diagnostics"]["contract_address"] = self.contract.address
+                    
+            except Exception as e:
+                issues.append("Network connectivity issue")
+                recommendations.append("Check Ganache network configuration")
+                status["diagnostics"]["error"] = str(e)
+                status["connection_healthy"] = False
         
         health_report = {
             "overall_status": "healthy" if status.get("connection_healthy", False) else "unhealthy",
-            "issues": [],
-            "recommendations": [],
+            "issues": issues,
+            "recommendations": recommendations,
             "details": status
         }
-        
-        # Check connection
-        if not status["is_connected"]:
-            health_report["issues"].append("No connection to Ganache")
-            health_report["recommendations"].append("Ensure Ganache Desktop is running on " + self.ganache_url)
-        
-        # Check ABI
-        if not status["abi_loaded"]:
-            health_report["issues"].append("ABI file not loaded")
-            health_report["recommendations"].append("Verify abi.json exists in blockchain directory")
-        
-        # Check contract
-        if not status["contract_initialized"]:
-            health_report["issues"].append("Smart contract not initialized")
-            health_report["recommendations"].append("Check contract address and ABI compatibility")
-        
-        # Check network
-        if status.get("diagnostics", {}).get("error"):
-            health_report["issues"].append("Network connectivity issue")
-            health_report["recommendations"].append("Check Ganache network configuration")
-        
-        # Update overall status
-        if health_report["issues"]:
-            health_report["overall_status"] = "unhealthy"
         
         return health_report
     

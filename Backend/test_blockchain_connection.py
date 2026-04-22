@@ -20,6 +20,26 @@ def test_blockchain_connection():
 
     manager = get_connection_manager()
 
+    # Debug: Check initial state
+    print(f"   Initial state - is_connected: {manager.is_connected}, contract: {manager.contract is not None}")
+
+    # Initialize the connection
+    print("   Loading ABI...")
+    abi_loaded = manager.load_abi()
+    print(f"   ABI loaded: {abi_loaded}")
+
+    print("   Connecting to Ganache...")
+    connected = manager.connect()
+    print(f"   Connected: {connected}")
+
+    if connected:
+        print("   Initializing contract...")
+        contract_init = manager.initialize_contract()
+        print(f"   Contract initialized: {contract_init is not None}")
+
+    # Debug: Check state after initialization
+    print(f"   After init - is_connected: {manager.is_connected}, contract: {manager.contract is not None}")
+
     # Test health check
     print("\n📊 Health Check:")
     health = manager.health_check()
