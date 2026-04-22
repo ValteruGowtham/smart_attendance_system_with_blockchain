@@ -1,277 +1,181 @@
-import { useState, useEffect } from 'react';
-import { getStudentDashboard } from '../api/api';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+import React, { useState, useEffect } from 'react';
 import {
-  HiOutlineCheckCircle,
-  HiOutlineCheck,
-  HiOutlineX,
-  HiOutlineBookOpen,
-  HiOutlineUser,
-  HiOutlineChartBar,
-  HiOutlineCalendar,
-  HiOutlineClock,
-  HiOutlineAcademicCap,
+  HiCheckCircle,
+  HiCalendar,
+  HiTrendingUp,
+  HiClock,
 } from 'react-icons/hi';
+import DashboardLayout from '../components/dashboard/DashboardLayout';
+import Sidebar from '../components/dashboard/Sidebar';
+import Topbar from '../components/dashboard/Topbar';
+import StatCard from '../components/dashboard/StatCard';
+import AlertCard from '../components/dashboard/AlertCard';
+import ProgressBar from '../components/dashboard/ProgressComponents';
+import DataTable from '../components/dashboard/DataTable';
+import { useToast } from '../context/ToastContext';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+/**
+ * StudentDashboard - Refactored student dashboard with clean layout
+ * Components: KPIs, ProgressBars, SubjectBreakdown, Alerts, AttendanceRecords
+ */
+const StudentDashboard = () => {
+  const [attendance, setAttendance] = useState({
+    present: 32,
+    absent: 8,
+    percentage: 80,
+  });
 
-export default function StudentDashboard() {
-  const [data, setData] = useState(null);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    getStudentDashboard().then((r) => setData(r.data)).catch(() => {});
-  }, []);
+  // Subject-wise breakdown
+  const subjectBreakdown = [
+    { name: 'Mathematics', present: 32, absent: 8, percentage: 80 },
+    { name: 'Physics', present: 28, absent: 12, percentage: 70 },
+    { name: 'Chemistry', present: 35, absent: 5, percentage: 88 },
+    { name: 'Programming', present: 38, absent: 2, percentage: 95 },
+  ];
 
-  if (!data) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-500">Loading dashboard...</p>
-      </div>
-    </div>
-  );
+  // Attendance records
+  const attendanceRecords = [
+    { date: '2024-12-20', subject: 'Mathematics', status: 'Present', faculty: 'Dr. Singh' },
+    { date: '2024-12-19', subject: 'Physics', status: 'Absent', faculty: 'Dr. Kumar' },
+    { date: '2024-12-18', subject: 'Chemistry', status: 'Present', faculty: 'Dr. Sharma' },
+    { date: '2024-12-17', subject: 'Programming', status: 'Present', faculty: 'Mr. Gupta' },
+    { date: '2024-12-16', subject: 'Mathematics', status: 'Present', faculty: 'Dr. Singh' },
+  ];
 
-  const { student, records, summary } = data;
-
-  const chartData = {
-    labels: ['Present', 'Absent'],
-    datasets: [{
-      data: [summary.present, summary.absent],
-      backgroundColor: ['#10b981', '#ef4444'],
-      borderWidth: 0,
-      hoverOffset: 4,
-    }],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          usePointStyle: true,
-          padding: 15,
-          font: { size: 12, weight: '600' }
-        }
-      },
+  const attendanceColumns = [
+    { key: 'date', label: 'Date' },
+    { key: 'subject', label: 'Subject' },
+    { key: 'faculty', label: 'Faculty' },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (value) => (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            value === 'Present'
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'
+          }`}
+        >
+          {value}
+        </span>
+      ),
     },
-  };
+  ];
 
-  const attendanceClass = summary.percentage >= 75 ? 'text-green-600' : summary.percentage >= 60 ? 'text-yellow-600' : 'text-red-600';
-  const attendanceBg = summary.percentage >= 75 ? 'bg-green-50' : summary.percentage >= 60 ? 'bg-yellow-50' : 'bg-red-50';
+  const requiredForSafe = Math.ceil((75 - attendance.percentage) * 2);
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Hero */}
-      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl shadow-xl p-8 text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white opacity-10 rounded-full -ml-24 -mb-24"></div>
-        
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-              <HiOutlineUser className="w-10 h-10" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Welcome back, {student.first_name}! 👋</h1>
-              <p className="text-blue-100">{student.branch} • Year {student.year} • Section {student.section}</p>
-              <p className="text-blue-100 text-sm mt-1">Reg ID: {student.registration_id}</p>
-            </div>
-          </div>
-          <HiOutlineAcademicCap className="w-24 h-24 text-white opacity-20 hidden md:block" />
-        </div>
+    <DashboardLayout sidebar={<Sidebar />} navbar={<Topbar />}>
+      {/* Page Title */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900">My Dashboard</h1>
+        <p className="text-slate-500 mt-1">Track your attendance and academic progress.</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {/* Attendance Rate */}
-        <div className={`${attendanceBg} rounded-2xl shadow-lg p-6 border-l-4 ${summary.percentage >= 75 ? 'border-green-500' : summary.percentage >= 60 ? 'border-yellow-500' : 'border-red-500'}`}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-600 font-semibold">Attendance Rate</p>
-            <HiOutlineChartBar className={`w-6 h-6 ${attendanceClass}`} />
-          </div>
-          <p className={`text-4xl font-bold ${attendanceClass}`}>{summary.percentage}%</p>
-          <p className="text-xs text-gray-500 mt-1">
-            {summary.percentage >= 75 ? '✓ Above minimum requirement' : summary.percentage >= 60 ? '⚠ Need improvement' : '✗ Below requirement'}
-          </p>
-        </div>
-
-        {/* Total Present */}
-        <div className="bg-green-50 rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-600 font-semibold">Classes Attended</p>
-            <HiOutlineCheck className="w-6 h-6 text-green-600" />
-          </div>
-          <p className="text-4xl font-bold text-green-600">{summary.present}</p>
-          <p className="text-xs text-gray-500 mt-1">Present classes</p>
-        </div>
-
-        {/* Total Absent */}
-        <div className="bg-red-50 rounded-2xl shadow-lg p-6 border-l-4 border-red-500">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-600 font-semibold">Classes Missed</p>
-            <HiOutlineX className="w-6 h-6 text-red-600" />
-          </div>
-          <p className="text-4xl font-bold text-red-600">{summary.absent}</p>
-          <p className="text-xs text-gray-500 mt-1">Absent classes</p>
-        </div>
-
-        {/* Total Classes */}
-        <div className="bg-blue-50 rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-gray-600 font-semibold">Total Classes</p>
-            <HiOutlineBookOpen className="w-6 h-6 text-blue-600" />
-          </div>
-          <p className="text-4xl font-bold text-blue-600">{summary.total}</p>
-          <p className="text-xs text-gray-500 mt-1">Overall sessions</p>
-        </div>
+      {/* Row 1: KPI Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard
+          icon={HiCheckCircle}
+          label="Present"
+          value={attendance.present}
+          color="green"
+        />
+        <StatCard
+          icon={HiCalendar}
+          label="Absent"
+          value={attendance.absent}
+          color="red"
+        />
+        <StatCard
+          icon={HiTrendingUp}
+          label="Attendance Rate"
+          value={`${attendance.percentage}%`}
+          color="blue"
+        />
+        <StatCard
+          icon={HiClock}
+          label="To Reach 75%"
+          value={requiredForSafe}
+          color="orange"
+        />
       </div>
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Attendance Chart */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
-            <HiOutlineChartBar className="w-6 h-6 text-blue-600" />
-            Attendance Overview
-          </h3>
-          
-          <div className="h-64 mb-6">
-            <Doughnut data={chartData} options={chartOptions} />
-          </div>
+      {/* Row 2: Alert */}
+      {attendance.percentage < 75 && (
+        <div className="mb-8">
+          <AlertCard
+            type="warning"
+            title="Attendance Warning"
+            message={`Your attendance is currently ${attendance.percentage}%. You need to attend ${requiredForSafe} more classes to reach 75%.`}
+          />
+        </div>
+      )}
 
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">Present</span>
-              </div>
-              <span className="text-lg font-bold text-green-600">{summary.present}</span>
+      {/* Row 3: Main Content - Progress & Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Overall Attendance */}
+        <div className="bg-white border border-slate-200 rounded-xl p-6 lg:col-span-1 shadow-sm">
+          <h3 className="text-lg font-semibold text-slate-900 mb-6">Overall Attendance</h3>
+          <ProgressBar
+            value={attendance.percentage}
+            max={100}
+            label="Current Attendance"
+            color="blue"
+          />
+          <div className="mt-6 space-y-2 pt-6 border-t border-slate-200">
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">Required</span>
+              <span className="font-semibold text-slate-900">75%</span>
             </div>
-            <div className="flex items-center justify-between p-3 bg-red-50 rounded-xl">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">Absent</span>
-              </div>
-              <span className="text-lg font-bold text-red-600">{summary.absent}</span>
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">Current</span>
+              <span className="font-semibold text-slate-900">{attendance.percentage}%</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">Difference</span>
+              <span className={`font-semibold ${attendance.percentage >= 75 ? 'text-green-600' : 'text-red-500'}`}>
+                {attendance.percentage >= 75 ? '+' : ''}{attendance.percentage - 75}%
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Recent Attendance */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
-            <HiOutlineCalendar className="w-6 h-6 text-blue-600" />
-            Recent Attendance History
-          </h3>
-          
-          {records.length > 0 ? (
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {records.slice(0, 10).map((record, i) => (
-                <div
-                  key={i}
-                  className={`p-4 rounded-xl border-l-4 transition-all hover:shadow-md ${
-                    record.status === 'Present'
-                      ? 'bg-green-50 border-green-500 hover:bg-green-100'
-                      : 'bg-red-50 border-red-500 hover:bg-red-100'
-                  }`}
-                >
-                  <div className="flex items-center justify-between flex-wrap gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                        record.status === 'Present'
-                          ? 'bg-green-100'
-                          : 'bg-red-100'
-                      }`}>
-                        {record.status === 'Present' ? (
-                          <HiOutlineCheck className="w-5 h-5 text-green-600" />
-                        ) : (
-                          <HiOutlineX className="w-5 h-5 text-red-600" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">{record.date}</p>
-                        <p className="text-xs text-gray-500 flex items-center gap-2">
-                          <HiOutlineClock className="w-3 h-3 inline" />
-                          {record.period_time || record.time} • {record.faculty_name}
-                        </p>
-                      </div>
-                    </div>
-                    <span className={`px-4 py-2 rounded-full text-sm font-bold ${
-                      record.status === 'Present'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-red-100 text-red-700'
-                    }`}>
-                      {record.status === 'Present' ? '✓ Present' : '✗ Absent'}
-                    </span>
-                  </div>
+        {/* Subject-wise Breakdown */}
+        <div className="bg-white border border-slate-200 rounded-xl p-6 lg:col-span-2 shadow-sm">
+          <h3 className="text-lg font-semibold text-slate-900 mb-6">Subject-wise Breakdown</h3>
+          <div className="space-y-6">
+            {subjectBreakdown.map((subject, idx) => (
+              <div key={idx}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-medium text-slate-900">{subject.name}</span>
+                  <span className="text-xs text-slate-500">
+                    {subject.present}/{subject.present + subject.absent}
+                  </span>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <HiOutlineCalendar className="w-10 h-10 text-gray-400" />
+                <ProgressBar
+                  value={subject.percentage}
+                  max={100}
+                  color={subject.percentage >= 75 ? 'green' : subject.percentage >= 60 ? 'yellow' : 'red'}
+                  showPercentage={false}
+                />
               </div>
-              <p className="text-gray-500 font-medium">No attendance records yet</p>
-              <p className="text-sm text-gray-400 mt-1">Your attendance will appear here once marked</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Attendance Tips */}
-        <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-lg p-6 text-white">
-          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <HiOutlineCheckCircle className="w-6 h-6" />
-            Attendance Tips
-          </h3>
-          <ul className="space-y-2 text-sm text-blue-100">
-            <li className="flex items-start gap-2">
-              <span className="text-blue-200 mt-1">•</span>
-              <span>Maintain at least 75% attendance to be eligible for exams</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-200 mt-1">•</span>
-              <span>Attend all classes regularly to improve your percentage</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-200 mt-1">•</span>
-              <span>Check your attendance history regularly</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-lg p-6 text-white">
-          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <HiOutlineAcademicCap className="w-6 h-6" />
-            Student Info
-          </h3>
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between">
-              <span className="text-purple-100">Name:</span>
-              <span className="font-semibold">{student.first_name} {student.last_name}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-purple-100">Registration ID:</span>
-              <span className="font-semibold">{student.registration_id}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-purple-100">Branch:</span>
-              <span className="font-semibold">{student.branch}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-purple-100">Year & Section:</span>
-              <span className="font-semibold">Year {student.year} - {student.section}</span>
-            </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Row 4: Attendance Records Table */}
+      <DataTable
+        title="Attendance Records"
+        subtitle="Your recent attendance history"
+        columns={attendanceColumns}
+        data={attendanceRecords}
+      />
+    </DashboardLayout>
   );
-}
+};
+
+export default StudentDashboard;

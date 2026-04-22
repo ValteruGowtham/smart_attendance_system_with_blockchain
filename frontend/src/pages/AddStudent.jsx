@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addStudent } from '../api/api';
 import Toast from '../components/Toast';
-import { HiOutlineUserAdd, HiOutlineUser, HiOutlineMail, HiOutlineIdentification, HiOutlineAcademicCap, HiOutlineUpload } from 'react-icons/hi';
+import { HiOutlineUser, HiOutlineKey, HiOutlineAcademicCap } from 'react-icons/hi';
+import { motion } from 'framer-motion';
 
 const BRANCHES = ['CSE', 'IT', 'ECE', 'CHEM', 'MECH', 'EEE', 'CIVIL'];
 const YEARS = ['1', '2', '3', '4'];
@@ -42,20 +43,29 @@ export default function AddStudent() {
       {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
       
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl shadow-xl p-6 text-white">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl shadow-xl p-6 text-white"
+      >
         <div className="flex items-center gap-4">
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
-            <HiOutlineUserAdd className="w-8 h-8" />
+            <HiOutlineUser className="w-8 h-8" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">Add New Student</h1>
             <p className="text-blue-100 text-sm">Register a new student to the system</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Form */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100"
+      >
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
           <div>
@@ -89,20 +99,15 @@ export default function AddStudent() {
             </div>
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <HiOutlineMail className="w-5 h-5 text-gray-400" />
-                </div>
-                <input 
-                  name="email" 
-                  type="email" 
-                  value={form.email} 
-                  onChange={handleChange}
-                  placeholder="student@example.com"
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
-                  required 
-                />
-              </div>
+              <input 
+                name="email" 
+                type="email" 
+                value={form.email} 
+                onChange={handleChange}
+                placeholder="student@example.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                required 
+              />
             </div>
           </div>
 
@@ -117,7 +122,7 @@ export default function AddStudent() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Registration ID *</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <HiOutlineIdentification className="w-5 h-5 text-gray-400" />
+                    <HiOutlineKey className="w-5 h-5 text-gray-400" />
                   </div>
                   <input 
                     name="registration_id" 
@@ -166,8 +171,7 @@ export default function AddStudent() {
 
           {/* Profile Picture */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <HiOutlineUpload className="w-5 h-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
               Profile Picture
             </h3>
             <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors">
@@ -182,7 +186,9 @@ export default function AddStudent() {
               <label htmlFor="profile-pic-upload" className="cursor-pointer">
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-3">
-                    <HiOutlineUpload className="w-8 h-8 text-blue-600" />
+                    <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
                   </div>
                   <p className="text-sm font-medium text-gray-700">
                     {form.profile_pic ? form.profile_pic.name : 'Click to upload profile picture'}
@@ -214,7 +220,7 @@ export default function AddStudent() {
                 </>
               ) : (
                 <>
-                  <HiOutlineUserAdd className="w-5 h-5" />
+                  <HiOutlineUser className="w-5 h-5" />
                   Add Student
                 </>
               )}
@@ -228,7 +234,7 @@ export default function AddStudent() {
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

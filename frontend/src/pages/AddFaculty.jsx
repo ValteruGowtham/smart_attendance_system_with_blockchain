@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addFaculty } from '../api/api';
 import Toast from '../components/Toast';
-import { HiOutlineUserAdd, HiOutlineUser, HiOutlineMail, HiOutlineIdentification, HiOutlinePhone, HiOutlineUpload } from 'react-icons/hi';
+import { HiOutlineUser, HiOutlineKey, HiOutlinePhone } from 'react-icons/hi';
+import { motion } from 'framer-motion';
 
 export default function AddFaculty() {
   const navigate = useNavigate();
@@ -38,20 +39,29 @@ export default function AddFaculty() {
       {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
       
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 to-green-600 rounded-2xl shadow-xl p-6 text-white">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-r from-emerald-600 to-green-600 rounded-2xl shadow-xl p-6 text-white"
+      >
         <div className="flex items-center gap-4">
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
-            <HiOutlineUserAdd className="w-8 h-8" />
+            <HiOutlineUser className="w-8 h-8" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">Add New Faculty</h1>
             <p className="text-emerald-100 text-sm">Register a new faculty member to the system</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Form */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100"
+      >
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
           <div>
@@ -85,27 +95,22 @@ export default function AddFaculty() {
             </div>
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <HiOutlineMail className="w-5 h-5 text-gray-400" />
-                </div>
-                <input 
-                  name="email" 
-                  type="email" 
-                  value={form.email} 
-                  onChange={handleChange}
-                  placeholder="faculty@example.com"
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" 
-                  required 
-                />
-              </div>
+              <input 
+                name="email" 
+                type="email" 
+                value={form.email} 
+                onChange={handleChange}
+                placeholder="faculty@example.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" 
+                required 
+              />
             </div>
           </div>
 
           {/* Professional Information */}
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <HiOutlineIdentification className="w-5 h-5 text-emerald-600" />
+              <HiOutlineKey className="w-5 h-5 text-emerald-600" />
               Professional Details
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,7 +118,7 @@ export default function AddFaculty() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Faculty UID *</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <HiOutlineIdentification className="w-5 h-5 text-gray-400" />
+                    <HiOutlineKey className="w-5 h-5 text-gray-400" />
                   </div>
                   <input 
                     name="uid" 
@@ -146,8 +151,7 @@ export default function AddFaculty() {
 
           {/* Profile Picture */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <HiOutlineUpload className="w-5 h-5 text-emerald-600" />
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
               Profile Picture
             </h3>
             <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-emerald-400 transition-colors">
@@ -162,7 +166,9 @@ export default function AddFaculty() {
               <label htmlFor="profile-pic-upload" className="cursor-pointer">
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-3">
-                    <HiOutlineUpload className="w-8 h-8 text-emerald-600" />
+                    <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
                   </div>
                   <p className="text-sm font-medium text-gray-700">
                     {form.profile_pic ? form.profile_pic.name : 'Click to upload profile picture'}
@@ -194,7 +200,7 @@ export default function AddFaculty() {
                 </>
               ) : (
                 <>
-                  <HiOutlineUserAdd className="w-5 h-5" />
+                  <HiOutlineUser className="w-5 h-5" />
                   Add Faculty
                 </>
               )}
@@ -208,7 +214,7 @@ export default function AddFaculty() {
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

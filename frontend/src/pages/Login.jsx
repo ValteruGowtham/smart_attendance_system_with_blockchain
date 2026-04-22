@@ -17,13 +17,30 @@ export default function Login() {
     setLoading(true);
     try {
       const data = await login(username, password);
-      if (data.role === 'admin') navigate('/admin');
-      else if (data.role === 'faculty') navigate('/faculty/dashboard');
-      else if (data.role === 'student') navigate('/student/dashboard');
-      else navigate('/');
+      console.log('Login successful, redirecting...', data);
+      
+      // Get role from response
+      const role = data.role || data.user?.role;
+      
+      // Redirect based on role
+      if (role === 'admin') {
+        navigate('/admin');
+      } else if (role === 'faculty') {
+        navigate('/faculty/dashboard');
+      } else if (role === 'student') {
+        navigate('/student/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
-      const serverError = err?.response?.data?.error;
-      setError(serverError || err.message || 'Invalid username or password');
+      console.error('Login error:', err);
+      // Handle various error formats
+      const errorMessage = 
+        err?.response?.data?.error || 
+        err?.response?.data?.message ||
+        err?.message || 
+        'Invalid username or password';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

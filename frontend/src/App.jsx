@@ -1,22 +1,22 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-import AdminHome from './pages/AdminHome';
+import AdminHome from './pages/AdminHome_Premium';
 import AddStudent from './pages/AddStudent';
 import AddFaculty from './pages/AddFaculty';
 import ViewStudents from './pages/ViewStudents';
 import ViewFaculty from './pages/ViewFaculty';
 import ViewAttendance from './pages/ViewAttendance';
-import FacultyDashboard from './pages/FacultyDashboard';
-import StudentDashboard from './pages/StudentDashboard';
+import FacultyDashboard from './pages/FacultyDashboard_Premium';
+import StudentDashboard from './pages/StudentDashboard_Premium';
 import './index.css';
 
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth();
-  
-  console.log('ProtectedRoute - loading:', loading, 'user:', user, 'roles:', roles);
   
   if (loading) {
     return (
@@ -30,13 +30,13 @@ function ProtectedRoute({ children, roles }) {
   }
   
   if (!user) {
-    console.log('No user, redirecting to login');
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
   
+  // Check role if specified
   if (roles && !roles.includes(user.role)) {
-    console.log('User role not allowed:', user.role);
-    return <Navigate to="/" />;
+    console.warn(`Access denied: User role '${user.role}' not in allowed roles:`, roles);
+    return <Navigate to="/" replace />;
   }
   
   return children;
@@ -44,8 +44,6 @@ function ProtectedRoute({ children, roles }) {
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth();
-  
-  console.log('PublicRoute - loading:', loading, 'user:', user);
   
   if (loading) {
     return (
@@ -58,11 +56,18 @@ function PublicRoute({ children }) {
     );
   }
   
+  // If user is already logged in, redirect to appropriate dashboard
   if (user) {
-    if (user.role === 'admin') return <Navigate to="/admin" />;
-    if (user.role === 'faculty') return <Navigate to="/faculty/dashboard" />;
-    if (user.role === 'student') return <Navigate to="/student/dashboard" />;
+    if (user.role === 'admin') {
+      return <Navigate to="/admin" replace />;
+    } else if (user.role === 'faculty') {
+      return <Navigate to="/faculty/dashboard" replace />;
+    } else if (user.role === 'student') {
+      return <Navigate to="/student/dashboard" replace />;
+    }
   }
+  
+  // User not logged in, show public page
   return children;
 }
 
@@ -97,14 +102,18 @@ export default function App() {
   console.log('App rendering...');
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <div className="bg-gray-50 text-gray-800 min-h-screen">
-          <Header />
-          <main className="max-w-6xl mx-auto p-6">
-            <AppRoutes />
-          </main>
-        </div>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider position="top-right">
+            <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+              <Header />
+              <main style={{ maxWidth: '6xl', margin: '0 auto', padding: '1.5rem' }}>
+                <AppRoutes />
+              </main>
+            </div>
+          </ToastProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }
