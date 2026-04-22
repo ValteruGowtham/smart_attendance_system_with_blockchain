@@ -29,11 +29,6 @@ PERIOD_TIME_SLOTS = {
     '8': {'start': dt_time(16, 0), 'end': dt_time(17, 0), 'label': '04:00 PM - 05:00 PM'},
 }
 
-# Temporary demo toggle for project expo screenshots.
-# When enabled, attendance can be opened outside 9 AM - 5 PM by assigning a fallback period.
-EXPO_SCREENSHOT_MODE = True
-EXPO_DEFAULT_PERIOD = '3'
-
 
 def get_period_time_label(period):
     slot = PERIOD_TIME_SLOTS.get(str(period))
@@ -62,15 +57,7 @@ def resolve_period(request):
     requested_period = request.POST.get('period', '').strip()
     if requested_period in PERIOD_TIME_SLOTS:
         return requested_period
-
-    current_period = get_current_period()
-    if current_period:
-        return current_period
-
-    if EXPO_SCREENSHOT_MODE:
-        return EXPO_DEFAULT_PERIOD
-
-    return None
+    return get_current_period()
 
 
 def get_class_students(branch, year, section):
@@ -544,7 +531,7 @@ def api_attendance_window_open(request):
     now = timezone.localtime(timezone.now()).replace(tzinfo=None)
 
     # If already past cutoff, auto-close by marking absentees.
-    if (not EXPO_SCREENSHOT_MODE) and cutoff and now > cutoff:
+    if cutoff and now > cutoff:
         created_absent, final_records = close_attendance_window_and_mark_absent(
             faculty, branch, year, section, period
         )
@@ -567,9 +554,8 @@ def api_attendance_window_open(request):
         'window_open': True,
         'period': period,
         'period_time': get_period_time_label(period),
-        'window_cutoff': '' if EXPO_SCREENSHOT_MODE else (cutoff.strftime('%I:%M %p') if cutoff else ''),
-        'window_cutoff_iso': '' if EXPO_SCREENSHOT_MODE else (cutoff.isoformat() if cutoff else ''),
-        'expo_mode': EXPO_SCREENSHOT_MODE,
+        'window_cutoff': cutoff.strftime('%I:%M %p') if cutoff else '',
+        'window_cutoff_iso': cutoff.isoformat() if cutoff else '',
         'class_strength': students.count(),
         'message': 'Attendance window opened. Camera can remain active for on-the-spot submissions.',
     })
@@ -603,7 +589,7 @@ def api_mark_attendance(request):
 
     cutoff = get_period_cutoff(period)
     now = timezone.localtime(timezone.now()).replace(tzinfo=None)
-    if (not EXPO_SCREENSHOT_MODE) and cutoff and now > cutoff:
+    if cutoff and now > cutoff:
         created_absent, final_records = close_attendance_window_and_mark_absent(
             faculty, branch, year, section, period
         )

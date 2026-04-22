@@ -29,11 +29,6 @@ PERIOD_TIME_SLOTS = {
     '8': {'start': dt_time(16, 0), 'end': dt_time(17, 0), 'label': '04:00 PM - 05:00 PM'},
 }
 
-# Temporary demo toggle for project expo screenshots.
-# When enabled, attendance can be opened outside 9 AM - 5 PM by assigning a fallback period.
-EXPO_SCREENSHOT_MODE = True
-EXPO_DEFAULT_PERIOD = '3'
-
 
 def get_period_time_label(period):
     slot = PERIOD_TIME_SLOTS.get(str(period))
@@ -43,6 +38,12 @@ def get_period_time_label(period):
 def get_period_start_time(period):
     slot = PERIOD_TIME_SLOTS.get(str(period))
     return slot['start'] if slot else None
+
+
+def get_period_end_time(period):
+    """Return the end time for a period."""
+    slot = PERIOD_TIME_SLOTS.get(str(period))
+    return slot['end'] if slot else None
 
 
 def format_time_short(value):
@@ -62,15 +63,7 @@ def resolve_period(request):
     requested_period = request.POST.get('period', '').strip()
     if requested_period in PERIOD_TIME_SLOTS:
         return requested_period
-
-    current_period = get_current_period()
-    if current_period:
-        return current_period
-
-    if EXPO_SCREENSHOT_MODE:
-        return EXPO_DEFAULT_PERIOD
-
-    return None
+    return get_current_period()
 
 
 def get_class_students(branch, year, section):
@@ -295,6 +288,70 @@ def api_student_add(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
+@csrf_exempt
+@api_login_required
+@require_http_methods(["POST"])
+def api_student_update(request, student_id):
+    """Update a student's details (admin only)."""
+    if not request.user.is_superuser:
+        return JsonResponse({'error': 'Admin access required'}, status=403)
+    
+    try:
+        student = Student.objects.select_related('user').get(id=student_id)
+        user = student.user
+        
+        # Update user fields
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        user.save()
+        
+        # Update student fields
+        student.branch = request.POST.get('branch', student.branch)
+        student.year = request.POST.get('year', student.year)
+        student.section = request.POST.get('section', student.section)
+        
+        # Handle profile picture update
+        if request.FILES.get('profile_pic'):
+            student.profile_pic = request.FILES.get('profile_pic')
+            # Regenerate embedding if new photo uploaded
+            embedding_generated = save_student_embedding(student)
+        else:
+            embedding_generated = bool(student.face_embedding)
+        
+        student.save()
+        
+        return JsonResponse({
+            'success': True,
+            'id': student.id,
+            'embedding_generated': embedding_generated,
+        })
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@api_login_required
+@require_http_methods(["POST", "DELETE"])
+def api_student_delete(request, student_id):
+    """Delete a student (admin only)."""
+    if not request.user.is_superuser:
+        return JsonResponse({'error': 'Admin access required'}, status=403)
+    
+    try:
+        student = Student.objects.get(id=student_id)
+        user = student.user
+        username = user.username
+        user.delete()  # This will cascade delete the student too
+        return JsonResponse({'success': True, 'message': f'Student {username} deleted'})
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
 # ─── Faculty CRUD ────────────────────────────────────────────
 @api_login_required
 def api_faculty_list(request):
@@ -341,68 +398,6 @@ def api_faculty_add(request):
             profile_pic=profile_pic,
         )
         return JsonResponse({'success': True, 'id': faculty.id})
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=400)
-
-
-@csrf_exempt
-@api_login_required
-@require_http_methods(["POST"])
-def api_student_update(request, student_id):
-    """Update a student's details (admin only)."""
-    if not request.user.is_superuser:
-        return JsonResponse({'error': 'Admin access required'}, status=403)
-    
-    try:
-        student = Student.objects.select_related('user').get(id=student_id)
-        user = student.user
-        
-        # Update user fields
-        user.first_name = request.POST.get('first_name', user.first_name)
-        user.last_name = request.POST.get('last_name', user.last_name)
-        user.email = request.POST.get('email', user.email)
-        user.save()
-        
-        # Update student fields
-        student.branch = request.POST.get('branch', student.branch)
-        student.year = request.POST.get('year', student.year)
-        student.section = request.POST.get('section', student.section)
-        
-        # Handle profile picture update
-        if request.FILES.get('profile_pic'):
-            student.profile_pic = request.FILES.get('profile_pic')
-            # Regenerate embedding if new photo uploaded
-            from .embedding_utils import save_student_embedding
-            save_student_embedding(student)
-        
-        student.save()
-        
-        return JsonResponse({
-            'success': True,
-            'id': student.id,
-        })
-    except Student.DoesNotExist:
-        return JsonResponse({'error': 'Student not found'}, status=404)
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=400)
-
-
-@csrf_exempt
-@api_login_required
-@require_http_methods(["POST", "DELETE"])
-def api_student_delete(request, student_id):
-    """Delete a student (admin only)."""
-    if not request.user.is_superuser:
-        return JsonResponse({'error': 'Admin access required'}, status=403)
-    
-    try:
-        student = Student.objects.get(id=student_id)
-        user = student.user
-        username = user.username
-        user.delete()  # This will cascade delete the student too
-        return JsonResponse({'success': True, 'message': f'Student {username} deleted'})
-    except Student.DoesNotExist:
-        return JsonResponse({'error': 'Student not found'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
@@ -466,7 +461,7 @@ def api_faculty_delete(request, faculty_id):
 def api_attendance_list(request):
     """List attendance records with optional search."""
     search = request.GET.get('search', '').strip()
-    qs = Attendance.objects.select_related('student', 'student__user', 'faculty', 'faculty__user').all().order_by('-date', '-time', '-id')
+    qs = Attendance.objects.select_related('student', 'student__user', 'faculty', 'faculty__user').all().order_by('-date', '-time')
     if search:
         qs = qs.filter(
             Q(student__registration_id__icontains=search) |
@@ -480,7 +475,6 @@ def api_attendance_list(request):
         'student_name': f"{a.student.user.first_name} {a.student.user.last_name}",
         'student_id': a.student.registration_id,
         'faculty_name': f"{a.faculty.user.first_name} {a.faculty.user.last_name}",
-        'faculty_uid': a.faculty.uid,
         'branch': a.branch,
         'year': a.year,
         'section': a.section,
@@ -540,11 +534,19 @@ def api_attendance_window_open(request):
     if not students.exists():
         return JsonResponse({'error': f'No students found for {branch}-{year}-{section}.'}, status=400)
 
-    cutoff = get_period_cutoff(period)
     now = timezone.localtime(timezone.now()).replace(tzinfo=None)
+    
+    # Set cutoff to 5 minutes from now (grace period for attendance marking)
+    cutoff = now + timedelta(minutes=5)
+    
+    # But don't exceed the period end time
+    period_end = get_period_end_time(period)
+    if period_end and cutoff > datetime.combine(date.today(), period_end):
+        cutoff = datetime.combine(date.today(), period_end)
 
-    # If already past cutoff, auto-close by marking absentees.
-    if (not EXPO_SCREENSHOT_MODE) and cutoff and now > cutoff:
+    # If already past period end, auto-close by marking absentees.
+    period_end_cutoff = get_period_cutoff(period)
+    if period_end_cutoff and now > period_end_cutoff:
         created_absent, final_records = close_attendance_window_and_mark_absent(
             faculty, branch, year, section, period
         )
@@ -567,11 +569,10 @@ def api_attendance_window_open(request):
         'window_open': True,
         'period': period,
         'period_time': get_period_time_label(period),
-        'window_cutoff': '' if EXPO_SCREENSHOT_MODE else (cutoff.strftime('%I:%M %p') if cutoff else ''),
-        'window_cutoff_iso': '' if EXPO_SCREENSHOT_MODE else (cutoff.isoformat() if cutoff else ''),
-        'expo_mode': EXPO_SCREENSHOT_MODE,
+        'window_cutoff': cutoff.strftime('%I:%M %p') if cutoff else '',
+        'window_cutoff_iso': cutoff.isoformat() if cutoff else '',
         'class_strength': students.count(),
-        'message': 'Attendance window opened. Camera can remain active for on-the-spot submissions.',
+        'message': 'Attendance window opened for 5 minutes. Camera will stay active for on-the-spot submissions.',
     })
 
 
@@ -603,7 +604,7 @@ def api_mark_attendance(request):
 
     cutoff = get_period_cutoff(period)
     now = timezone.localtime(timezone.now()).replace(tzinfo=None)
-    if (not EXPO_SCREENSHOT_MODE) and cutoff and now > cutoff:
+    if cutoff and now > cutoff:
         created_absent, final_records = close_attendance_window_and_mark_absent(
             faculty, branch, year, section, period
         )
