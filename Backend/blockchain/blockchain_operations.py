@@ -66,12 +66,13 @@ class AttendanceBlockchainStorage:
     
     def verify_blockchain_connection(self):
         """
-        Verify blockchain connection is available
+        Verify blockchain connection is available with health check
         
         Returns:
-            bool: True if connected, False otherwise
+            bool: True if connected and healthy, False otherwise
         """
         try:
+            # First check basic connection
             if not self.manager.is_connected:
                 logger.warning("Blockchain manager not connected, attempting connection...")
                 self.manager.load_abi()
@@ -81,7 +82,46 @@ class AttendanceBlockchainStorage:
                 logger.warning("Contract not initialized, initializing...")
                 self.manager.initialize_contract()
             
-            return self.manager.is_connected and self.manager.contract is not None
+            # Perform health check
+            health = self.manager.health_check()
+            if health["overall_status"] != "healthy":
+                logger.warning(f"Blockchain health check failed: {health['issues']}")
+                # Try to reconnect once
+                if self.manager.reconnect():
+                    health = self.manager.health_check()
+            
+            return health["overall_status"] == "healthy"
+        
+        except Exception as e:
+            logger.error(f"Error verifying blockchain connection: {e}")
+            return False
+    
+    def get_blockchain_stats(self):
+        """
+        Get blockchain network statistics
+        
+        Returns:
+            dict: Blockchain statistics or None if unavailable
+        """
+        try:
+            if not self.verify_blockchain_connection():
+                return None
+            
+            w3 = self.manager.w3
+            stats = {
+                "network_id": self.manager.network_id,
+                "latest_block": w3.eth.block_number,
+                "gas_price": w3.eth.gas_price,
+                "accounts_count": len(w3.eth.accounts),
+                "contract_address": self.manager.contract.address if self.manager.contract else None,
+                "connection_url": self.manager.ganache_url
+            }
+            
+            return stats
+        
+        except Exception as e:
+            logger.error(f"Error getting blockchain stats: {e}")
+            return None
         
         except Exception as e:
             logger.error(f"Error verifying blockchain connection: {e}")
