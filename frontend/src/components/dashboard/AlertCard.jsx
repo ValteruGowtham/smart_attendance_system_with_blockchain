@@ -1,90 +1,76 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 import {
-  HiOutlineExclamation,
-  HiOutlineCheckCircle,
-  HiOutlineInformationCircle,
-  HiOutlineX,
+  HiInformationCircle,
+  HiCheckCircle,
+  HiExclamation,
+  HiXCircle,
 } from 'react-icons/hi';
 
-export const AlertCard = ({ type = 'info', title, message, action, onClose, icon: CustomIcon }) => {
-  const alertConfig = {
+/**
+ * AlertCard - Display alerts/warnings/info messages
+ * Clean, simple alert component for light background
+ */
+const AlertCard = ({ type = 'info', title, message, onClose }) => {
+  const [visible, setVisible] = useState(true);
+
+  const typeConfig = {
     info: {
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      border: 'border-blue-200 dark:border-blue-700',
-      icon: HiOutlineInformationCircle,
-      iconColor: 'text-blue-600 dark:text-blue-500',
-      title: 'text-blue-900 dark:text-blue-100',
+      border: 'border-blue-100',
+      bg: 'bg-blue-50',
+      icon: HiInformationCircle,
+      iconColor: 'text-blue-600',
+      titleColor: 'text-blue-900',
+      messageColor: 'text-blue-700',
     },
     success: {
-      bg: 'bg-green-50 dark:bg-green-900/20',
-      border: 'border-green-200 dark:border-green-700',
-      icon: HiOutlineCheckCircle,
-      iconColor: 'text-green-600 dark:text-green-500',
-      title: 'text-green-900 dark:text-green-100',
+      border: 'border-green-100',
+      bg: 'bg-green-50',
+      icon: HiCheckCircle,
+      iconColor: 'text-green-600',
+      titleColor: 'text-green-900',
+      messageColor: 'text-green-700',
     },
     warning: {
-      bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-      border: 'border-yellow-200 dark:border-yellow-700',
-      icon: HiOutlineExclamation,
-      iconColor: 'text-yellow-600 dark:text-yellow-500',
-      title: 'text-yellow-900 dark:text-yellow-100',
+      border: 'border-yellow-100',
+      bg: 'bg-yellow-50',
+      icon: HiExclamation,
+      iconColor: 'text-yellow-600',
+      titleColor: 'text-yellow-900',
+      messageColor: 'text-yellow-700',
     },
     error: {
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-700',
-      icon: HiOutlineExclamation,
-      iconColor: 'text-red-600 dark:text-red-500',
-      title: 'text-red-900 dark:text-red-100',
+      border: 'border-red-100',
+      bg: 'bg-red-50',
+      icon: HiXCircle,
+      iconColor: 'text-red-600',
+      titleColor: 'text-red-900',
+      messageColor: 'text-red-700',
     },
   };
 
-  const config = alertConfig[type] || alertConfig.info;
-  const Icon = CustomIcon || config.icon;
+  const config = typeConfig[type];
+  const Icon = config.icon;
+
+  if (!visible) return null;
+
+  const handleClose = () => {
+    setVisible(false);
+    onClose?.();
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      className={`${config.bg} border ${config.border} rounded-lg p-4 flex gap-4`}
-    >
-      <Icon className={`w-5 h-5 mt-0.5 flex-shrink-0 ${config.iconColor}`} />
-
-      <div className="flex-1 min-w-0">
-        <h3 className={`font-semibold text-sm ${config.title}`}>{title}</h3>
-        <p className={`text-sm opacity-75 mt-1 ${config.title}`}>{message}</p>
-        {action && (
-          <button className={`text-sm font-medium mt-2 hover:opacity-75 transition ${config.title}`}>
-            {action.label}
-          </button>
-        )}
+    <div className={`border ${config.border} ${config.bg} rounded-xl p-4 flex gap-4`}
+      <Icon className={`w-5 h-5 ${config.iconColor} flex-shrink-0 mt-0.5`} />
+      <div className="flex-1">
+        <h4 className={`font-semibold text-sm ${config.titleColor}`}>{title}</h4>
+        <p className={`text-sm mt-1 ${config.messageColor}`}>{message}</p>
       </div>
-
-      {onClose && (
-        <button
-          onClick={onClose}
-          className="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition"
-        >
-          <HiOutlineX size={18} />
-        </button>
-      )}
-    </motion.div>
-  );
-};
-
-export const AlertsList = ({ alerts = [] }) => {
-  const [visibleAlerts, setVisibleAlerts] = React.useState(alerts);
-
-  return (
-    <div className="space-y-3">
-      {visibleAlerts.map((alert) => (
-        <AlertCard
-          key={alert.id}
-          {...alert}
-          onClose={() => setVisibleAlerts(prev => prev.filter(a => a.id !== alert.id))}
-        />
-      ))}
+      <button
+        onClick={handleClose}
+        className={`text-slate-400 hover:text-slate-600 flex-shrink-0 transition-colors`}
+      >
+        ✕
+      </button>
     </div>
   );
 };

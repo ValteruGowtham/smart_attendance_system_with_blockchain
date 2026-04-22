@@ -1,0 +1,233 @@
+INFO 2026-04-22 13:51:46,042 autoreload 14400 23360 Watching for file changes with StatReloader
+INFO 2026-04-22 13:51:46,355 server 14400 12764 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-22 13:51:46,356 server 14400 12764 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-22 13:51:46,357 server 14400 12764 Listening on TCP address 127.0.0.1:8000
+INFO 2026-04-22 13:53:34,464 autoreload 23208 13980 Watching for file changes with StatReloader
+INFO 2026-04-22 13:53:34,585 server 23208 12528 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-22 13:53:34,606 server 23208 12528 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-22 13:53:34,610 server 23208 12528 Listening on TCP address 127.0.0.1:8000
+INFO 2026-04-22 13:56:25,054 runserver 23208 12528 [mHTTP GET / 200 [0.09, 127.0.0.1:56215][0m
+WARNING 2026-04-22 13:56:25,192 log 23208 7316 Not Found: /favicon.ico
+WARNING 2026-04-22 13:56:25,194 runserver 23208 12528 [33mHTTP GET /favicon.ico 404 [0.06, 127.0.0.1:56215][0m
+WARNING 2026-04-22 13:57:02,280 log 23208 7316 Unauthorized: /api/auth/login/
+WARNING 2026-04-22 13:57:02,281 runserver 23208 12528 [31;1mHTTP POST /api/auth/login/ 401 [1.00, 127.0.0.1:57771][0m
+WARNING 2026-04-22 13:57:09,244 log 23208 7316 Unauthorized: /api/auth/login/
+WARNING 2026-04-22 13:57:09,246 runserver 23208 12528 [31;1mHTTP POST /api/auth/login/ 401 [0.94, 127.0.0.1:51866][0m
+WARNING 2026-04-22 13:57:15,830 log 23208 7316 Unauthorized: /api/auth/login/
+WARNING 2026-04-22 13:57:15,832 runserver 23208 12528 [31;1mHTTP POST /api/auth/login/ 401 [0.93, 127.0.0.1:60472][0m
+WARNING 2026-04-22 13:59:04,692 log 23208 7316 Unauthorized: /api/auth/login/
+WARNING 2026-04-22 13:59:04,695 runserver 23208 12528 [31;1mHTTP POST /api/auth/login/ 401 [2.33, 127.0.0.1:55238][0m
+INFO 2026-04-22 14:00:37,552 autoreload 23208 13980 C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\attendance\models.py changed, reloading.
+INFO 2026-04-22 14:00:42,770 autoreload 8900 22116 Watching for file changes with StatReloader
+INFO 2026-04-22 14:00:42,900 server 8900 23324 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-22 14:00:42,900 server 8900 23324 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-22 14:00:42,901 server 8900 23324 Listening on TCP address 127.0.0.1:8000
+INFO 2026-04-22 14:00:57,601 autoreload 8900 22116 C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\attendance\models.py changed, reloading.
+INFO 2026-04-22 14:01:01,667 autoreload 10232 13152 Watching for file changes with StatReloader
+INFO 2026-04-22 14:01:01,741 server 10232 13080 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-22 14:01:01,771 server 10232 13080 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-22 14:01:01,772 server 10232 13080 Listening on TCP address 127.0.0.1:8000
+INFO 2026-04-22 14:09:25,198 autoreload 10232 13152 C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\attendance\models.py changed, reloading.
+INFO 2026-04-22 14:09:30,185 autoreload 10100 9848 Watching for file changes with StatReloader
+INFO 2026-04-22 14:09:30,275 server 10100 1228 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-22 14:09:30,275 server 10100 1228 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-22 14:09:30,276 server 10100 1228 Listening on TCP address 127.0.0.1:8000
+INFO 2026-04-22 14:09:33,037 autoreload 10100 9848 C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\attendance\models.py changed, reloading.
+INFO 2026-04-22 14:09:37,763 autoreload 1708 13600 Watching for file changes with StatReloader
+INFO 2026-04-22 14:09:37,858 server 1708 15616 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-22 14:09:37,859 server 1708 15616 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-22 14:09:37,861 server 1708 15616 Listening on TCP address 127.0.0.1:8000
+INFO 2026-04-22 14:48:55,223 autoreload 15376 15464 Watching for file changes with StatReloader
+INFO 2026-04-22 14:48:55,338 server 15376 4812 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-22 14:48:55,338 server 15376 4812 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-04-22 14:48:55,339 server 15376 4812 Listening on TCP address 127.0.0.1:8000
+INFO 2026-04-22 14:49:27,836 runserver 15376 4812 [mHTTP POST /api/auth/login/ 200 [0.67, 127.0.0.1:53665][0m
+INFO 2026-04-22 14:49:27,915 runserver 15376 4812 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:53668][0m
+INFO 2026-04-22 14:49:27,939 runserver 15376 4812 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:53670][0m
+INFO 2026-04-22 14:49:55,699 runserver 15376 4812 [mHTTP POST /api/students/add/ 200 [1.77, 127.0.0.1:63286][0m
+INFO 2026-04-22 14:49:56,960 runserver 15376 4812 [mHTTP GET /api/students/ 200 [0.01, 127.0.0.1:64423][0m
+INFO 2026-04-22 14:49:56,979 runserver 15376 4812 [mHTTP GET /api/students/ 200 [0.01, 127.0.0.1:60908][0m
+INFO 2026-04-22 14:50:00,804 runserver 15376 4812 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:60091][0m
+INFO 2026-04-22 14:50:00,832 runserver 15376 4812 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:60481][0m
+INFO 2026-04-22 14:50:39,767 runserver 15376 4812 [mHTTP POST /api/faculty/add/ 200 [0.65, 127.0.0.1:53937][0m
+INFO 2026-04-22 14:50:41,010 runserver 15376 4812 [mHTTP GET /api/faculty/ 200 [0.02, 127.0.0.1:56811][0m
+INFO 2026-04-22 14:50:41,025 runserver 15376 4812 [mHTTP GET /api/faculty/ 200 [0.01, 127.0.0.1:49268][0m
+INFO 2026-04-22 14:50:45,217 runserver 15376 4812 [mHTTP POST /api/auth/logout/ 200 [0.02, 127.0.0.1:62715][0m
+INFO 2026-04-22 14:50:51,363 runserver 15376 4812 [mHTTP POST /api/auth/login/ 200 [0.89, 127.0.0.1:59762][0m
+INFO 2026-04-22 14:50:51,440 runserver 15376 4812 [mHTTP GET /api/faculty/dashboard/ 200 [0.03, 127.0.0.1:60024][0m
+INFO 2026-04-22 14:50:51,464 runserver 15376 4812 [mHTTP GET /api/faculty/dashboard/ 200 [0.02, 127.0.0.1:62974][0m
+WARNING 2026-04-22 14:50:55,007 log 15376 15820 Bad Request: /api/attendance/window/open/
+WARNING 2026-04-22 14:50:55,008 runserver 15376 4812 [31;1mHTTP POST /api/attendance/window/open/ 400 [0.06, 127.0.0.1:58601][0m
+WARNING 2026-04-22 14:51:01,129 log 15376 15820 Bad Request: /api/attendance/window/open/
+WARNING 2026-04-22 14:51:01,130 runserver 15376 4812 [31;1mHTTP POST /api/attendance/window/open/ 400 [0.03, 127.0.0.1:54971][0m
+WARNING 2026-04-22 14:51:14,040 log 15376 15820 Bad Request: /api/attendance/window/open/
+WARNING 2026-04-22 14:51:14,042 runserver 15376 4812 [31;1mHTTP POST /api/attendance/window/open/ 400 [0.04, 127.0.0.1:49894][0m
+INFO 2026-04-22 14:51:23,833 runserver 15376 4812 [mHTTP GET /api/faculty/dashboard/ 200 [0.03, 127.0.0.1:50807][0m
+INFO 2026-04-22 14:51:23,866 runserver 15376 4812 [mHTTP GET /api/faculty/dashboard/ 200 [0.03, 127.0.0.1:59922][0m
+INFO 2026-04-22 14:51:26,061 runserver 15376 4812 [mHTTP GET /api/faculty/dashboard/ 200 [0.02, 127.0.0.1:55478][0m
+INFO 2026-04-22 14:51:26,093 runserver 15376 4812 [mHTTP GET /api/faculty/dashboard/ 200 [0.02, 127.0.0.1:64117][0m
+INFO 2026-04-22 14:51:30,222 runserver 15376 4812 [mHTTP GET /api/faculty/dashboard/ 200 [0.01, 127.0.0.1:52637][0m
+INFO 2026-04-22 14:51:30,240 runserver 15376 4812 [mHTTP GET /api/faculty/dashboard/ 200 [0.01, 127.0.0.1:58442][0m
+INFO 2026-04-22 14:51:32,155 runserver 15376 4812 [mHTTP POST /api/auth/logout/ 200 [0.02, 127.0.0.1:55045][0m
+INFO 2026-04-22 14:51:37,115 runserver 15376 4812 [mHTTP POST /api/auth/login/ 200 [0.71, 127.0.0.1:54975][0m
+INFO 2026-04-22 14:51:37,147 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.02, 127.0.0.1:51050][0m
+INFO 2026-04-22 14:51:37,164 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.01, 127.0.0.1:62684][0m
+INFO 2026-04-22 14:51:44,208 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.02, 127.0.0.1:61656][0m
+INFO 2026-04-22 14:51:44,231 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.02, 127.0.0.1:49675][0m
+INFO 2026-04-22 14:51:44,937 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.02, 127.0.0.1:54624][0m
+INFO 2026-04-22 14:51:44,967 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.02, 127.0.0.1:59698][0m
+INFO 2026-04-22 14:53:21,475 autoreload 13712 19440 Watching for file changes with StatReloader
+INFO 2026-04-22 14:53:21,549 server 13712 10880 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-04-22 14:53:21,550 server 13712 10880 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+CRITICAL 2026-04-22 14:53:21,551 server 13712 10880 Listen failure: Couldn't listen on 127.0.0.1:8000: [WinError 10048] Only one usage of each socket address (protocol/network address/port) is normally permitted.
+INFO 2026-04-22 14:55:14,936 web3_connection 11828 988 ABI loaded successfully from C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\blockchain\abi.json
+INFO 2026-04-22 14:55:14,937 web3_connection 11828 988 Attempting to connect to Ganache at http://127.0.0.1:8545
+INFO 2026-04-22 14:55:14,942 web3_connection 11828 988 Successfully connected to Ganache. Network ID: 1776849205519
+INFO 2026-04-22 14:55:14,948 web3_connection 11828 988 Contract initialized at 0xDa0c9a811f7851Deb38A66889D5510789DbBCd05
+INFO 2026-04-22 14:55:14,949 web3_connection 11828 988 Web3 connection module loaded successfully
+INFO 2026-04-22 14:55:14,967 blockchain_operations 11828 988 Storing attendance on blockchain for STU001
+INFO 2026-04-22 14:55:14,997 blockchain_operations 11828 988 Transaction sent: 0x0f09365cf26f345f9950ba6f4f8678f0bdd7a71a727428827c2da16f6cc34519
+INFO 2026-04-22 14:55:15,000 blockchain_operations 11828 988 Attendance stored successfully. TxHash: 0x0f09365cf26f345f9950ba6f4f8678f0bdd7a71a727428827c2da16f6cc34519, Block: 2, Gas Used: 22848
+INFO 2026-04-22 14:56:24,900 web3_connection 14576 12740 ABI loaded successfully from C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\blockchain\abi.json
+INFO 2026-04-22 14:56:24,901 web3_connection 14576 12740 Attempting to connect to Ganache at http://127.0.0.1:8545
+INFO 2026-04-22 14:56:24,921 web3_connection 14576 12740 Successfully connected to Ganache. Network ID: 1776849205519
+INFO 2026-04-22 14:56:24,931 web3_connection 14576 12740 Contract initialized at 0xDa0c9a811f7851Deb38A66889D5510789DbBCd05
+INFO 2026-04-22 14:56:24,931 web3_connection 14576 12740 Web3 connection module loaded successfully
+INFO 2026-04-22 14:56:24,952 blockchain_operations 14576 12740 Storing attendance on blockchain for STU001
+INFO 2026-04-22 14:56:24,974 blockchain_operations 14576 12740 Transaction sent: 0x2c600662974aabde4f603602353a3cc3dda9e9009c7b1a77b76f4c199ee856a8
+INFO 2026-04-22 14:56:24,977 blockchain_operations 14576 12740 Attendance stored successfully. TxHash: 0x2c600662974aabde4f603602353a3cc3dda9e9009c7b1a77b76f4c199ee856a8, Block: 3, Gas Used: 22848
+INFO 2026-04-22 14:57:08,326 web3_connection 20912 2256 ABI loaded successfully from C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\blockchain\abi.json
+INFO 2026-04-22 14:57:08,326 web3_connection 20912 2256 Attempting to connect to Ganache at http://127.0.0.1:8545
+INFO 2026-04-22 14:57:08,357 web3_connection 20912 2256 Successfully connected to Ganache. Network ID: 1776849205519
+INFO 2026-04-22 14:57:08,364 web3_connection 20912 2256 Contract initialized at 0xDa0c9a811f7851Deb38A66889D5510789DbBCd05
+INFO 2026-04-22 14:57:08,365 web3_connection 20912 2256 Web3 connection module loaded successfully
+INFO 2026-04-22 14:57:08,378 blockchain_operations 20912 2256 Storing attendance on blockchain for STU001
+INFO 2026-04-22 14:57:08,404 blockchain_operations 20912 2256 Transaction sent: 0x609d3fec614d75a994d07ed55f03c7346dffaa456d490efe6e72794c34536734
+INFO 2026-04-22 14:57:08,407 blockchain_operations 20912 2256 Attendance stored successfully. TxHash: 0x609d3fec614d75a994d07ed55f03c7346dffaa456d490efe6e72794c34536734, Block: 4, Gas Used: 22848
+INFO 2026-04-22 14:58:48,299 runserver 15376 4812 [mHTTP GET / 200 [0.01, 127.0.0.1:57642][0m
+WARNING 2026-04-22 14:58:48,386 log 15376 15820 Not Found: /favicon.ico
+WARNING 2026-04-22 14:58:48,387 runserver 15376 4812 [33mHTTP GET /favicon.ico 404 [0.04, 127.0.0.1:57642][0m
+INFO 2026-04-22 15:11:27,305 runserver 15376 4812 [mHTTP GET /api/auth/user/ 200 [0.03, 127.0.0.1:62102][0m
+INFO 2026-04-22 15:11:27,332 runserver 15376 4812 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:62104][0m
+INFO 2026-04-22 15:11:27,393 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.03, 127.0.0.1:62106][0m
+INFO 2026-04-22 15:11:27,428 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.03, 127.0.0.1:58432][0m
+INFO 2026-04-22 15:20:26,386 runserver 15376 4812 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:54145][0m
+INFO 2026-04-22 15:20:26,437 runserver 15376 4812 [mHTTP GET /api/auth/user/ 200 [0.04, 127.0.0.1:54147][0m
+INFO 2026-04-22 15:20:26,919 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.03, 127.0.0.1:51648][0m
+INFO 2026-04-22 15:20:26,961 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.03, 127.0.0.1:61983][0m
+INFO 2026-04-22 15:43:12,033 web3_connection 10104 21308 ABI loaded successfully from C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\blockchain\abi.json
+INFO 2026-04-22 15:43:12,033 web3_connection 10104 21308 Attempting to connect to Ganache at http://127.0.0.1:7545
+INFO 2026-04-22 15:43:12,042 web3_connection 10104 21308 Successfully connected to Ganache. Network ID: 5777
+INFO 2026-04-22 15:43:12,051 web3_connection 10104 21308 Contract initialized at 0xDa0c9a811f7851Deb38A66889D5510789DbBCd05
+INFO 2026-04-22 15:43:12,051 web3_connection 10104 21308 Web3 connection module loaded successfully
+INFO 2026-04-22 15:43:12,113 blockchain_operations 10104 21308 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:43:12,192 blockchain_operations 10104 21308 Transaction sent: 0x6f95f53108180b27dd713cefd4a3e1bfb8e173b71c3552eb507a76ca17f3e59f
+INFO 2026-04-22 15:43:12,199 blockchain_operations 10104 21308 Attendance stored successfully. TxHash: 0x6f95f53108180b27dd713cefd4a3e1bfb8e173b71c3552eb507a76ca17f3e59f, Block: 1, Gas Used: 22848
+INFO 2026-04-22 15:52:28,223 web3_connection 17320 14868 ABI loaded successfully from C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\blockchain\abi.json
+INFO 2026-04-22 15:52:28,224 web3_connection 17320 14868 Attempting to connect to Ganache at http://127.0.0.1:7545
+INFO 2026-04-22 15:52:28,230 web3_connection 17320 14868 Successfully connected to Ganache. Network ID: 5777
+INFO 2026-04-22 15:52:28,238 web3_connection 17320 14868 Contract initialized at 0xDa0c9a811f7851Deb38A66889D5510789DbBCd05
+INFO 2026-04-22 15:52:28,239 web3_connection 17320 14868 Web3 connection module loaded successfully
+INFO 2026-04-22 15:52:28,400 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,438 blockchain_operations 17320 14868 Transaction sent: 0x6e915427a9fbb4278845decc9169aa86fc5e8c651cc179dec1d3012fc38c4346
+INFO 2026-04-22 15:52:28,444 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x6e915427a9fbb4278845decc9169aa86fc5e8c651cc179dec1d3012fc38c4346, Block: 2, Gas Used: 22848
+INFO 2026-04-22 15:52:28,451 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,491 blockchain_operations 17320 14868 Transaction sent: 0x670868b2f98156069326e5f89a8e885a161c2f129ca9b871bd543237735d71a8
+INFO 2026-04-22 15:52:28,495 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x670868b2f98156069326e5f89a8e885a161c2f129ca9b871bd543237735d71a8, Block: 3, Gas Used: 22848
+INFO 2026-04-22 15:52:28,501 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,542 blockchain_operations 17320 14868 Transaction sent: 0x7e932d409fb13c159e97b9508acc95d366d489397afe97a51d436fbedb55d137
+INFO 2026-04-22 15:52:28,549 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x7e932d409fb13c159e97b9508acc95d366d489397afe97a51d436fbedb55d137, Block: 4, Gas Used: 22848
+INFO 2026-04-22 15:52:28,556 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,600 blockchain_operations 17320 14868 Transaction sent: 0xe1065650b9d10fd7bf4448c5aeaa84dd7d5450df10b1fbf11e5e40ec6f98a8e4
+INFO 2026-04-22 15:52:28,609 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xe1065650b9d10fd7bf4448c5aeaa84dd7d5450df10b1fbf11e5e40ec6f98a8e4, Block: 5, Gas Used: 22848
+INFO 2026-04-22 15:52:28,616 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,660 blockchain_operations 17320 14868 Transaction sent: 0x6bdd5d9b7a33636e407d171181dd7fdab2b55a5ccd4f1e3e39aef2551f19a100
+INFO 2026-04-22 15:52:28,669 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x6bdd5d9b7a33636e407d171181dd7fdab2b55a5ccd4f1e3e39aef2551f19a100, Block: 6, Gas Used: 22848
+INFO 2026-04-22 15:52:28,677 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,716 blockchain_operations 17320 14868 Transaction sent: 0x7bccddf6077c0950491a6e8515f91521bf83f829801bd47570928b10e8aab2c4
+INFO 2026-04-22 15:52:28,723 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x7bccddf6077c0950491a6e8515f91521bf83f829801bd47570928b10e8aab2c4, Block: 7, Gas Used: 22848
+INFO 2026-04-22 15:52:28,727 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,773 blockchain_operations 17320 14868 Transaction sent: 0x6a589819ad34846c34409d35a9bf225f320994325ef6a2e1c8e9b26cb707aa5e
+INFO 2026-04-22 15:52:28,778 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x6a589819ad34846c34409d35a9bf225f320994325ef6a2e1c8e9b26cb707aa5e, Block: 8, Gas Used: 22848
+INFO 2026-04-22 15:52:28,784 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,813 blockchain_operations 17320 14868 Transaction sent: 0x1da5ca257b368e42c80df375b90368a21b7710ee9e771bd4546822b14ad039ca
+INFO 2026-04-22 15:52:28,819 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x1da5ca257b368e42c80df375b90368a21b7710ee9e771bd4546822b14ad039ca, Block: 9, Gas Used: 22848
+INFO 2026-04-22 15:52:28,825 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,852 blockchain_operations 17320 14868 Transaction sent: 0xbe9e2dbdaf1dcb3fab2ba386ac9194341311fe63667250b07c82acafc71663a3
+INFO 2026-04-22 15:52:28,856 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xbe9e2dbdaf1dcb3fab2ba386ac9194341311fe63667250b07c82acafc71663a3, Block: 10, Gas Used: 22848
+INFO 2026-04-22 15:52:28,862 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,899 blockchain_operations 17320 14868 Transaction sent: 0x370ff44df19c752382786ce66ec235f1f5bca908611a85e4ac486c0107352885
+INFO 2026-04-22 15:52:28,904 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x370ff44df19c752382786ce66ec235f1f5bca908611a85e4ac486c0107352885, Block: 11, Gas Used: 22848
+INFO 2026-04-22 15:52:28,909 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:28,968 blockchain_operations 17320 14868 Transaction sent: 0x42c41ed728ef6ff1641621c671bca1efffe9907f205afa5e9917ad4b16c54292
+INFO 2026-04-22 15:52:28,979 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x42c41ed728ef6ff1641621c671bca1efffe9907f205afa5e9917ad4b16c54292, Block: 12, Gas Used: 22848
+INFO 2026-04-22 15:52:28,985 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,023 blockchain_operations 17320 14868 Transaction sent: 0x0ed28cf883268fb01be09a57d721bade930e73405b2d233aaa61904db9e51733
+INFO 2026-04-22 15:52:29,033 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x0ed28cf883268fb01be09a57d721bade930e73405b2d233aaa61904db9e51733, Block: 13, Gas Used: 22848
+INFO 2026-04-22 15:52:29,039 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,081 blockchain_operations 17320 14868 Transaction sent: 0xc80b5b6bdee98c6f1e67fcf772c62e06ec8570e325ad58e2ed5e4180827690b2
+INFO 2026-04-22 15:52:29,089 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xc80b5b6bdee98c6f1e67fcf772c62e06ec8570e325ad58e2ed5e4180827690b2, Block: 14, Gas Used: 22848
+INFO 2026-04-22 15:52:29,098 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,140 blockchain_operations 17320 14868 Transaction sent: 0x7bc33992980809f164224990747b0966b7d8cce9523419628beaa3d9040e211e
+INFO 2026-04-22 15:52:29,144 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x7bc33992980809f164224990747b0966b7d8cce9523419628beaa3d9040e211e, Block: 15, Gas Used: 22848
+INFO 2026-04-22 15:52:29,149 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,180 blockchain_operations 17320 14868 Transaction sent: 0x7552b3e0ed9635f233190441708f929708dece1b30b75489a1a966f42b1ef384
+INFO 2026-04-22 15:52:29,185 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x7552b3e0ed9635f233190441708f929708dece1b30b75489a1a966f42b1ef384, Block: 16, Gas Used: 22848
+INFO 2026-04-22 15:52:29,190 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,222 blockchain_operations 17320 14868 Transaction sent: 0x0be46a9f8130bdbed57b58d0c5da1ef9ccc0a2270f16e0d5c1478f119f37e028
+INFO 2026-04-22 15:52:29,227 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x0be46a9f8130bdbed57b58d0c5da1ef9ccc0a2270f16e0d5c1478f119f37e028, Block: 17, Gas Used: 22848
+INFO 2026-04-22 15:52:29,233 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,278 blockchain_operations 17320 14868 Transaction sent: 0xd73b197bc5708b1c15fe15861094a62c01281758c21f197529ec06aba0b8bb2c
+INFO 2026-04-22 15:52:29,285 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xd73b197bc5708b1c15fe15861094a62c01281758c21f197529ec06aba0b8bb2c, Block: 18, Gas Used: 22848
+INFO 2026-04-22 15:52:29,291 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,324 blockchain_operations 17320 14868 Transaction sent: 0x8cd77af49fb6ec2bce3f23c8005bf57cebf28517b3342a9eacff03ff0f100b28
+INFO 2026-04-22 15:52:29,334 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x8cd77af49fb6ec2bce3f23c8005bf57cebf28517b3342a9eacff03ff0f100b28, Block: 19, Gas Used: 22848
+INFO 2026-04-22 15:52:29,340 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,367 blockchain_operations 17320 14868 Transaction sent: 0x572e9293f6a77d6425f354e0a0d4c4790b3654dbaca487dff2aa4c3b3953cdfd
+INFO 2026-04-22 15:52:29,372 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x572e9293f6a77d6425f354e0a0d4c4790b3654dbaca487dff2aa4c3b3953cdfd, Block: 20, Gas Used: 22848
+INFO 2026-04-22 15:52:29,377 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,404 blockchain_operations 17320 14868 Transaction sent: 0xbbfcc170996e5add9842457906b4c44e603a20c03c9431a543f0f08ad0a89e67
+INFO 2026-04-22 15:52:29,409 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xbbfcc170996e5add9842457906b4c44e603a20c03c9431a543f0f08ad0a89e67, Block: 21, Gas Used: 22848
+INFO 2026-04-22 15:52:29,414 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,443 blockchain_operations 17320 14868 Transaction sent: 0x781e4b0f2ca4f9347fe5893d1ad3d03264b76f41817fb64e471d033b46e8ee7a
+INFO 2026-04-22 15:52:29,447 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x781e4b0f2ca4f9347fe5893d1ad3d03264b76f41817fb64e471d033b46e8ee7a, Block: 22, Gas Used: 22848
+INFO 2026-04-22 15:52:29,451 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,477 blockchain_operations 17320 14868 Transaction sent: 0xb4d81c971f95edd201a087c06b762637a9c1347c1f41d0b9afd498796c899659
+INFO 2026-04-22 15:52:29,481 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xb4d81c971f95edd201a087c06b762637a9c1347c1f41d0b9afd498796c899659, Block: 23, Gas Used: 22848
+INFO 2026-04-22 15:52:29,487 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,522 blockchain_operations 17320 14868 Transaction sent: 0x59579c1e3a9f45dfaaecb8c17d9cd3550caf441d1f401b2509f7f25426a9918e
+INFO 2026-04-22 15:52:29,528 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x59579c1e3a9f45dfaaecb8c17d9cd3550caf441d1f401b2509f7f25426a9918e, Block: 24, Gas Used: 22848
+INFO 2026-04-22 15:52:29,532 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,576 blockchain_operations 17320 14868 Transaction sent: 0xba9d1445684e15a37ad72cd3f437633e4214cef89f2f444d472f353ffd8785bb
+INFO 2026-04-22 15:52:29,584 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xba9d1445684e15a37ad72cd3f437633e4214cef89f2f444d472f353ffd8785bb, Block: 25, Gas Used: 22848
+INFO 2026-04-22 15:52:29,590 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,629 blockchain_operations 17320 14868 Transaction sent: 0xce6f8e97eec58ff896a4067107bcdbe4a9a283a46ba8a39344dee21946262e2e
+INFO 2026-04-22 15:52:29,633 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xce6f8e97eec58ff896a4067107bcdbe4a9a283a46ba8a39344dee21946262e2e, Block: 26, Gas Used: 22848
+INFO 2026-04-22 15:52:29,638 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,671 blockchain_operations 17320 14868 Transaction sent: 0x36b91fd09b329464c6d7d02361afa7d733b6e1194fb1a6eca6011b7f4e6deee1
+INFO 2026-04-22 15:52:29,676 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x36b91fd09b329464c6d7d02361afa7d733b6e1194fb1a6eca6011b7f4e6deee1, Block: 27, Gas Used: 22848
+INFO 2026-04-22 15:52:29,682 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,715 blockchain_operations 17320 14868 Transaction sent: 0x1b574b479a6181320bce49d6399331bd3bd8fa686cbca31892577cd79d082385
+INFO 2026-04-22 15:52:29,720 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x1b574b479a6181320bce49d6399331bd3bd8fa686cbca31892577cd79d082385, Block: 28, Gas Used: 22848
+INFO 2026-04-22 15:52:29,726 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,758 blockchain_operations 17320 14868 Transaction sent: 0x05549c365c28915d6db88c6836f186ad7673f816e29a5d55ec0e41b58da16300
+INFO 2026-04-22 15:52:29,767 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x05549c365c28915d6db88c6836f186ad7673f816e29a5d55ec0e41b58da16300, Block: 29, Gas Used: 22848
+INFO 2026-04-22 15:52:29,773 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,801 blockchain_operations 17320 14868 Transaction sent: 0x13fb45a201efa0f84b20beaf39b3860d7aa14b2b8c549da84e746513c11b6634
+INFO 2026-04-22 15:52:29,808 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x13fb45a201efa0f84b20beaf39b3860d7aa14b2b8c549da84e746513c11b6634, Block: 30, Gas Used: 22848
+INFO 2026-04-22 15:52:29,814 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,849 blockchain_operations 17320 14868 Transaction sent: 0xafe307005fe43c036ca5f1132be52cbf737a826b4ac9c80dfb2db1cbb3adfce7
+INFO 2026-04-22 15:52:29,852 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0xafe307005fe43c036ca5f1132be52cbf737a826b4ac9c80dfb2db1cbb3adfce7, Block: 31, Gas Used: 22848
+INFO 2026-04-22 15:52:29,858 blockchain_operations 17320 14868 Storing attendance on blockchain for STU001
+INFO 2026-04-22 15:52:29,886 blockchain_operations 17320 14868 Transaction sent: 0x216fb60c702442e3fa7f38bffb85809bd826203f6c1428125e59e328a0945175
+INFO 2026-04-22 15:52:29,890 blockchain_operations 17320 14868 Attendance stored successfully. TxHash: 0x216fb60c702442e3fa7f38bffb85809bd826203f6c1428125e59e328a0945175, Block: 32, Gas Used: 22848
+INFO 2026-04-22 16:07:24,868 runserver 15376 4812 [mHTTP GET /api/auth/user/ 200 [0.06, 127.0.0.1:53680][0m
+INFO 2026-04-22 16:07:24,899 runserver 15376 4812 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:53682][0m
+INFO 2026-04-22 16:07:24,988 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.04, 127.0.0.1:53684][0m
+INFO 2026-04-22 16:07:25,049 runserver 15376 4812 [mHTTP GET /api/student/dashboard/ 200 [0.05, 127.0.0.1:53686][0m
+INFO 2026-04-22 16:07:28,308 runserver 15376 4812 [mHTTP POST /api/auth/logout/ 200 [0.05, 127.0.0.1:53688][0m
+INFO 2026-04-22 16:07:32,925 runserver 15376 4812 [mHTTP POST /api/auth/login/ 200 [1.05, 127.0.0.1:65504][0m
+INFO 2026-04-22 16:07:33,001 runserver 15376 4812 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:49168][0m
+INFO 2026-04-22 16:07:33,026 runserver 15376 4812 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:56571][0m
+INFO 2026-04-22 16:07:46,441 runserver 15376 4812 [mHTTP GET /api/attendance/?search= 200 [0.04, 127.0.0.1:50214][0m
+INFO 2026-04-22 16:07:46,480 runserver 15376 4812 [mHTTP GET /api/attendance/?search= 200 [0.03, 127.0.0.1:61961][0m
