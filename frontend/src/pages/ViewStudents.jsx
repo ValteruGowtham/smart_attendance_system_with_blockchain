@@ -10,6 +10,7 @@ export default function ViewStudents() {
   const [editForm, setEditForm] = useState({});
   const [profilePic, setProfilePic] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sectionFilter, setSectionFilter] = useState('');
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -73,12 +74,16 @@ export default function ViewStudents() {
     }
   };
 
-  const filteredStudents = students.filter(s =>
-    s.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.registration_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.branch?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const sections = [...new Set(students.map(s => s.section).filter(Boolean))].sort();
+
+  const filteredStudents = students.filter(s => {
+    const matchesSearch = s.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          s.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          s.registration_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          s.branch?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSection = sectionFilter ? s.section === sectionFilter : true;
+    return matchesSearch && matchesSection;
+  });
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -104,17 +109,29 @@ export default function ViewStudents() {
       </div>
 
       {/* Search Bar */}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <HiOutlineSearch className="w-5 h-5 text-gray-400" />
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="relative flex-1">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <HiOutlineSearch className="w-5 h-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search by name, registration ID, or branch..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+          />
         </div>
-        <input
-          type="text"
-          placeholder="Search by name, registration ID, or branch..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
-        />
+        <select
+          value={sectionFilter}
+          onChange={(e) => setSectionFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm outline-none"
+        >
+          <option value="">All Sections</option>
+          {sections.map(sec => (
+            <option key={sec} value={sec}>Section {sec}</option>
+          ))}
+        </select>
       </div>
 
       {/* Table */}

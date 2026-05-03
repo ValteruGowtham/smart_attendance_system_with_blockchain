@@ -11,6 +11,7 @@ export default function ViewAttendance() {
   const [presentCount, setPresentCount] = useState(0);
   const [absentCount, setAbsentCount] = useState(0);
   const [search, setSearch] = useState('');
+  const [sectionFilter, setSectionFilter] = useState('');
 
   const fetchData = (q = '') => {
     getAttendance(q).then((r) => {
@@ -27,14 +28,21 @@ export default function ViewAttendance() {
     fetchData(search);
   };
 
-  const attendanceRate = presentCount + absentCount > 0 
-    ? ((presentCount / (presentCount + absentCount)) * 100).toFixed(1) 
+  const sections = [...new Set(records.map(r => r.section).filter(Boolean))].sort();
+
+  const filteredRecords = records.filter(r => sectionFilter ? r.section === sectionFilter : true);
+  
+  const displayPresent = sectionFilter ? filteredRecords.filter(r => r.status === 'Present').length : presentCount;
+  const displayAbsent = sectionFilter ? filteredRecords.filter(r => r.status === 'Absent').length : absentCount;
+
+  const attendanceRate = displayPresent + displayAbsent > 0 
+    ? ((displayPresent / (displayPresent + displayAbsent)) * 100).toFixed(1) 
     : 0;
 
   const chartData = {
     labels: ['Present', 'Absent'],
     datasets: [{
-      data: [presentCount, absentCount],
+      data: [displayPresent, displayAbsent],
       backgroundColor: ['#10b981', '#ef4444'],
       borderWidth: 0,
       borderRadius: 8,
@@ -78,7 +86,7 @@ export default function ViewAttendance() {
             </div>
           </div>
           <div className="text-right hidden md:block">
-            <div className="text-3xl font-bold">{records.length}</div>
+            <div className="text-3xl font-bold">{filteredRecords.length}</div>
             <div className="text-amber-100 text-sm">Total Records</div>
           </div>
         </div>
@@ -100,6 +108,16 @@ export default function ViewAttendance() {
                 placeholder="Search by Registration ID or Faculty UID"
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent"
               />
+              <select
+                value={sectionFilter}
+                onChange={(e) => setSectionFilter(e.target.value)}
+                className="px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+              >
+                <option value="">All Sections</option>
+                {sections.map(sec => (
+                  <option key={sec} value={sec}>Section {sec}</option>
+                ))}
+              </select>
               <button 
                 type="submit" 
                 className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg"
@@ -109,7 +127,7 @@ export default function ViewAttendance() {
               {search && (
                 <button 
                   type="button" 
-                  onClick={() => { setSearch(''); fetchData(''); }} 
+                  onClick={() => { setSearch(''); setSectionFilter(''); fetchData(''); }} 
                   className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors"
                 >
                   Clear
@@ -133,11 +151,11 @@ export default function ViewAttendance() {
                 </div>
                 <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-100">
                   <div className="text-center p-2 bg-green-50 rounded-lg">
-                    <div className="text-xl font-bold text-green-600">{presentCount}</div>
+                    <div className="text-xl font-bold text-green-600">{displayPresent}</div>
                     <div className="text-xs text-gray-500 font-medium">Present</div>
                   </div>
                   <div className="text-center p-2 bg-red-50 rounded-lg">
-                    <div className="text-xl font-bold text-red-600">{absentCount}</div>
+                    <div className="text-xl font-bold text-red-600">{displayAbsent}</div>
                     <div className="text-xs text-gray-500 font-medium">Absent</div>
                   </div>
                   <div className="text-center p-2 bg-amber-50 rounded-lg">
@@ -177,8 +195,8 @@ export default function ViewAttendance() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 bg-white">
-              {records.length > 0 ? (
-                records.map((a, i) => (
+              {filteredRecords.length > 0 ? (
+                filteredRecords.map((a, i) => (
                   <tr
                     key={i}
                     className="hover:bg-gray-50 transition-colors"
