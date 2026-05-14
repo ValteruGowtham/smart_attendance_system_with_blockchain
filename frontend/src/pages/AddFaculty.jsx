@@ -5,6 +5,8 @@ import Toast from '../components/Toast';
 import { HiOutlineUser, HiOutlineKey, HiOutlinePhone } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 
+
+
 export default function AddFaculty() {
   const navigate = useNavigate();
   const [toast, setToast] = useState(null);
