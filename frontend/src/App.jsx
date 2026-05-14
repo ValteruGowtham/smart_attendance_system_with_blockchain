@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-import AdminHome from './pages/AdminHome';
+import AdminHome from './pages/AdminDashboard';
 import AddStudent from './pages/AddStudent';
 import AddFaculty from './pages/AddFaculty';
 import ViewStudents from './pages/ViewStudents';
@@ -11,12 +13,15 @@ import ViewFaculty from './pages/ViewFaculty';
 import ViewAttendance from './pages/ViewAttendance';
 import FacultyDashboard from './pages/FacultyDashboard';
 import StudentDashboard from './pages/StudentDashboard';
+import AttendanceAlerts from './pages/AttendanceAlerts';
+import AttendanceCalendar from './pages/AttendanceCalendar';
+import StudentEnroll from './pages/StudentEnroll';
+import SessionReport from './pages/SessionReport';
+import NotificationsCenter from './pages/NotificationsCenter';
 import './index.css';
 
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth();
-  
-  console.log('ProtectedRoute - loading:', loading, 'user:', user, 'roles:', roles);
   
   if (loading) {
     return (
@@ -30,13 +35,13 @@ function ProtectedRoute({ children, roles }) {
   }
   
   if (!user) {
-    console.log('No user, redirecting to login');
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
   
+  // Check role if specified
   if (roles && !roles.includes(user.role)) {
-    console.log('User role not allowed:', user.role);
-    return <Navigate to="/" />;
+    console.warn(`Access denied: User role '${user.role}' not in allowed roles:`, roles);
+    return <Navigate to="/" replace />;
   }
   
   return children;
@@ -44,8 +49,6 @@ function ProtectedRoute({ children, roles }) {
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth();
-  
-  console.log('PublicRoute - loading:', loading, 'user:', user);
   
   if (loading) {
     return (
@@ -58,11 +61,18 @@ function PublicRoute({ children }) {
     );
   }
   
+  // If user is already logged in, redirect to appropriate dashboard
   if (user) {
-    if (user.role === 'admin') return <Navigate to="/admin" />;
-    if (user.role === 'faculty') return <Navigate to="/faculty/dashboard" />;
-    if (user.role === 'student') return <Navigate to="/student/dashboard" />;
+    if (user.role === 'admin') {
+      return <Navigate to="/admin" replace />;
+    } else if (user.role === 'faculty') {
+      return <Navigate to="/faculty/dashboard" replace />;
+    } else if (user.role === 'student') {
+      return <Navigate to="/student/dashboard" replace />;
+    }
   }
+  
+  // User not logged in, show public page
   return children;
 }
 
@@ -83,9 +93,14 @@ function AppRoutes() {
 
       {/* Faculty */}
       <Route path="/faculty/dashboard" element={<ProtectedRoute roles={['faculty']}><FacultyDashboard /></ProtectedRoute>} />
+      <Route path="/faculty/session-report" element={<ProtectedRoute roles={['faculty']}><SessionReport /></ProtectedRoute>} />
+      <Route path="/faculty/attendance-alerts" element={<ProtectedRoute roles={['faculty']}><AttendanceAlerts /></ProtectedRoute>} />
 
       {/* Student */}
       <Route path="/student/dashboard" element={<ProtectedRoute roles={['student']}><StudentDashboard /></ProtectedRoute>} />
+      <Route path="/student/attendance-calendar" element={<ProtectedRoute roles={['student']}><AttendanceCalendar /></ProtectedRoute>} />
+      <Route path="/student/enroll" element={<ProtectedRoute roles={['student']}><StudentEnroll /></ProtectedRoute>} />
+      <Route path="/student/notifications" element={<ProtectedRoute roles={['student']}><NotificationsCenter /></ProtectedRoute>} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" />} />
@@ -96,15 +111,19 @@ function AppRoutes() {
 export default function App() {
   console.log('App rendering...');
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <ThemeProvider>
         <AuthProvider>
-          <Header />
-          <main style={{ maxWidth: '6xl', margin: '0 auto', padding: '1.5rem' }}>
-            <AppRoutes />
-          </main>
+          <ToastProvider position="top-right">
+            <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+              <Header />
+              <main style={{ maxWidth: '6xl', margin: '0 auto', padding: '1.5rem' }}>
+                <AppRoutes />
+              </main>
+            </div>
+          </ToastProvider>
         </AuthProvider>
-      </BrowserRouter>
-    </div>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }

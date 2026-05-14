@@ -9,3 +9,7 @@ opencv-python
 requests
 tqdm
 pytz
+web3==6.15.1
+tenacity
+daphne
+channels

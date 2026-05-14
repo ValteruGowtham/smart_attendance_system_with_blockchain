@@ -26,9 +26,16 @@ urlpatterns = [
     path('attendance/', api_views.api_attendance_list, name='api_attendance_list'),
     path('attendance/window/open/', api_views.api_attendance_window_open, name='api_attendance_window_open'),
     path('attendance/mark/', api_views.api_mark_attendance, name='api_mark_attendance'),
+    path('attendance/mark/multi/', api_views.api_mark_attendance_multi, name='api_mark_attendance_multi'),
     path('attendance/window/close/', api_views.api_attendance_window_close, name='api_attendance_window_close'),
 
     # Dashboards
     path('faculty/dashboard/', api_views.api_faculty_dashboard, name='api_faculty_dashboard'),
     path('student/dashboard/', api_views.api_student_dashboard, name='api_student_dashboard'),
+
+    # Attendance Prediction
+    path('prediction/', api_views.api_attendance_prediction, name='api_attendance_prediction'),
+    path('prediction/student/<str:registration_id>/', api_views.api_student_prediction_by_id, name='api_student_prediction_by_id'),
+    path('prediction/at-risk/', api_views.api_class_at_risk_students, name='api_class_at_risk_students'),
+    path('prediction/calculate/', api_views.api_calculate_prediction, name='api_calculate_prediction'),
 ]

@@ -139,3 +139,27 @@ def compare_embeddings(embedding1, embedding2, threshold=0.6):
     except Exception as e:
         print(f"Error comparing embeddings: {e}")
         return False
+
+
+def get_embedding_similarity(embedding1, embedding2):
+    """
+    Calculate cosine similarity between two face embeddings
+    Args:
+        embedding1: numpy array
+        embedding2: numpy array
+    Returns:
+        float: similarity score (0-1), or 0.0 if error
+    """
+    try:
+        if embedding1 is None or embedding2 is None:
+            return 0.0
+        
+        # Calculate cosine similarity
+        similarity = np.dot(embedding1, embedding2) / (
+            np.linalg.norm(embedding1) * np.linalg.norm(embedding2)
+        )
+        
+        return float(similarity)
+    except Exception as e:
+        print(f"Error calculating similarity: {e}")
+        return 0.0

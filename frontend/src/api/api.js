@@ -6,6 +6,18 @@ const API = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+// ─── Request Interceptor - Add Token to All Requests ───────────
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // ─── Auth ─────────────────────────────────────────────────────
 export const getUserInfo = () => API.get('/auth/user/');
 export const loginUser = (username, password) =>
@@ -14,6 +26,9 @@ export const logoutUser = () => API.post('/auth/logout/');
 
 // ─── Admin ────────────────────────────────────────────────────
 export const getAdminStats = () => API.get('/admin/stats/');
+
+// ─── Public ───────────────────────────────────────────────────
+export const getPublicStats = () => API.get('/public/stats/');
 
 // ─── Students CRUD ────────────────────────────────────────────────
 export const getStudents = () => API.get('/students/');
