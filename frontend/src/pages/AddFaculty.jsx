@@ -5,6 +5,8 @@ import Toast from '../components/Toast';
 import { HiOutlineUser, HiOutlineKey, HiOutlinePhone } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 
+
+
 export default function AddFaculty() {
   const navigate = useNavigate();
   const [toast, setToast] = useState(null);
@@ -49,8 +51,8 @@ export default function AddFaculty() {
             <HiOutlineUser className="w-8 h-8" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Add New Faculty</h1>
-            <p className="text-emerald-100 text-sm">Register a new faculty member to the system</p>
+            <h1 className="text-2xl font-bold">Add New Faculty.</h1>
+            <p className="text-emerald-100 text-sm">Register a new faculty member to the system.</p>
           </div>
         </div>
       </motion.div>
