@@ -122,6 +122,32 @@ class AttendanceBlockchainStorage:
         except Exception as e:
             logger.error(f"Error getting blockchain stats: {e}")
             return None
+
+    def get_transaction_details(self, tx_hash):
+        """Fetch transaction details from the blockchain."""
+        try:
+            if not self.verify_blockchain_connection():
+                return None
+            
+            w3 = self.manager.w3
+            receipt = w3.eth.get_transaction_receipt(tx_hash)
+            tx = w3.eth.get_transaction(tx_hash)
+            
+            if not receipt or not tx:
+                return None
+                
+            return {
+                "hash": tx_hash,
+                "block_number": receipt.blockNumber,
+                "from": tx['from'],
+                "to": tx['to'],
+                "gas_used": receipt.gasUsed,
+                "status": receipt.status, # 1 for success
+                "confirmations": w3.eth.block_number - receipt.blockNumber
+            }
+        except Exception as e:
+            logger.error(f"Error fetching tx details: {e}")
+            return None
         
         except Exception as e:
             logger.error(f"Error verifying blockchain connection: {e}")

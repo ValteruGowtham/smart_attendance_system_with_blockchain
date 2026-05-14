@@ -80,15 +80,17 @@ def get_class_students(branch, year, section):
     return Student.objects.filter(branch__iexact=branch, year__iexact=year, section__iexact=section)
 
 
-def get_today_class_records(faculty, branch, year, section, period):
-    return Attendance.objects.filter(
+def get_today_class_records(faculty, branch, year, section, period, course_id=None):
+    qs = Attendance.objects.filter(
         date=date.today(),
-        branch=branch,
-        year=year,
-        section=section,
         period=period,
         faculty=faculty,
     )
+    if course_id:
+        qs = qs.filter(course_id=course_id)
+    else:
+        qs = qs.filter(branch=branch, year=year, section=section)
+    return qs
 
 
 def get_period_cutoff(period):
@@ -101,10 +103,17 @@ def get_period_cutoff(period):
     return period_start + timedelta(minutes=9, seconds=59)
 
 
-def close_attendance_window_and_mark_absent(faculty, branch, year, section, period):
+def close_attendance_window_and_mark_absent(faculty, branch, year, section, period, course_id=None):
     """Create Absent entries for students not yet recorded in this class-period."""
-    students = get_class_students(branch, year, section)
-    existing_records = get_today_class_records(faculty, branch, year, section, period)
+    if course_id:
+        from .models import Course
+        course = Course.objects.get(id=course_id)
+        students = course.students.all()
+    else:
+        course = None
+        students = get_class_students(branch, year, section)
+        
+    existing_records = get_today_class_records(faculty, branch, year, section, period, course_id)
     recorded_student_ids = set(existing_records.values_list('student_id', flat=True))
     period_start_time = get_period_start_time(period)
 
@@ -121,11 +130,12 @@ def close_attendance_window_and_mark_absent(faculty, branch, year, section, peri
             year=year,
             section=section,
             period=period,
+            course=course,
             status='Absent',
         )
         created_absent += 1
 
-    final_records = get_today_class_records(faculty, branch, year, section, period)
+    final_records = get_today_class_records(faculty, branch, year, section, period, course_id)
     return created_absent, final_records
 
 
@@ -230,6 +240,98 @@ def api_admin_stats(request):
         'total_students': Student.objects.count(),
         'total_faculty': Faculty.objects.count(),
         'total_attendance': Attendance.objects.count(),
+    })
+
+
+# ─── Public stats (no auth required) ────────────────────────
+def api_public_stats(request):
+    """Return real aggregate numbers for the landing page. No login required."""
+    from .models import Course
+    total_students = Student.objects.count()
+    total_faculty = Faculty.objects.count()
+    total_attendance = Attendance.objects.count()
+    total_courses = Course.objects.count()
+    present_count = Attendance.objects.filter(status__iexact='Present').count()
+    present_pct = round((present_count / total_attendance * 100), 1) if total_attendance > 0 else 0
+
+    return JsonResponse({
+        'total_students': total_students,
+        'total_faculty': total_faculty,
+        'total_attendance': total_attendance,
+        'total_courses': total_courses,
+        'present_count': present_count,
+        'present_percentage': present_pct,
+    })
+
+
+# ─── Blockchain Info ───────────────────────────────────────
+def api_blockchain_info(request):
+    """Return blockchain network status and recent transactions."""
+    from blockchain.blockchain_operations import get_blockchain_storage
+    storage = get_blockchain_storage()
+    stats = storage.get_blockchain_stats()
+    is_simulated = False
+    
+    if not stats:
+        is_simulated = True
+        stats = {
+            "network_id": "1337",
+            "latest_block": Attendance.objects.count() + 1000,
+            "gas_price": 2000000000,
+            "accounts_count": 10,
+            "contract_address": "0x789...abcd (Demo)",
+            "connection_url": "Demo Ledger (Local)"
+        }
+        
+    # Get recent attendance records that have a tx hash
+    recent_records = Attendance.objects.filter(blockchain_tx__isnull=False).select_related('student', 'course').order_by('-id')[:10]
+    transactions = [{
+        'tx_hash': r.blockchain_tx,
+        'student': f"{r.student.first_name} {r.student.last_name}",
+        'reg_id': r.student.registration_id,
+        'course': r.course.course_name if r.course else 'N/A',
+        'date': str(r.date),
+        'status': r.blockchain_status,
+    } for r in recent_records]
+    
+    return JsonResponse({
+        'stats': stats,
+        'transactions': transactions,
+        'is_simulated': is_simulated
+    })
+
+
+def api_verify_transaction(request):
+    """Verify a transaction hash on the blockchain."""
+    tx_hash = request.GET.get('hash')
+    if not tx_hash:
+        return JsonResponse({'error': 'No hash provided'}, status=400)
+        
+    from blockchain.blockchain_operations import get_blockchain_storage
+    storage = get_blockchain_storage()
+    details = storage.get_transaction_details(tx_hash)
+    
+    if not details:
+        # Fallback: check if it's a fake hash from our seed
+        record = Attendance.objects.filter(blockchain_tx=tx_hash).first()
+        if record:
+            return JsonResponse({
+                'found': True,
+                'is_demo': True,
+                'details': {
+                    'hash': tx_hash,
+                    'student': f"{record.student.first_name} {record.student.last_name}",
+                    'course': record.course.course_name if record.course else 'N/A',
+                    'date': str(record.date),
+                    'status': 'Confirmed (Demo Ledger)'
+                }
+            })
+        return JsonResponse({'found': False, 'error': 'Transaction not found on network'}, status=404)
+        
+    return JsonResponse({
+        'found': True,
+        'is_demo': False,
+        'details': details
     })
 
 
@@ -502,7 +604,7 @@ def api_attendance_list(request):
 # ─── Faculty Dashboard ───────────────────────────────────────
 @api_login_required
 def api_faculty_dashboard(request):
-    """Return faculty dashboard metadata (branches, years, sections, periods)."""
+    """Return faculty dashboard metadata (branches, years, sections, periods, courses)."""
     faculty = getattr(request.user, 'faculty_profile', None)
     if not faculty:
         return JsonResponse({'error': 'Not a faculty member'}, status=403)
@@ -512,6 +614,16 @@ def api_faculty_dashboard(request):
     sections = list(Student.objects.values_list('section', flat=True).distinct().order_by('section'))
     periods = ['1', '2', '3', '4', '5', '6', '7', '8']
 
+    courses = Course.objects.filter(faculty=faculty)
+    courses_data = [{
+        'id': c.id,
+        'course_code': c.course_code,
+        'course_name': c.course_name,
+        'branch': c.branch,
+        'year': c.year,
+        'section': c.section,
+    } for c in courses]
+
     return JsonResponse({
         'faculty_name': str(faculty),
         'branches': branches,
@@ -519,6 +631,7 @@ def api_faculty_dashboard(request):
         'sections': sections,
         'periods': periods,
         'period_slots': {k: v['label'] for k, v in PERIOD_TIME_SLOTS.items()},
+        'courses': courses_data,
     })
 
 
@@ -531,6 +644,7 @@ def api_attendance_window_open(request):
     if not faculty:
         return JsonResponse({'error': 'Not a faculty member'}, status=403)
 
+    course_id = request.POST.get('course_id')
     branch = request.POST.get('branch', '')
     year = request.POST.get('year', '')
     section = request.POST.get('section', '')
@@ -540,9 +654,22 @@ def api_attendance_window_open(request):
     if not period_start_time:
         return JsonResponse({'error': 'Current time is outside attendance periods (09:00 AM - 05:00 PM).'}, status=400)
 
-    students = get_class_students(branch, year, section)
-    if not students.exists():
-        return JsonResponse({'error': f'No students found for {branch}-{year}-{section}.'}, status=400)
+    course = None
+    if course_id:
+        try:
+            course = Course.objects.get(id=course_id)
+            students = course.students.all()
+            if not students.exists():
+                return JsonResponse({'error': f'No students enrolled in course {course.course_name}.'}, status=400)
+            branch = course.branch or branch
+            year = course.year or year
+            section = course.section or section
+        except Course.DoesNotExist:
+            return JsonResponse({'error': 'Selected course not found.'}, status=404)
+    else:
+        students = get_class_students(branch, year, section)
+        if not students.exists():
+            return JsonResponse({'error': f'No students found for {branch}-{year}-{section}.'}, status=400)
 
     cutoff = get_period_cutoff(period)
     now = timezone.localtime(timezone.now()).replace(tzinfo=None)
@@ -550,7 +677,7 @@ def api_attendance_window_open(request):
     # If already past cutoff, auto-close by marking absentees.
     if (not EXPO_SCREENSHOT_MODE) and cutoff and now > cutoff:
         created_absent, final_records = close_attendance_window_and_mark_absent(
-            faculty, branch, year, section, period
+            faculty, branch, year, section, period, course_id=course_id
         )
         return JsonResponse({
             'success': False,
@@ -588,6 +715,7 @@ def api_mark_attendance(request):
     if not faculty:
         return JsonResponse({'error': 'Not a faculty member'}, status=403)
 
+    course_id = request.POST.get('course_id')
     branch = request.POST.get('branch', '')
     year = request.POST.get('year', '')
     section = request.POST.get('section', '')
@@ -601,15 +729,28 @@ def api_mark_attendance(request):
     if not face_image_data.strip():
         return JsonResponse({'error': 'Please capture a face image before submitting.'}, status=400)
 
-    students = get_class_students(branch, year, section)
-    if not students.exists():
-        return JsonResponse({'error': f'No students found for {branch}-{year}-{section}.'}, status=400)
+    course = None
+    if course_id:
+        try:
+            course = Course.objects.get(id=course_id)
+            students = course.students.all()
+            if not students.exists():
+                return JsonResponse({'error': f'No students enrolled in course {course.course_name}.'}, status=400)
+            branch = course.branch or branch
+            year = course.year or year
+            section = course.section or section
+        except Course.DoesNotExist:
+            return JsonResponse({'error': 'Selected course not found.'}, status=404)
+    else:
+        students = get_class_students(branch, year, section)
+        if not students.exists():
+            return JsonResponse({'error': f'No students found for {branch}-{year}-{section}.'}, status=400)
 
     cutoff = get_period_cutoff(period)
     now = timezone.localtime(timezone.now()).replace(tzinfo=None)
     if (not EXPO_SCREENSHOT_MODE) and cutoff and now > cutoff:
         created_absent, final_records = close_attendance_window_and_mark_absent(
-            faculty, branch, year, section, period
+            faculty, branch, year, section, period, course_id=course_id
         )
         return JsonResponse({
             'error': 'Attendance window closed (cutoff reached).',
@@ -653,6 +794,7 @@ def api_mark_attendance(request):
         year=year,
         section=section,
         period=period,
+        course=course,
         defaults={
             'time': period_start_time,
             'status': 'Present',
@@ -708,6 +850,7 @@ def api_mark_attendance_multi(request):
     if not faculty:
         return JsonResponse({'error': 'Not a faculty member'}, status=403)
 
+    course_id = request.POST.get('course_id')
     branch = request.POST.get('branch', '')
     year = request.POST.get('year', '')
     section = request.POST.get('section', '')
@@ -721,9 +864,22 @@ def api_mark_attendance_multi(request):
     if not face_image_data.strip():
         return JsonResponse({'error': 'Please capture a face image before submitting.'}, status=400)
 
-    students = get_class_students(branch, year, section)
-    if not students.exists():
-        return JsonResponse({'error': f'No students found for {branch}-{year}-{section}.'}, status=400)
+    course = None
+    if course_id:
+        try:
+            course = Course.objects.get(id=course_id)
+            students = course.students.all()
+            if not students.exists():
+                return JsonResponse({'error': f'No students enrolled in course {course.course_name}.'}, status=400)
+            branch = course.branch or branch
+            year = course.year or year
+            section = course.section or section
+        except Course.DoesNotExist:
+            return JsonResponse({'error': 'Selected course not found.'}, status=404)
+    else:
+        students = get_class_students(branch, year, section)
+        if not students.exists():
+            return JsonResponse({'error': f'No students found for {branch}-{year}-{section}.'}, status=400)
 
     # Check if students have embeddings
     students_with_embeddings = students.exclude(face_embedding__isnull=True).exclude(face_embedding='')
@@ -736,7 +892,7 @@ def api_mark_attendance_multi(request):
     now = timezone.localtime(timezone.now()).replace(tzinfo=None)
     if (not EXPO_SCREENSHOT_MODE) and cutoff and now > cutoff:
         created_absent, final_records = close_attendance_window_and_mark_absent(
-            faculty, branch, year, section, period
+            faculty, branch, year, section, period, course_id=course_id
         )
         return JsonResponse({
             'error': 'Attendance window closed (cutoff reached).',
@@ -802,6 +958,7 @@ def api_mark_attendance_multi(request):
                     year=year,
                     section=section,
                     period=period,
+                    course=course,
                     defaults={
                         'time': period_start_time,
                         'status': 'Present',
@@ -925,7 +1082,7 @@ def api_student_dashboard(request):
     if not student:
         return JsonResponse({'error': 'Not a student'}, status=403)
 
-    attendances = Attendance.objects.filter(student=student).select_related('faculty', 'faculty__user').order_by('-date')
+    attendances = Attendance.objects.filter(student=student).select_related('faculty', 'faculty__user', 'course').order_by('-date')
     total = attendances.count()
     present = attendances.filter(status__iexact='Present').count()
     absent = total - present
@@ -935,9 +1092,12 @@ def api_student_dashboard(request):
         'date': str(a.date) if a.date else '',
         'time': get_period_time_label(a.period) or format_time_short(a.time),
         'faculty_name': f"{a.faculty.user.first_name} {a.faculty.user.last_name}",
+        'course_name': a.course.course_name if hasattr(a, 'course') and a.course else None,
         'period': a.period,
         'period_time': get_period_time_label(a.period),
         'status': a.status,
+        'blockchain_tx': a.blockchain_tx,
+        'blockchain_status': a.blockchain_status,
     } for a in attendances]
 
     return JsonResponse({

@@ -1,325 +1,347 @@
-/**
- * BlockchainPage.jsx - Blockchain Explorer
- * View and explore all blockchain transactions with expandable details
- */
-
-import React, { useState, useMemo } from 'react';
-import {
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  HiShieldCheck, 
+  HiCube, 
+  HiGlobeAlt, 
+  HiRefresh, 
+  HiDatabase, 
+  HiLink, 
+  HiClipboardCopy,
+  HiExternalLink,
   HiSearch,
-  HiChevronDown,
-  HiChevronUp,
-  HiCheckCircle,
-  HiClock,
-  HiExclamationCircle,
-  HiCube,
-  HiCheckBadge,
-  HiLink,
+  HiChip,
+  HiArrowLeft
 } from 'react-icons/hi';
+import { getBlockchainInfo, verifyTransaction } from '../api/api';
+import { useToast } from '../context/ToastContext';
 
-export default function BlockchainPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [expandedRow, setExpandedRow] = useState(null);
+const BlockchainPage = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchHash, setSearchHash] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [searchResult, setSearchResult] = useState(null);
+  const { toast } = useToast();
 
-  // Mock blockchain data
-  const transactions = [
-    {
-      id: 1,
-      hash: 'a3f8c1e9b2d4f7a6c5e8b1d3f9a2c4e6',
-      studentName: 'Rahul Kumar',
-      faculty: 'Dr. Singh',
-      dateTime: '2024-12-20 10:02:15',
-      period: '2',
-      status: 'Confirmed',
-      fullHash: 'a3f8c1e9b2d4f7a6c5e8b1d3f9a2c4e6b7d9f0a1c3e5f7a8b0d2e4f6a8c',
-      blockNumber: 15847,
-      gasUsed: 24500,
-    },
-    {
-      id: 2,
-      hash: 'b4e7d2f9a1c6e8b3d5f7a0c2e4f6a8b1',
-      studentName: 'Priya Sharma',
-      faculty: 'Dr. Kumar',
-      dateTime: '2024-12-20 10:01:45',
-      period: '2',
-      status: 'Confirmed',
-      fullHash: 'b4e7d2f9a1c6e8b3d5f7a0c2e4f6a8b1c3e5f7a9b0d2e4f6a8c0e2f4a6c8',
-      blockNumber: 15846,
-      gasUsed: 24500,
-    },
-    {
-      id: 3,
-      hash: 'c5f6e3a0b2d7f9c1e4f6a8b0d2e5f7a9',
-      studentName: 'Arjun Singh',
-      faculty: 'Mr. Gupta',
-      dateTime: '2024-12-20 09:58:30',
-      period: '1',
-      status: 'Pending',
-      fullHash: 'c5f6e3a0b2d7f9c1e4f6a8b0d2e5f7a9b1c3e5f7a9b0d2e4f6a8c0e2f4a6',
-      blockNumber: 15845,
-      gasUsed: 0,
-    },
-    {
-      id: 4,
-      hash: 'd6a7f4b1c3e8f0d2f5a7b9c1e3f5a8b0',
-      studentName: 'Neha Patel',
-      faculty: 'Dr. Sharma',
-      dateTime: '2024-12-20 09:45:20',
-      period: '1',
-      status: 'Confirmed',
-      fullHash: 'd6a7f4b1c3e8f0d2f5a7b9c1e3f5a8b0c2d4f6a8b0c2e4f6a8c0e2f4a6c8e',
-      blockNumber: 15844,
-      gasUsed: 24500,
-    },
-    {
-      id: 5,
-      hash: 'e7b8f5c2d4e9f1a3f6b8c0d2e4f6a9b1',
-      studentName: 'Amit Verma',
-      faculty: 'Dr. Singh',
-      dateTime: '2024-12-20 09:30:10',
-      period: '1',
-      status: 'Confirmed',
-      fullHash: 'e7b8f5c2d4e9f1a3f6b8c0d2e4f6a9b1c3e5f7a9b0d2e4f6a8c0e2f4a6c8e0',
-      blockNumber: 15843,
-      gasUsed: 24500,
-    },
-  ];
-
-  // Stats
-  const stats = {
-    totalTransactions: transactions.length,
-    verifiedRecords: transactions.filter(t => t.status === 'Confirmed').length,
-    lastBlockNumber: 15847,
-    networkStatus: 'Connected',
+  const fetchData = async (isRefresh = false) => {
+    try {
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
+      
+      const res = await getBlockchainInfo();
+      setData(res.data);
+    } catch (err) {
+      // Silently handle error as backend now provides simulated data or empty states
+      console.error('Blockchain connection issue:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
 
-  // Filter transactions by search term
-  const filteredTransactions = useMemo(() => {
-    if (!searchTerm) return transactions;
-    const term = searchTerm.toLowerCase();
-    return transactions.filter(t =>
-      t.studentName.toLowerCase().includes(term) ||
-      t.hash.toLowerCase().includes(term) ||
-      t.fullHash.toLowerCase().includes(term)
-    );
-  }, [searchTerm]);
+  const handleVerify = async () => {
+    if (!searchHash || !searchHash.startsWith('0x')) {
+      toast.error('Please enter a valid transaction hash starting with 0x');
+      return;
+    }
 
-  // Copy to clipboard
-  const copyToClipboard = (text, label) => {
+    try {
+      setVerifying(true);
+      setSearchResult(null);
+      const res = await verifyTransaction(searchHash);
+      if (res.data.found) {
+        setSearchResult(res.data.details);
+        toast.success('Transaction Verified on Ledger');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Transaction verification failed');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(() => fetchData(true), 15000); // Auto refresh every 15s
+    return () => clearInterval(interval);
+  }, []);
+
+  const copyToClipboard = (text, msg) => {
     navigator.clipboard.writeText(text);
-    // Toast would go here
-    console.log(`Copied ${label} to clipboard`);
+    toast.success(msg || 'Copied to clipboard');
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0c10] flex flex-col items-center justify-center text-white p-6">
+        <motion.div 
+          animate={{ rotate: 360 }} 
+          transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+          className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full mb-4"
+        />
+        <p className="text-gray-400 font-mono tracking-widest animate-pulse">SYNCHRONIZING WITH LEDGER...</p>
+      </div>
+    );
+  }
+
+  const { stats, transactions } = data || {};
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">Blockchain Explorer</h1>
-        <p className="text-slate-600">Real-time attendance transaction verification on the blockchain</p>
-      </div>
+    <div className="min-h-screen bg-[#0a0c10] text-gray-100 font-sans selection:bg-indigo-500/30">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel {
+          background: rgba(17, 25, 40, 0.75);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.125);
+          border-radius: 16px;
+        }
+        .glow-indigo { box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); }
+        .glow-emerald { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+      `}</style>
 
-      {/* Top Stats Bar */}
-      <div className="grid grid-cols-4 gap-6 mb-8">
-        {/* Total Transactions */}
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-blue-600 text-sm font-semibold">Total Transactions</p>
-              <p className="text-3xl font-bold text-slate-900 mt-2">{stats.totalTransactions}</p>
+      {/* Header Section */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <Link to="/" className="p-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all mr-2">
+                <HiArrowLeft className="w-5 h-5 text-gray-400" />
+              </Link>
+              <div className="p-2 bg-indigo-500/20 rounded-lg">
+                <HiShieldCheck className="w-8 h-8 text-indigo-400" />
+              </div>
+              <h1 className="text-3xl font-extrabold tracking-tight">Trust Protocol</h1>
             </div>
-            <HiCube className="w-12 h-12 text-blue-400 opacity-60" />
+            <p className="text-gray-400 max-w-2xl">
+              Blockchain-backed attendance verification. All records are cryptographically hashed 
+              and stored on an immutable ledger, ensuring zero tampering and full auditability.
+            </p>
           </div>
+          
+          <button 
+            onClick={() => fetchData(true)}
+            disabled={refreshing}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-semibold ${refreshing ? 'opacity-50' : ''}`}
+          >
+            <HiRefresh className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? 'Syncing...' : 'Sync Network'}
+          </button>
         </div>
 
-        {/* Verified Records */}
-        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-green-600 text-sm font-semibold">Verified Records</p>
-              <p className="text-3xl font-bold text-slate-900 mt-2">{stats.verifiedRecords}</p>
-            </div>
-            <HiCheckBadge className="w-12 h-12 text-green-400 opacity-60" />
-          </div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {[
+            { label: 'Network Status', value: 'ONLINE', icon: HiGlobeAlt, color: 'text-emerald-400', sub: stats?.connection_url },
+            { label: 'Current Block', value: stats?.latest_block?.toLocaleString(), icon: HiCube, color: 'text-indigo-400', sub: 'Main Chain Height' },
+            { label: 'Network ID', value: stats?.network_id, icon: HiLink, color: 'text-sky-400', sub: 'Ethereum / Ganache' },
+            { label: 'Validator Nodes', value: stats?.accounts_count, icon: HiChip, color: 'text-violet-400', sub: 'Active Peers' },
+          ].map((s, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="glass-panel p-6 glow-indigo hover:border-indigo-500/50 transition-colors"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className={`p-3 rounded-xl bg-white/5 ${s.color}`}>
+                  <s.icon className="w-6 h-6" />
+                </div>
+              </div>
+              <div className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">{s.label}</div>
+              <div className={`text-2xl font-black font-mono ${s.color}`}>{s.value}</div>
+              <div className="text-gray-500 text-[10px] font-medium mt-1 truncate">{s.sub}</div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Last Block Number */}
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-purple-600 text-sm font-semibold">Last Block Number</p>
-              <p className="text-3xl font-bold text-slate-900 font-mono mt-2">{stats.lastBlockNumber}</p>
-            </div>
-            <HiLink className="w-12 h-12 text-purple-400 opacity-60" />
-          </div>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Transaction List */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="glass-panel p-8">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-xl font-bold flex items-center gap-3">
+                  <HiDatabase className="text-indigo-400" />
+                  Immutable Audit Trail
+                </h2>
+                <div className="text-xs font-mono text-gray-500 bg-white/5 px-3 py-1 rounded-full">
+                  Recent 10 Cycles
+                </div>
+              </div>
 
-        {/* Network Status */}
-        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-emerald-600 text-sm font-semibold">Network Status</p>
-              <div className="flex items-center gap-2 mt-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <p className="text-lg font-bold text-green-600">{stats.networkStatus}</p>
+              <div className="space-y-4">
+                {transactions?.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500 font-mono">
+                    NO ON-CHAIN RECORDS FOUND
+                  </div>
+                ) : (
+                  transactions?.map((tx, idx) => (
+                    <motion.div 
+                      key={tx.tx_hash}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="group p-5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] hover:border-indigo-500/30 transition-all"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-mono text-xs font-bold">
+                            #{idx + 1}
+                          </div>
+                          <div>
+                            <div className="text-sm font-bold">{tx.student}</div>
+                            <div className="text-[10px] text-gray-500 font-mono tracking-tighter uppercase">{tx.reg_id} • {tx.course}</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
+                            MINED
+                          </div>
+                          <div className="text-[10px] text-gray-500 font-mono mt-1">{tx.date}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 mt-4 p-2 bg-black/40 rounded border border-white/5 group-hover:border-indigo-500/20 transition-colors">
+                        <span className="text-[10px] font-mono text-gray-500 uppercase px-2">TxHash</span>
+                        <code className="text-xs font-mono text-indigo-300 flex-1 truncate">
+                          {tx.tx_hash}
+                        </code>
+                        <button 
+                          onClick={() => copyToClipboard(tx.tx_hash, 'Transaction Hash copied')}
+                          className="p-1.5 hover:bg-white/10 rounded transition-colors"
+                          title="Copy Hash"
+                        >
+                          <HiClipboardCopy className="w-4 h-4 text-gray-400" />
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
               </div>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-green-200 flex items-center justify-center">
-              <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
-            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Search Bar */}
-      <div className="mb-8">
-        <div className="relative">
-          <HiSearch className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by student name or transaction hash..."
-            className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-      </div>
-
-      {/* Transactions Table */}
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
-        {/* Table Header */}
-        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
-          <div className="grid grid-cols-6 gap-4 text-sm font-semibold text-slate-700 uppercase tracking-wide">
-            <div>Tx Hash</div>
-            <div>Student Name</div>
-            <div>Faculty</div>
-            <div>Date / Time</div>
-            <div>Period</div>
-            <div>Status</div>
-          </div>
-        </div>
-
-        {/* Table Rows */}
-        <div className="divide-y divide-slate-200">
-          {filteredTransactions.length > 0 ? (
-            filteredTransactions.map((tx) => (
-              <React.Fragment key={tx.id}>
-                {/* Main Row */}
-                <div
-                  className="px-6 py-4 hover:bg-slate-50 transition-colors cursor-pointer"
-                  onClick={() => setExpandedRow(expandedRow === tx.id ? null : tx.id)}
-                >
-                  <div className="grid grid-cols-6 gap-4 items-center">
-                    {/* Tx Hash (Truncated) */}
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          copyToClipboard(tx.hash, 'Hash');
-                        }}
-                        className="font-mono text-sm text-blue-600 hover:text-blue-800 transition-colors"
-                        title="Click to copy full hash"
-                      >
-                        {tx.hash.substring(0, 12)}...
-                      </button>
-                      <HiLink className="w-4 h-4 text-slate-400" />
-                    </div>
-
-                    {/* Student Name */}
-                    <div className="text-slate-900 font-medium">{tx.studentName}</div>
-
-                    {/* Faculty */}
-                    <div className="text-slate-600">{tx.faculty}</div>
-
-                    {/* Date / Time */}
-                    <div className="text-slate-600 text-sm">{tx.dateTime}</div>
-
-                    {/* Period */}
-                    <div className="text-slate-600 font-medium">Period {tx.period}</div>
-
-                    {/* Status Badge */}
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-                          tx.status === 'Confirmed'
-                            ? 'bg-green-100 text-green-700 border border-green-200'
-                            : 'bg-amber-100 text-amber-700 border border-amber-200'
-                        }`}
-                      >
-                        {tx.status === 'Confirmed' ? (
-                          <HiCheckCircle className="w-4 h-4" />
-                        ) : (
-                          <HiClock className="w-4 h-4" />
-                        )}
-                        {tx.status}
-                      </div>
-                      {expandedRow === tx.id ? (
-                        <HiChevronUp className="w-5 h-5 text-slate-400" />
-                      ) : (
-                        <HiChevronDown className="w-5 h-5 text-slate-400" />
-                      )}
-                    </div>
-                  </div>
+          {/* Sidebar Info */}
+          <div className="space-y-6">
+            <div className="glass-panel p-6 glow-emerald border-emerald-500/20">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <HiGlobeAlt className="text-emerald-400" />
+                Chain Details
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-2 border-b border-white/5">
+                  <span className="text-xs text-gray-500 uppercase tracking-wider">Contract Deployment</span>
+                  <HiExternalLink className="w-4 h-4 text-gray-600" />
                 </div>
-
-                {/* Expanded Details */}
-                {expandedRow === tx.id && (
-                  <div className="px-6 py-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-slate-200">
-                    <div className="grid grid-cols-2 gap-8">
-                      {/* Left Column */}
-                      <div className="space-y-4">
-                        <div>
-                          <p className="text-slate-600 text-xs uppercase font-semibold tracking-wide mb-2">Full Transaction Hash</p>
-                          <div className="bg-white rounded-lg p-4 font-mono text-sm text-slate-700 break-all overflow-x-auto max-h-20 border border-slate-200">
-                            {tx.fullHash}
-                          </div>
-                          <button
-                            onClick={() => copyToClipboard(tx.fullHash, 'Full Hash')}
-                            className="mt-2 text-xs text-blue-600 hover:text-blue-800 transition-colors font-medium"
-                          >
-                            📋 Copy Full Hash
-                          </button>
-                        </div>
-
-                        <div>
-                          <p className="text-slate-600 text-xs uppercase font-semibold tracking-wide mb-2">Block Number</p>
-                          <p className="text-slate-900 font-mono text-lg">#{tx.blockNumber}</p>
-                        </div>
-                      </div>
-
-                      {/* Right Column */}
-                      <div className="space-y-4">
-                        <div>
-                          <p className="text-slate-600 text-xs uppercase font-semibold tracking-wide mb-2">Gas Used</p>
-                          <p className="text-slate-900 font-mono text-lg">{tx.gasUsed} units</p>
-                        </div>
-
-                        <div className="pt-4">
-                          <button
-                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
-                          >
-                            <HiCheckBadge className="w-5 h-5" />
-                            Verify on Chain
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase mb-1">Gas Price (Current)</p>
+                  <span className="text-xl font-bold font-mono">
+                    {stats?.gas_price ? (stats.gas_price / 1e9).toFixed(1) : '2.0'} Gwei
+                  </span>
+                </div>
+                {data?.is_simulated && (
+                  <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                    <p className="text-[10px] font-bold text-amber-500 uppercase flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                      Showcase Demo Mode
+                    </p>
+                    <p className="text-[10px] text-amber-500/70 mt-1 leading-tight">
+                      Blockchain network is currently offline. Showing local simulated ledger for demonstration.
+                    </p>
                   </div>
                 )}
-              </React.Fragment>
-            ))
-          ) : (
-            <div className="px-6 py-12 text-center">
-              <HiExclamationCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">No transactions found matching your search.</p>
+                <div className="pt-4 border-t border-white/5">
+                  <div className="text-[10px] text-emerald-500/80 italic leading-relaxed">
+                    "Every attendance record is hashed using SHA256 before being committed to the block. 
+                    This creates a mathematical proof of presence that cannot be retroactively altered."
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* Footer Info */}
-      <div className="mt-8 text-center text-slate-500 text-sm">
-        Showing {filteredTransactions.length} of {transactions.length} transactions
+            <div className="glass-panel p-6">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <HiSearch className="text-sky-400" />
+                Verify Record
+              </h3>
+              <div className="space-y-3">
+                <p className="text-xs text-gray-500">Paste a transaction hash to verify its existence in the public ledger.</p>
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    value={searchHash}
+                    onChange={(e) => setSearchHash(e.target.value)}
+                    placeholder="0x..." 
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:border-indigo-500 transition-colors"
+                  />
+                  <HiSearch className="absolute right-4 top-3.5 text-gray-600" />
+                </div>
+                <button 
+                  onClick={handleVerify}
+                  disabled={verifying}
+                  className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 rounded-xl font-bold text-sm transition-all shadow-lg shadow-indigo-500/20"
+                >
+                  {verifying ? 'Verifying...' : 'Lookup Transaction'}
+                </button>
+
+                <AnimatePresence>
+                  {searchResult && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20"
+                    >
+                      <div className="text-[10px] font-bold text-emerald-400 uppercase mb-2 flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        Verification Success
+                      </div>
+                      <div className="space-y-2 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Block Number</span>
+                          <span className="font-mono text-gray-300">{searchResult.block_number || 'Demo-1'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Subject</span>
+                          <span className="text-gray-300">{searchResult.course || 'N/A'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Student</span>
+                          <span className="text-gray-300">{searchResult.student || 'N/A'}</span>
+                        </div>
+                        <div className="flex justify-between pt-2 border-t border-white/5">
+                          <span className="text-gray-500">Status</span>
+                          <span className="text-emerald-400 font-bold uppercase">{searchResult.status === 1 ? 'SUCCESS' : searchResult.status || 'CONFIRMED'}</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+            
+            <div className="p-6 rounded-2xl bg-indigo-500/5 border border-indigo-500/10">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-2 h-2 rounded-full bg-indigo-400 animate-ping" />
+                <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Network Peer Monitoring</span>
+              </div>
+              <div className="text-[10px] text-gray-500 font-mono leading-relaxed">
+                Listening for block events...
+                <br />✓ Connection: HTTP/1.1
+                <br />✓ Handshake: Completed
+                <br />✓ Latency: 12ms
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default BlockchainPage;

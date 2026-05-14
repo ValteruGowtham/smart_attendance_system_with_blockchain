@@ -12,25 +12,35 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const initAuth = async () => {
       try {
+        const savedUser = localStorage.getItem('user');
         const savedToken = localStorage.getItem('token');
-        if (savedToken) {
-          setToken(savedToken);
-          // Fetch user info with the token
-          const res = await getUserInfo();
-          console.log('User info response:', res.data);
-          // Backend returns user data directly
+        
+        if (savedToken) setToken(savedToken);
+        
+        if (savedUser) {
+          setUser(JSON.parse(savedUser));
+          setLoading(false); // Optimistic: assume session is valid
+        }
+        
+        // Background verify with backend
+        const res = await getUserInfo();
+        if (res.data.authenticated) {
           setUser(res.data);
+          localStorage.setItem('user', JSON.stringify(res.data));
         } else {
+          // If not authenticated, clear state
           setUser(null);
-          setToken(null);
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
         }
       } catch (error) {
         console.error('Failed to fetch user info:', error);
-        // Clear invalid token
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
-        setToken(null);
+        // Only clear if it's a 401
+        if (error.response?.status === 401) {
+          setUser(null);
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+        }
       } finally {
         setLoading(false);
       }
@@ -41,24 +51,29 @@ export function AuthProvider({ children }) {
 
   const login = async (username, password) => {
     try {
+      setLoading(true);
       const res = await apiLogin(username, password);
-      console.log('Login response:', res.data);
       
-      // Extract token and user data from response
-      const { token: newToken, ...userData } = res.data;
-      
-      // Store in localStorage
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      // Update state
-      setToken(newToken);
-      setUser(userData);
-      
-      return res.data;
+      if (res.data.success) {
+        const userData = res.data;
+        // Store user in localStorage for persistence
+        localStorage.setItem('user', JSON.stringify(userData));
+        // Some backends might still provide a token
+        if (userData.token) {
+          localStorage.setItem('token', userData.token);
+          setToken(userData.token);
+        }
+        
+        setUser(userData);
+        return userData;
+      } else {
+        throw new Error(res.data.error || 'Login failed');
+      }
     } catch (err) {
       const errorMsg = err?.response?.data?.error || err.message || 'Login failed';
       throw new Error(errorMsg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,6 +88,7 @@ export function AuthProvider({ children }) {
       localStorage.removeItem('user');
       setToken(null);
       setUser(null);
+      window.location.href = '/login';
     }
   };
 

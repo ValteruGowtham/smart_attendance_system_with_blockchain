@@ -332,11 +332,13 @@ import {
   HiCalendar,
   HiBookOpen,
   HiClipboardList,
+  HiShieldCheck,
 } from 'react-icons/hi';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import Sidebar from '../components/dashboard/Sidebar';
 import Topbar from '../components/dashboard/Topbar';
 import { useToast } from '../context/ToastContext';
+import { getStudentDashboard } from '../api/api';
 
 /* ─── Styles ────────────────────────────────────────────────────────────────── */
 const CSS = `
@@ -763,6 +765,20 @@ const CSS = `
   }
   .rec-badge.present { background: #d3f9d8; color: #2f9e44; }
   .rec-badge.absent  { background: #ffe3e3; color: #c92a2a; }
+  
+  .rec-blockchain {
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s;
+  }
+  .rec-blockchain:hover {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 
   /* ── heatmap ── */
   .heatmap-wrap {
@@ -891,42 +907,67 @@ const StudentDashboard = () => {
       else setRefreshing(true);
       setError(null);
 
-      const [overviewRes, subjectsRes, heatmapRes] = await Promise.all([
-        fetch('/api/attendance/overview/', { credentials: 'include' }),
-        fetch('/api/attendance/subjects/', { credentials: 'include' }),
-        fetch('/api/attendance/heatmap/',  { credentials: 'include' }),
-      ]);
+      const res = await getStudentDashboard();
+      const data = res.data;
 
-      if (!overviewRes.ok) throw new Error('Failed to fetch attendance overview');
-      if (!subjectsRes.ok) throw new Error('Failed to fetch subject data');
+      const overviewData = {
+        present: data.summary.present,
+        absent: data.summary.absent,
+        percentage: data.summary.percentage,
+        student_name: `${data.student.first_name} ${data.student.last_name}`,
+        student_id: data.student.id || data.student.registration_id,
+      };
 
-      const overviewData = await overviewRes.json();
-      const subjectsData = await subjectsRes.json();
-      const heatmapData  = heatmapRes.ok ? await heatmapRes.json() : [];
+      const subjectsMap = {};
+      const heatmapMap = {};
+
+      data.records.forEach(rec => {
+        // Group by course as subject
+        const key = rec.course_name || rec.faculty_name || 'General';
+        if (!subjectsMap[key]) {
+          subjectsMap[key] = {
+            name: key,
+            faculty: rec.faculty_name || '',
+            present: 0,
+            absent: 0,
+            records: []
+          };
+        }
+        if (rec.status.toLowerCase() === 'present') {
+          subjectsMap[key].present += 1;
+          heatmapMap[rec.date] = 'present'; // overwrite if present
+        } else if (rec.status.toLowerCase() === 'absent') {
+          subjectsMap[key].absent += 1;
+          if (heatmapMap[rec.date] !== 'present') {
+            heatmapMap[rec.date] = 'absent';
+          }
+        }
+        subjectsMap[key].records.push(rec);
+      });
+
+      const subjectsData = Object.values(subjectsMap).map(sub => {
+        const total = sub.present + sub.absent;
+        sub.percentage = total > 0 ? Math.round((sub.present / total) * 100) : 0;
+        return sub;
+      });
+
+      const heatmapData = Object.keys(heatmapMap).map(date => ({
+        date: date,
+        status: heatmapMap[date]
+      }));
 
       setOverview(overviewData);
-      setSubjects(subjectsData.subjects || subjectsData);
-      setHeatmap(heatmapData.days || heatmapData);
+      setSubjects(subjectsData);
+      setHeatmap(heatmapData);
     } catch (err) {
-      setError(err.message);
-      toast.error(err.message);
+      const msg = err.response?.data?.error || err.message || 'Failed to fetch attendance data';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
-
-  /* ── fetch subject detail records ── */
-  const fetchSubjectDetail = useCallback(async (subjectId) => {
-    try {
-      const res = await fetch(`/api/attendance/subjects/${subjectId}/records/`, { credentials: 'include' });
-      if (!res.ok) throw new Error('Failed to fetch subject records');
-      const data = await res.json();
-      setSelectedSubject(prev => ({ ...prev, records: data.records || data }));
-    } catch (err) {
-      toast.error(err.message);
-    }
-  }, []);
+  }, [toast]);
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
@@ -945,7 +986,6 @@ const StudentDashboard = () => {
   const openSubject = (subject) => {
     setSelectedSubject(subject);
     setView('detail');
-    if (subject.id) fetchSubjectDetail(subject.id);
   };
 
   /* ── download certificate ── */
@@ -1217,6 +1257,20 @@ const StudentDashboard = () => {
                       <span className={`rec-badge ${isPresent ? 'present' : 'absent'}`}>
                         {isPresent ? 'Present' : 'Absent'}
                       </span>
+                      
+                      {rec.blockchain_tx && (
+                        <div 
+                          className="rec-blockchain" 
+                          title={`Blockchain Verified: ${rec.blockchain_tx}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigator.clipboard.writeText(rec.blockchain_tx);
+                            toast.success('Tx Hash copied to clipboard');
+                          }}
+                        >
+                          <HiShieldCheck style={{ width: 16, height: 16, color: '#3b5bdb' }} />
+                        </div>
+                      )}
                     </div>
                   );
                 })

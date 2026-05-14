@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   HiUsers,
   HiAcademicCap,
@@ -82,21 +83,34 @@ const AdminDashboard = () => {
             <span className="text-sm text-slate-600">Real-time Dashboard</span>
           </div>
 
-          {/* Date Range Filter */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-slate-700">Filter:</span>
-            <div className="relative">
-              <select
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-                className="appearance-none bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm font-medium text-slate-900 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="semester">This Semester</option>
-              </select>
-              <HiChevronDown className="absolute right-3 top-2.5 w-5 h-5 text-slate-400 pointer-events-none" />
+          {/* Action Buttons & Filter */}
+          <div className="flex items-center gap-4">
+            <Link to="/admin/add-student" className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+              <HiUsers className="w-4 h-4" />
+              Add Student
+            </Link>
+            <Link to="/admin/add-faculty" className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+              <HiAcademicCap className="w-4 h-4" />
+              Add Faculty
+            </Link>
+            
+            <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
+            
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-slate-700 hidden sm:inline">Filter:</span>
+              <div className="relative">
+                <select
+                  value={dateRange}
+                  onChange={(e) => setDateRange(e.target.value)}
+                  className="appearance-none bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm font-medium text-slate-900 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="today">Today</option>
+                  <option value="week">This Week</option>
+                  <option value="month">This Month</option>
+                  <option value="semester">This Semester</option>
+                </select>
+                <HiChevronDown className="absolute right-3 top-2.5 w-5 h-5 text-slate-400 pointer-events-none" />
+              </div>
             </div>
           </div>
         </div>

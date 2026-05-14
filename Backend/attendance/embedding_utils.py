@@ -113,7 +113,7 @@ def save_student_embedding(student):
     student.face_embedding = embedding_to_json(embedding)
     student.save(update_fields=['face_embedding'])
     
-    print(f"✓ Saved embedding for {student.registration_id}")
+    print(f"[SUCCESS] Saved embedding for {student.registration_id}")
     return True
 
 def compare_embeddings(embedding1, embedding2, threshold=0.6):

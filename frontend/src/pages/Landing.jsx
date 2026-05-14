@@ -21,7 +21,7 @@ import {
   HiOutlineMail,
   HiOutlineUserGroup,
   HiOutlineEye,
-  HiOutlineFingerPrint,
+  HiOutlineAcademicCap,
   HiOutlineChartPie,
   HiOutlineTrendingUp,
   HiOutlineArrowRight,
@@ -76,33 +76,39 @@ export default function Landing() {
   const [openFAQ, setOpenFAQ] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [stats, setStats] = useState({ students: 0, records: 0 });
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const [stats, setStats] = useState({ 
+    students: 0, 
+    records: 0, 
+    faculty: 0, 
+    courses: 0,
+    present_percentage: 0 
+  });
 
   useEffect(() => {
     getPublicStats()
-      .then(r => setStats({ students: r.data.total_students || 0, records: r.data.total_attendance || 0 }))
+      .then(r => setStats({ 
+        students: r.data.total_students || 0, 
+        records: r.data.total_attendance || 0,
+        faculty: r.data.total_faculty || 0,
+        courses: r.data.total_courses || 0,
+        present_percentage: r.data.present_percentage || 0
+      }))
       .catch(() => {});
   }, []);
 
   const metrics = [
-    { value: stats.students, suffix: '+', label: 'Active Students', icon: HiOutlineUsers },
-    { value: stats.records, suffix: '+', label: 'Attendance Records', icon: HiOutlineChartBar },
-    { value: '99.3', suffix: '%', label: 'Recognition Accuracy', icon: HiOutlineBadgeCheck, raw: true },
-    { value: '0.8', suffix: 's', label: 'Avg. Recognition Time', icon: HiOutlineLightningBolt, raw: true },
+    { value: stats.students, suffix: '', label: 'Active Students', icon: HiOutlineUsers },
+    { value: stats.records, suffix: '', label: 'Attendance Records', icon: HiOutlineChartBar },
+    { value: stats.courses, suffix: '', label: 'Active Courses', icon: HiOutlineAcademicCap },
+    { value: stats.present_percentage, suffix: '%', label: 'Average Attendance', icon: HiOutlineBadgeCheck, raw: true },
   ];
 
   const features = [
     {
       icon: HiOutlineVideoCamera,
       color: 'indigo',
-      title: 'AI Face Recognition',
-      desc: 'FaceNet-powered biometric engine with 99.3% accuracy, liveness detection, and anti-spoofing — all in under a second.',
+      title: 'Face Recognition',
+      desc: 'High-accuracy biometric engine with liveness detection and anti-spoofing — marking attendance in under a second.',
       tags: ['Multi-angle', 'Anti-spoofing', 'Real-time'],
     },
     {
@@ -143,7 +149,7 @@ export default function Landing() {
   ];
 
   const faqs = [
-    { q: 'How accurate is the face recognition?', a: 'Our FaceNet-based system achieves 99.3% accuracy across varied lighting, angles, and demographics. Real-world testing shows very few false positives.' },
+    { q: 'How accurate is the face recognition?', a: 'Our FaceNet-based system achieves high accuracy across varied lighting, angles, and demographics. Real-world testing shows robust performance with liveness detection.' },
     { q: 'Is student biometric data stored securely?', a: 'Faces are converted to 128-dimensional mathematical embeddings — never stored as images. All data is AES-256 encrypted and GDPR compliant.' },
     { q: 'What devices and browsers are supported?', a: 'Any device with a webcam works: laptops, tablets, and phones. Supports Chrome, Firefox, Safari, and Edge (latest versions).' },
     { q: 'Can attendance records be edited manually?', a: 'Yes. Faculty and admins can correct or adjust records. All changes are logged in the immutable blockchain audit trail.' },
@@ -153,6 +159,7 @@ export default function Landing() {
   const navLinks = [
     { href: '#features', label: 'Features' },
     { href: '#how-it-works', label: 'How It Works' },
+    { href: '/blockchain', label: 'Blockchain', isExternal: true },
     { href: '#faq', label: 'FAQ' },
   ];
 
@@ -305,28 +312,70 @@ export default function Landing() {
       `}</style>
 
       {/* ── NAVBAR ─────────────────────────────────────────────────────── */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur shadow-sm border-b border-gray-100' : 'bg-transparent'}`}>
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+      <nav
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-white/80 backdrop-blur-xl shadow-sm border-b border-gray-200/60'
+            : 'bg-transparent'
+        }`}
+        style={{ height: 64 }}
+      >
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-full flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)' }}>
-              <HiOutlineFingerPrint className="w-4.5 h-4.5 text-white" style={{ width: 18, height: 18 }} />
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105"
+              style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)' }}
+            >
+              <HiOutlineAcademicCap style={{ width: 20, height: 20, color: '#fff' }} />
             </div>
-            <span className="text-lg font-bold text-gray-900" style={{ fontFamily: "'Sora', sans-serif" }}>AttendanceAI</span>
+            <span
+              className="text-lg font-bold text-gray-900 hidden sm:inline"
+              style={{ fontFamily: "'Sora', sans-serif", letterSpacing: '-0.01em' }}
+            >
+              Smart Attendance
+            </span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map(l => (
-              <a key={l.href} href={l.href} className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">{l.label}</a>
+              l.isExternal ? (
+                <Link
+                  key={l.href}
+                  to={l.href}
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100/60 transition-all"
+                >
+                  {l.label}
+                </Link>
+              ) : (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100/60 transition-all"
+                >
+                  {l.label}
+                </a>
+              )
             ))}
-            <Link to="/login" className="btn-primary" style={{ padding: '9px 22px', fontSize: 14 }}>
+            <div className="w-px h-5 bg-gray-200 mx-2" />
+            <Link
+              to="/login"
+              className="ml-1 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
+              style={{
+                background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                boxShadow: '0 4px 14px rgba(79,70,229,.3)',
+              }}
+            >
               <HiOutlineLogin style={{ width: 16, height: 16 }} /> Sign In
             </Link>
           </div>
 
           {/* Mobile Toggle */}
-          <button className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100" onClick={() => setMobileOpen(v => !v)}>
+          <button
+            className="md:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors"
+            onClick={() => setMobileOpen(v => !v)}
+          >
             {mobileOpen ? <HiOutlineX className="w-5 h-5" /> : <HiOutlineMenu className="w-5 h-5" />}
           </button>
         </div>
@@ -337,12 +386,35 @@ export default function Landing() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-t border-gray-100 px-5 py-4 space-y-3"
+              className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100 px-5 py-4 space-y-1"
             >
               {navLinks.map(l => (
-                <a key={l.href} href={l.href} onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-gray-700 py-1">{l.label}</a>
+                l.isExternal ? (
+                  <Link
+                    key={l.href}
+                    to={l.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="block text-sm font-medium text-gray-700 py-2.5 px-3 rounded-lg hover:bg-gray-50"
+                  >
+                    {l.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="block text-sm font-medium text-gray-700 py-2.5 px-3 rounded-lg hover:bg-gray-50"
+                  >
+                    {l.label}
+                  </a>
+                )
               ))}
-              <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-primary w-full justify-center mt-2">
+              <Link
+                to="/login"
+                onClick={() => setMobileOpen(false)}
+                className="btn-primary w-full justify-center mt-3"
+                style={{ borderRadius: 12 }}
+              >
                 Sign In
               </Link>
             </motion.div>
@@ -365,7 +437,7 @@ export default function Landing() {
               <motion.div variants={fadeUp}>
                 <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-700 border" style={{ background: '#eef2ff', color: '#4f46e5', borderColor: '#c7d2fe', fontWeight: 700 }}>
                   <span className="live-dot" />
-                  Now live at 500+ institutions
+                  Live System Statistics
                 </span>
               </motion.div>
 
@@ -373,7 +445,7 @@ export default function Landing() {
                 <h1 className="text-5xl md:text-6xl font-extrabold leading-tight text-gray-900" style={{ fontFamily: "'Sora', sans-serif", letterSpacing: '-0.02em' }}>
                   Smarter Attendance
                   <br />
-                  <span className="gradient-text">Powered by AI</span>
+                  <span className="gradient-text">Blockchain + Face Recognition</span>
                 </h1>
                 <p className="mt-5 text-lg text-gray-500 leading-relaxed max-w-lg">
                   Real-time face recognition marks attendance in under 1 second — no cards, no roll calls, no proxies. Secured with blockchain and built for modern institutions.
@@ -406,7 +478,7 @@ export default function Landing() {
                   <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
                   <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
                   <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                  <span className="ml-3 text-xs text-gray-400 font-medium">AttendanceAI – Live Dashboard</span>
+                  <span className="ml-3 text-xs text-gray-400 font-medium">Smart Attendance – Live Dashboard</span>
                   <span className="ml-auto flex items-center gap-1.5"><span className="live-dot" /><span className="text-xs text-emerald-400">Active</span></span>
                 </div>
 
@@ -414,9 +486,9 @@ export default function Landing() {
                   {/* Stats Row */}
                   <div className="grid grid-cols-3 gap-3">
                     {[
-                      { label: 'Present', value: '1,247', icon: '🟢', change: '+3.2%' },
-                      { label: 'Accuracy', value: '99.3%', icon: '🎯', change: 'Today' },
-                      { label: 'Speed', value: '0.8s', icon: '⚡', change: 'Avg' },
+                      { label: 'Present', value: stats.records, icon: '🟢', change: 'Total' },
+                      { label: 'Courses', value: stats.courses, icon: '📚', change: 'Active' },
+                      { label: 'Attendance', value: `${stats.present_percentage}%`, icon: '📊', change: 'Avg' },
                     ].map(s => (
                       <div key={s.label} className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.06)' }}>
                         <div className="text-xs text-gray-400">{s.label}</div>
@@ -768,7 +840,7 @@ export default function Landing() {
               Ready to eliminate<br />manual roll calls?
             </motion.h2>
             <motion.p variants={fadeUp} className="text-indigo-200 text-lg mb-10 max-w-xl mx-auto">
-              Join 500+ institutions that have switched to AI-powered attendance. Free 14-day trial — no credit card required.
+              Join our modern institution platform. Start your journey with AI-powered attendance today.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
@@ -794,9 +866,9 @@ export default function Landing() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-8">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)' }}>
-                <HiOutlineFingerPrint style={{ width: 18, height: 18, color: 'white' }} />
+                <HiOutlineAcademicCap style={{ width: 18, height: 18, color: 'white' }} />
               </div>
-              <span className="text-white font-bold text-base" style={{ fontFamily: "'Sora', sans-serif" }}>AttendanceAI</span>
+              <span className="text-white font-bold text-base" style={{ fontFamily: "'Sora', sans-serif" }}>Smart Attendance</span>
             </div>
 
             <div className="flex flex-wrap gap-6 text-sm">
@@ -811,7 +883,7 @@ export default function Landing() {
           </div>
 
           <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-            <span>© 2024 AttendanceAI. All rights reserved.</span>
+            <span>© 2024 Smart Attendance. All rights reserved.</span>
             <div className="flex items-center gap-1.5">
               <HiOutlineShieldCheck style={{ width: 14, height: 14, color: '#10b981' }} />
               <span>GDPR Compliant · AES-256 Encrypted · Blockchain Secured</span>

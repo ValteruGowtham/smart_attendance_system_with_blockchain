@@ -25,25 +25,25 @@ const Sidebar = () => {
       { label: 'Students', icon: HiUsers, path: '/admin/students' },
       { label: 'Faculty', icon: HiAcademicCap, path: '/admin/faculty' },
       { label: 'Attendance', icon: HiClipboardList, path: '/admin/attendance' },
-      { label: 'Reports', icon: HiChartBar, path: '/admin/reports' },
-      { label: 'Settings', icon: HiCog, path: '/admin/settings' },
+      { label: 'Add Student', icon: HiUsers, path: '/admin/add-student' },
+      { label: 'Add Faculty', icon: HiAcademicCap, path: '/admin/add-faculty' },
     ],
     faculty: [
-      { label: 'Dashboard', icon: HiHome, path: '/faculty' },
-      { label: 'Attendance', icon: HiClipboardList, path: '/faculty/attendance' },
-      { label: 'Reports', icon: HiChartBar, path: '/faculty/reports' },
-      { label: 'Settings', icon: HiCog, path: '/faculty/settings' },
+      { label: 'Dashboard', icon: HiHome, path: '/faculty/dashboard' },
+      { label: 'Session Report', icon: HiClipboardList, path: '/faculty/session-report' },
+      { label: 'Alerts', icon: HiChartBar, path: '/faculty/attendance-alerts' },
+      { label: 'Update Profile', icon: HiCog, path: '/faculty/profile' },
     ],
     student: [
-      { label: 'Dashboard', icon: HiHome, path: '/student' },
-      { label: 'My Attendance', icon: HiClipboardList, path: '/student/attendance' },
-      { label: 'Reports', icon: HiChartBar, path: '/student/reports' },
-      { label: 'Settings', icon: HiCog, path: '/student/settings' },
+      { label: 'Dashboard', icon: HiHome, path: '/student/dashboard' },
+      { label: 'Calendar', icon: HiClipboardList, path: '/student/attendance-calendar' },
+      { label: 'Update Profile', icon: HiCog, path: '/student/profile' },
+      { label: 'Notifications', icon: HiChartBar, path: '/student/notifications' },
     ],
   };
 
   const menu = navigationItems[userRole] || navigationItems.student;
-  const isActive = (path) => location.pathname.startsWith(path);
+  const isActive = (path) => location.pathname === path;
 
   return (
     <div className="h-screen flex flex-col">
@@ -51,10 +51,10 @@ const Sidebar = () => {
       <div className="p-6 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold">AI</span>
+            <HiAcademicCap className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-slate-900 text-sm">AI Attendance</h1>
+            <h1 className="font-bold text-slate-900 text-sm">Smart Attendance</h1>
             <p className="text-xs text-slate-500">System</p>
           </div>
         </div>
@@ -86,7 +86,9 @@ const Sidebar = () => {
       <div className="border-t border-slate-200 p-4 space-y-3">
         <div className="bg-slate-50 rounded-lg p-3">
           <p className="text-xs text-slate-500 mb-1">Logged in as</p>
-          <p className="font-semibold text-slate-900 text-sm truncate">{user?.name || 'User'}</p>
+          <p className="font-semibold text-slate-900 text-sm truncate">
+            {user?.first_name ? `${user.first_name} ${user.last_name || ''}` : user?.username || 'User'}
+          </p>
           <p className="text-xs text-slate-500 capitalize">{userRole}</p>
         </div>
         <button

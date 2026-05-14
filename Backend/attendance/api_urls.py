@@ -1,11 +1,17 @@
 from django.urls import path
 from . import api_views
+from . import api_courses_views
 
 urlpatterns = [
     # Auth
     path('auth/user/', api_views.api_user_info, name='api_user_info'),
     path('auth/login/', api_views.api_login, name='api_login'),
     path('auth/logout/', api_views.api_logout, name='api_logout'),
+
+    # Public (no auth)
+    path('public/stats/', api_views.api_public_stats, name='api_public_stats'),
+    path('blockchain/info/', api_views.api_blockchain_info, name='api_blockchain_info'),
+    path('blockchain/verify/', api_views.api_verify_transaction, name='api_verify_transaction'),
 
     # Admin
     path('admin/stats/', api_views.api_admin_stats, name='api_admin_stats'),
@@ -38,4 +44,10 @@ urlpatterns = [
     path('prediction/student/<str:registration_id>/', api_views.api_student_prediction_by_id, name='api_student_prediction_by_id'),
     path('prediction/at-risk/', api_views.api_class_at_risk_students, name='api_class_at_risk_students'),
     path('prediction/calculate/', api_views.api_calculate_prediction, name='api_calculate_prediction'),
+
+    # Courses
+    path('courses/', api_courses_views.api_courses_list, name='api_courses_list'),
+    path('courses/add/', api_courses_views.api_course_add, name='api_course_add'),
+    path('courses/<int:course_id>/enroll/', api_courses_views.api_course_enroll, name='api_course_enroll'),
+    path('courses/<int:course_id>/students/', api_courses_views.api_course_students, name='api_course_students'),
 ]

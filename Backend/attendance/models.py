@@ -64,6 +64,7 @@ class Course(models.Model):
     section = models.CharField(max_length=10, null=True, blank=True)
     semester = models.CharField(max_length=20, null=True, blank=True)
     academic_year = models.CharField(max_length=20, null=True, blank=True)
+    students = models.ManyToManyField(Student, related_name='enrolled_courses', blank=True)
 
     def __str__(self):
         return f"{self.course_code} - {self.course_name}"

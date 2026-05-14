@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   HiOutlineHome,
@@ -20,9 +20,14 @@ import { useState, useEffect } from 'react';
 export default function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Hide Header on pages that have their own navbar
+  const hiddenPaths = ['/', '/login', '/blockchain'];
+  if (hiddenPaths.includes(location.pathname)) return null;
 
   // Handle scroll effect
   useEffect(() => {
@@ -96,16 +101,13 @@ export default function Header() {
           {/* Logo */}
           <Link to={dashLink()} className="flex items-center gap-3 group">
             <div className="w-11 h-11 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all transform group-hover:scale-105 group-hover:rotate-3">
-              <svg className="w-6 h-6 text-white" viewBox="0 0 48 48" fill="none">
-                <rect width="48" height="48" rx="8" fill="currentColor" opacity="0.12" />
-                <path d="M12 34L24 14L36 34H12Z" fill="currentColor" />
-              </svg>
+              <HiOutlineAcademicCap className="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 className="font-bold text-lg text-gray-800 group-hover:text-indigo-600 transition-colors">
-                Digital ID
+                Smart Attendance
               </h1>
-              <p className="text-xs text-gray-500 -mt-0.5">AI Attendance System</p>
+              <p className="text-xs text-gray-500 -mt-0.5">Management System</p>
             </div>
           </Link>
 

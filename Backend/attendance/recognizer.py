@@ -175,7 +175,7 @@ def Recognizer(details, face_image_data=None):
         # Compare embeddings
         if compare_embeddings(captured_embedding, student_embedding):
             recognized.append(student.registration_id)
-            print(f"✓ Recognized: {student.registration_id}")
+            print(f"[OK] Recognized: {student.registration_id}")
     
     print(f"Total recognized: {len(recognized)} out of {students_with_embeddings} students with embeddings")
     return recognized
@@ -299,12 +299,12 @@ def MultiRecognizer(details, face_image_data=None, similarity_threshold=0.6):
                     'name': f"{student.first_name} {student.last_name}",
                     'confidence': best_match['confidence']
                 })
-                print(f"✓ Face {face_idx + 1} recognized: {best_match['registration_id']} (confidence: {best_match['confidence']:.3f})")
+                print(f"[OK] Face {face_idx + 1} recognized: {best_match['registration_id']} (confidence: {best_match['confidence']:.3f})")
             else:
-                print(f"⚠ Face {face_idx + 1} matched {best_match['registration_id']} but already recognized (duplicate)")
+                print(f"[WARN] Face {face_idx + 1} matched {best_match['registration_id']} but already recognized (duplicate)")
         else:
             unknown_faces += 1
-            print(f"✗ Face {face_idx + 1}: Unknown (no match above threshold {similarity_threshold})")
+            print(f"[FAIL] Face {face_idx + 1}: Unknown (no match above threshold {similarity_threshold})")
     
     print(f"Total recognized: {len(recognized_students)} unique student(s), {unknown_faces} unknown face(s)")
     

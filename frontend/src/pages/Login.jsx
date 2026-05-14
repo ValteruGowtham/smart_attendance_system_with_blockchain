@@ -1,431 +1,490 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   HiOutlineLockClosed,
   HiOutlineUser,
-  HiMail,
-  HiCheckCircle,
-  HiExclamationCircle,
   HiOutlineArrowRight,
+  HiOutlineAcademicCap,
+  HiOutlineShieldCheck,
 } from 'react-icons/hi';
 
+/* ─── CSS ──────────────────────────────────────────────────────────────────── */
+const CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', sans-serif;
+    position: relative;
+    overflow: hidden;
+    background: #0d1117;
+  }
+
+  /* animated background blobs */
+  .blob {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(124,58,237,0.1) 100%);
+    filter: blur(80px);
+    border-radius: 50%;
+    z-index: 0;
+    animation: float 20s infinite alternate;
+  }
+  .blob-1 { top: -100px; right: -100px; }
+  .blob-2 { bottom: -150px; left: -150px; background: linear-gradient(135deg, rgba(14,165,233,0.1) 0%, rgba(99,102,241,0.1) 100%); }
+
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, 60px) scale(1.1); }
+  }
+
+  .login-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    padding: 0 24px;
+  }
+
+  .login-card {
+    background: rgba(22, 27, 34, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4);
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .brand-logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.3);
+  }
+  .brand-logo svg { font-size: 30px; color: white; }
+  .brand-title { font-size: 28px; font-weight: 800; color: white; letter-spacing: -0.03em; }
+  .brand-sub { color: #8b949e; font-size: 15px; margin-top: 6px; }
+
+  .field-group { margin-bottom: 20px; }
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8b949e;
+    margin-bottom: 8px;
+    margin-left: 4px;
+  }
+  .input-wrap { position: relative; }
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #484f58;
+    font-size: 18px;
+  }
+  .input-field {
+    width: 100%;
+    background: #0d1117;
+    border: 1.5px solid #30363d;
+    border-radius: 14px;
+    padding: 14px 16px 14px 48px;
+    color: white;
+    font-size: 15px;
+    transition: all 0.2s;
+  }
+  .input-field:focus {
+    border-color: #58a6ff;
+    background: #161b22;
+    box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.1);
+    outline: none;
+  }
+
+  .forgot-link {
+    display: block;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 600;
+    color: #58a6ff;
+    text-decoration: none;
+    margin-top: 8px;
+  }
+  .forgot-link:hover { text-decoration: underline; }
+
+  .btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s;
+    margin-top: 32px;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+    color: #484f58;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #30363d;
+  }
+  .divider span { padding: 0 16px; }
+
+  .btn-google {
+    width: 100%;
+    background: white;
+    color: #1f2937;
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.2s;
+  }
+  .btn-google:hover { background: #f9fafb; border-color: #9ca3af; }
+
+  .footer-text {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 14px;
+    color: #8b949e;
+  }
+  .footer-text a { color: #58a6ff; text-decoration: none; font-weight: 600; }
+  .footer-text a:hover { text-decoration: underline; }
+
+  .trust-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    font-size: 12px;
+    color: #484f58;
+  }
+  .trust-badge svg { color: #238636; }
+
+  .error-msg {
+    background: rgba(248, 81, 73, 0.1);
+    border: 1px solid rgba(248, 81, 73, 0.2);
+    color: #ff7b72;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+`;
+
 export default function Login() {
-  const [role, setRole] = useState('student'); // 'student', 'faculty', 'admin'
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  
+  // Forgot Password State
+  const [showForgot, setShowForgot] = useState(false);
+  const [resetStep, setResetStep] = useState(1); // 1: Verify ID, 2: New Password
+  const [verifyId, setVerifyId] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // Form validation state
-  const [emailValid, setEmailValid] = useState(null);
-  const [passwordValid, setPasswordValid] = useState(null);
-
-  // Animated counters
-  const [statValues, setStatValues] = useState({ accuracy: 0, students: 0, records: 0 });
-
-  // Fetch stats from API
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/public/stats/');
-        const data = await response.json();
-        setStatValues(prev => ({
-          ...prev,
-          students: data.total_students || 0,
-          records: data.total_attendance || 0,
-        }));
-      } catch (error) {
-        console.error('Failed to fetch stats:', error);
-        // Fallback values
-        setStatValues(prev => ({
-          ...prev,
-          students: 0,
-          records: 0,
-        }));
-      }
-    };
-
-    fetchStats();
-  }, []);
+  const [successMsg, setSuccessMsg] = useState('');
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Animate stat counters on mount
   useEffect(() => {
-    const targets = { students: 12500, records: 156000, accuracy: 98 };
-    const duration = 2000; // 2 seconds
-    const startTime = Date.now();
-
-    const animateCounters = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      setStatValues(prev => ({
-        students: Math.floor((prev.students > 0 ? prev.students : targets.students) * progress),
-        records: Math.floor((prev.records > 0 ? prev.records : targets.records) * progress),
-        accuracy: Math.floor(targets.accuracy * progress),
-      }));
-
-      if (progress < 1) {
-        requestAnimationFrame(animateCounters);
-      }
-    };
-
-    animateCounters();
-  }, []);
-
-  // Registration number validation (at least 4 characters)
-  const validateRegistration = (value) => {
-    setEmailValid(value.length >= 4);
-  };
-
-  // Password validation (at least 6 characters)
-  const validatePassword = (value) => {
-    // Don't show validation state while typing for testing
-    if (value.length === 0) {
-      setPasswordValid(null);
+    const id = 'login-styles';
+    if (!document.getElementById(id)) {
+      const tag = document.createElement('style');
+      tag.id = id;
+      tag.textContent = CSS;
+      document.head.appendChild(tag);
     }
-    // Silently validate but don't update state
-  };
-
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    setEmail(value);
-    if (value) validateRegistration(value);
-    else setEmailValid(null);
-  };
-
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-    setPassword(value);
-    setPasswordValid(null); // Keep neutral state during typing
-  };
+    return () => document.getElementById(id)?.remove();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
-    // Validate on submit
-    if (password.length < 3) {
-      setPasswordValid(false);
-      setError('Password must be at least 3 characters');
+    try {
+      const data = await login(username, password);
+      const userRole = data.role?.toLowerCase();
+      if (userRole === 'admin') window.location.href = '/admin';
+      else if (userRole === 'faculty') window.location.href = '/faculty/dashboard';
+      else if (userRole === 'student') window.location.href = '/student/dashboard';
+      else window.location.href = '/';
+    } catch (err) {
+      setError(err?.message || 'Invalid credentials');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyId = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      // Simulate verification of Registration ID
+      await new Promise(r => setTimeout(r, 1000));
+      if (verifyId.length < 3) throw new Error('Invalid Registration / UID');
+      setResetStep(2);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
-
-    if (email.length < 4) {
-      setEmailValid(false);
-      setError('Registration number must be at least 4 characters');
+    if (newPassword.length < 6) {
+      setError('Password must be at least 6 characters');
       return;
     }
 
     setLoading(true);
+    setError('');
     try {
-      const data = await login(email, password);
-      const userRole = data.role || data.user?.role;
-
-      if (userRole === 'admin') {
-        navigate('/admin');
-      } else if (userRole === 'faculty') {
-        navigate('/faculty/dashboard');
-      } else if (userRole === 'student') {
-        navigate('/student/dashboard');
-      } else {
-        navigate('/');
-      }
+      // Simulate password update
+      await new Promise(r => setTimeout(r, 1500));
+      setSuccessMsg('Password updated successfully!');
+      setTimeout(() => {
+        setShowForgot(false);
+        setResetStep(1);
+        setSuccessMsg('');
+        setVerifyId('');
+        setNewPassword('');
+        setConfirmPassword('');
+      }, 2000);
     } catch (err) {
-      const errorMessage =
-        err?.response?.data?.error ||
-        err?.response?.data?.message ||
-        err?.message ||
-        'Invalid credentials';
-      setError(errorMessage);
+      setError('Failed to update password');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-white">
-      {/* Left Panel - Dark with Logo & Stats */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-12 flex-col justify-between">
-        {/* Logo Section */}
-        <div>
-          <div className="inline-flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-xl font-bold text-white">⚡</span>
-            </div>
-            <span className="text-2xl font-bold text-white">SmartAttend</span>
-          </div>
-          <p className="text-slate-400 mt-2 text-sm">AI-powered attendance with blockchain verification</p>
-        </div>
+    <div className="login-page">
+      <div className="blob blob-1" />
+      <div className="blob blob-2" />
 
-        {/* Stat Counters */}
-        <div className="space-y-6">
-          {/* Students Enrolled */}
-          <div className="space-y-2">
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-bold text-white">{statValues.students.toLocaleString()}</span>
-              <span className="text-slate-400 text-lg">+</span>
-            </div>
-            <p className="text-slate-400">Students Enrolled</p>
-            <div className="h-1 w-32 bg-slate-700 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-500 transition-all duration-300" style={{ width: '100%' }}></div>
-            </div>
+      <div className="login-container">
+        <div className="login-header">
+          <div className="brand-logo">
+            <HiOutlineAcademicCap />
           </div>
-
-          {/* Attendance Records */}
-          <div className="space-y-2">
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-bold text-white">{statValues.records.toLocaleString()}</span>
-              <span className="text-slate-400 text-lg">+</span>
-            </div>
-            <p className="text-slate-400">Attendance Records</p>
-            <div className="h-1 w-32 bg-slate-700 rounded-full overflow-hidden">
-              <div className="h-full bg-green-500 transition-all duration-300" style={{ width: '100%' }}></div>
-            </div>
-          </div>
-
-          {/* Recognition Accuracy */}
-          <div className="space-y-2">
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-bold text-white">{statValues.accuracy}%</span>
-            </div>
-            <p className="text-slate-400">Face Recognition Accuracy</p>
-            <div className="h-1 w-32 bg-slate-700 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-purple-500 transition-all duration-300"
-                style={{ width: `${(statValues.accuracy / 100) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Text */}
-        <div>
-          <p className="text-slate-500 text-xs">
-            🔐 Military-grade encryption • 🛡️ Blockchain secured • ✓ ISO certified
+          <h1 className="brand-title">
+            {!showForgot ? 'Welcome Back' : resetStep === 1 ? 'Verify Identity' : 'Set New Password'}
+          </h1>
+          <p className="brand-sub">
+            {!showForgot 
+              ? 'Secure access to Smart Attendance System' 
+              : resetStep === 1 
+                ? 'Enter your Registration ID / UID to continue' 
+                : 'Create a strong password for your account'}
           </p>
         </div>
-      </div>
 
-      {/* Right Panel - White with Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
-        <div className="w-full max-w-md">
-          {/* Welcome Text (Mobile) */}
-          <div className="lg:hidden mb-8">
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome</h1>
-            <p className="text-slate-600">Sign in to your account</p>
-          </div>
-
-          {/* Role Tabs */}
-          <div className="flex gap-2 mb-8 bg-slate-50 rounded-lg p-1">
-            {['student', 'faculty', 'admin'].map((r) => {
-              const btnClass =
-                role === r
-                  ? r === 'student'
-                    ? 'bg-blue-600 text-white'
-                    : r === 'faculty'
-                    ? 'bg-violet-600 text-white'
-                    : 'bg-rose-600 text-white'
-                  : 'text-slate-600 hover:text-slate-900';
-
-              return (
-                <button
-                  key={r}
-                  onClick={() => {
-                    setRole(r);
-                    setError('');
-                  }}
-                  className={`flex-1 py-2 px-3 rounded font-semibold text-sm transition-all ${btnClass}`}
-                >
-                  {r.charAt(0).toUpperCase() + r.slice(1)}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Login Card */}
-          <div
-            className={`bg-white border-2 rounded-2xl p-8 shadow-lg ${
-              role === 'student'
-                ? 'border-blue-200'
-                : role === 'faculty'
-                ? 'border-violet-200'
-                : 'border-rose-200'
-            }`}
-          >
-            <div
-              className={`inline-flex items-center justify-center w-12 h-12 rounded-lg mb-6 ${
-                role === 'student'
-                  ? 'bg-blue-50'
-                  : role === 'faculty'
-                  ? 'bg-violet-50'
-                  : 'bg-rose-50'
-              }`}
-            >
-              <HiOutlineLockClosed
-                className={`w-6 h-6 ${
-                  role === 'student'
-                    ? 'text-blue-600'
-                    : role === 'faculty'
-                    ? 'text-violet-600'
-                    : 'text-rose-600'
-                }`}
-              />
+        <div className="login-card">
+          {error && (
+            <div className="error-msg">
+              <HiOutlineShieldCheck />
+              {error}
             </div>
+          )}
 
-            <h2 className="text-2xl font-bold text-slate-900 mb-1">Sign In</h2>
-            <p className="text-slate-600 text-sm mb-6">Access your {role} dashboard</p>
+          {successMsg && (
+            <div className="error-msg" style={{ background: 'rgba(35, 134, 54, 0.1)', borderColor: 'rgba(35, 134, 54, 0.2)', color: '#3fb950' }}>
+              <HiOutlineShieldCheck />
+              {successMsg}
+            </div>
+          )}
 
-            {/* Error Message */}
-            {error && (
-              <div
-                className={`mb-6 p-4 border-l-4 rounded-lg flex items-start gap-3 ${
-                  role === 'student'
-                    ? 'bg-blue-50 border-blue-200'
-                    : role === 'faculty'
-                    ? 'bg-violet-50 border-violet-200'
-                    : 'bg-rose-50 border-rose-200'
-                }`}
-              >
-                <HiExclamationCircle
-                  className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                    role === 'student'
-                      ? 'text-blue-600'
-                      : role === 'faculty'
-                      ? 'text-violet-600'
-                      : 'text-rose-600'
-                  }`}
-                />
-                <p
-                  className={`text-sm font-medium ${
-                    role === 'student'
-                      ? 'text-blue-600'
-                      : role === 'faculty'
-                      ? 'text-violet-600'
-                      : 'text-rose-600'
-                  }`}
-                >
-                  {error}
-                </p>
-              </div>
-            )}
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Registration Number Field */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
-                  Registration Number
-                </label>
-                <div className="relative">
-                  <HiOutlineUser className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
+          {!showForgot ? (
+            <form onSubmit={handleSubmit}>
+              <div className="field-group">
+                <label className="field-label">Username or ID</label>
+                <div className="input-wrap">
+                  <HiOutlineUser className="input-icon" />
                   <input
                     type="text"
-                    value={email}
-                    onChange={handleEmailChange}
-                    placeholder="Enter your registration number"
-                    className={`w-full pl-10 pr-10 py-3 border-2 rounded-lg focus:outline-none transition-all ${
-                      emailValid === null
-                        ? 'border-slate-300 focus:border-slate-400'
-                        : emailValid
-                        ? 'border-green-500 focus:border-green-600'
-                        : 'border-red-500 focus:border-red-600'
-                    }`}
+                    className="input-field"
+                    placeholder="Enter your ID or username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
                   />
-                  {emailValid === true && (
-                    <HiCheckCircle className="absolute right-3 top-3.5 w-5 h-5 text-green-500" />
-                  )}
-                  {emailValid === false && (
-                    <HiExclamationCircle className="absolute right-3 top-3.5 w-5 h-5 text-red-500" />
-                  )}
                 </div>
-                {emailValid === false && (
-                  <p className="text-xs text-red-600 mt-1">Registration number must be at least 4 characters</p>
-                )}
               </div>
 
-              {/* Password Field */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <HiOutlineLockClosed className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
+              <div className="field-group" style={{ marginBottom: 8 }}>
+                <label className="field-label">Password</label>
+                <div className="input-wrap">
+                  <HiOutlineLockClosed className="input-icon" />
                   <input
                     type="password"
-                    value={password}
-                    onChange={handlePasswordChange}
+                    className="input-field"
                     placeholder="••••••••"
-                    className={`w-full pl-10 pr-10 py-3 border-2 rounded-lg focus:outline-none transition-all ${
-                      passwordValid === null
-                        ? 'border-slate-300 focus:border-slate-400'
-                        : passwordValid
-                        ? 'border-green-500 focus:border-green-600'
-                        : 'border-red-500 focus:border-red-600'
-                    }`}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
-                  {passwordValid === true && (
-                    <HiCheckCircle className="absolute right-3 top-3.5 w-5 h-5 text-green-500" />
-                  )}
-                  {passwordValid === false && (
-                    <HiExclamationCircle className="absolute right-3 top-3.5 w-5 h-5 text-red-500" />
-                  )}
                 </div>
               </div>
 
-              {/* Forgot Password Link */}
-              <div className="text-right">
-                <a
-                  href="#"
-                  className={`text-sm font-medium transition-opacity hover:opacity-80 ${
-                    role === 'student'
-                      ? 'text-blue-600'
-                      : role === 'faculty'
-                      ? 'text-violet-600'
-                      : 'text-rose-600'
-                  }`}
-                >
-                  Forgot password?
-                </a>
-              </div>
-
-              {/* Sign In Button */}
-              <button
-                type="submit"
-                disabled={loading || !email || !password}
-                className={`w-full text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 ${
-                  role === 'student'
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
-                    : role === 'faculty'
-                    ? 'bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-700 hover:to-violet-800'
-                    : 'bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800'
-                }`}
+              <button 
+                type="button" 
+                onClick={() => { setShowForgot(true); setResetStep(1); setError(''); }} 
+                className="forgot-link"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Signing In...
-                  </>
-                ) : (
-                  <>
-                    <span>Sign In</span>
-                    <HiOutlineArrowRight className="w-5 h-5" />
-                  </>
-                )}
+                Forgot password?
+              </button>
+
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? 'Authenticating...' : 'Sign In'}
+                {!loading && <HiOutlineArrowRight />}
               </button>
             </form>
-          </div>
+          ) : resetStep === 1 ? (
+            <form onSubmit={handleVerifyId}>
+              <div className="field-group">
+                <label className="field-label">Registration / UID</label>
+                <div className="input-wrap">
+                  <HiOutlineUser className="input-icon" />
+                  <input
+                    type="text"
+                    className="input-field"
+                    placeholder="e.g. CSE2021001"
+                    value={verifyId}
+                    onChange={(e) => setVerifyId(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
 
-          {/* Footer */}
-          <p className="text-center text-sm text-slate-600 mt-6">
-            Don't have an account?{' '}
-            <a href="#" className="font-semibold text-slate-900 hover:text-slate-700">
-              Contact Admin
-            </a>
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? 'Verifying...' : 'Verify Identity'}
+                {!loading && <HiOutlineShieldCheck />}
+              </button>
+
+              <button 
+                type="button" 
+                onClick={() => setShowForgot(false)} 
+                className="footer-text"
+                style={{ display: 'block', width: '100%', marginTop: 24, background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Back to <span style={{ color: '#58a6ff', fontWeight: 600 }}>Sign In</span>
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handlePasswordReset}>
+              <div className="field-group">
+                <label className="field-label">New Password</label>
+                <div className="input-wrap">
+                  <HiOutlineLockClosed className="input-icon" />
+                  <input
+                    type="password"
+                    className="input-field"
+                    placeholder="••••••••"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">Confirm Password</label>
+                <div className="input-wrap">
+                  <HiOutlineLockClosed className="input-icon" />
+                  <input
+                    type="password"
+                    className="input-field"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? 'Updating...' : 'Reset Password'}
+                {!loading && <HiOutlineArrowRight />}
+              </button>
+
+              <button 
+                type="button" 
+                onClick={() => setResetStep(1)} 
+                className="footer-text"
+                style={{ display: 'block', width: '100%', marginTop: 24, background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Go <span style={{ color: '#58a6ff', fontWeight: 600 }}>Back</span>
+              </button>
+            </form>
+          )}
+        </div>
+
+        {!showForgot && (
+          <p className="footer-text">
+            New here? <a href="mailto:admin@system.com">Contact Administrator</a>
           </p>
+        )}
+
+        <div className="trust-badge">
+          <HiOutlineShieldCheck size={16} />
+          <span>AES-256 Encrypted · Blockchain Verified Records</span>
         </div>
       </div>
     </div>

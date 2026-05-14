@@ -1248,8 +1248,9 @@ const FacultyDashboard = () => {
   const [sessionDuration]                   = useState(3600);
   const [recognitions, setRecognitions]     = useState([]);
   const [showEndModal, setShowEndModal]     = useState(false);
-  const [classInfo, setClassInfo]           = useState({ branch: 'CSE', year: '2', section: 'A' });
+  const [classInfo, setClassInfo]           = useState({ branch: 'CSE', year: '2', section: 'A', course_id: '' });
   const [sessionData, setSessionData]       = useState(null);
+  const [metadata, setMetadata]             = useState(null);
   const [loading, setLoading]               = useState(false);
   const [capturing, setCapturing]           = useState(false);
   const [cameraReady, setCameraReady]       = useState(false);
@@ -1280,6 +1281,27 @@ const FacultyDashboard = () => {
     };
   }, []);
 
+  /* Fetch dashboard metadata */
+  useEffect(() => {
+    fetch('/api/faculty/dashboard/', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          setMetadata(data);
+          if (data.courses && data.courses.length > 0) {
+            const firstCourse = data.courses[0];
+            setClassInfo({
+              branch: firstCourse.branch,
+              year: firstCourse.year,
+              section: firstCourse.section,
+              course_id: firstCourse.id.toString(),
+            });
+          }
+        }
+      })
+      .catch(err => console.error("Error fetching metadata", err));
+  }, []);
+
   const formatTime = (seconds) => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
@@ -1300,6 +1322,9 @@ const FacultyDashboard = () => {
       formData.append('branch',   classInfo.branch);
       formData.append('year',     classInfo.year);
       formData.append('section',  classInfo.section);
+      if (classInfo.course_id) {
+        formData.append('course_id', classInfo.course_id);
+      }
 
       const response = await fetch('/api/attendance/window/open/', {
         method: 'POST', body: formData, credentials: 'include',
@@ -1362,6 +1387,9 @@ const FacultyDashboard = () => {
       formData.append('branch',          classInfo.branch);
       formData.append('year',            classInfo.year);
       formData.append('section',         classInfo.section);
+      if (classInfo.course_id) {
+        formData.append('course_id', classInfo.course_id);
+      }
       formData.append('face_image_data', imageData);
 
       const response = await fetch('/api/attendance/mark/', {
@@ -1419,8 +1447,13 @@ const FacultyDashboard = () => {
           <div className="session-bar">
             <div className="session-bar-meta">
               <div className="session-bar-stat">
-                <span className="label">Class</span>
-                <span className="value">{classInfo.branch}-{classInfo.year}{classInfo.section}</span>
+                <span className="label">Course</span>
+                <span className="value">
+                  {classInfo.course_id && metadata?.courses ? 
+                    metadata.courses.find(c => c.id.toString() === classInfo.course_id)?.course_name : 
+                    `${classInfo.branch}-${classInfo.year}${classInfo.section}`
+                  }
+                </span>
               </div>
               <div className="divider-v" />
               <div className="session-bar-stat">
@@ -1577,36 +1610,72 @@ const FacultyDashboard = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
             {/* Class selector */}
             <div className="idle-panel">
-              <h2 className="idle-heading">Select Class</h2>
-              <p className="idle-sub">Choose the branch, year, and section before starting the session.</p>
+              <h2 className="idle-heading">Select Course / Class</h2>
+              <p className="idle-sub">Choose the subject you are teaching before starting the session.</p>
 
-              <div className="class-form-grid">
+              <div className="class-form-grid" style={{ gridTemplateColumns: '1fr', gap: '16px', marginBottom: '24px' }}>
                 <div className="form-group">
-                  <label>Branch</label>
-                  <select value={classInfo.branch} onChange={e => setClassInfo({ ...classInfo, branch: e.target.value })}>
-                    {['CSE','ECE','ME','CE','EE'].map(b => <option key={b}>{b}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Year</label>
-                  <select value={classInfo.year} onChange={e => setClassInfo({ ...classInfo, year: e.target.value })}>
-                    {[['1','1st Year'],['2','2nd Year'],['3','3rd Year'],['4','4th Year']].map(([v,l]) =>
-                      <option key={v} value={v}>{l}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Section</label>
-                  <select value={classInfo.section} onChange={e => setClassInfo({ ...classInfo, section: e.target.value })}>
-                    {['A','B','C'].map(s => <option key={s}>{s}</option>)}
-                  </select>
+                  <label>Course</label>
+                  {metadata?.courses && metadata.courses.length > 0 ? (
+                    <select 
+                      value={classInfo.course_id} 
+                      onChange={e => {
+                        const courseId = e.target.value;
+                        const course = metadata.courses.find(c => c.id.toString() === courseId);
+                        if (course) {
+                          setClassInfo({ ...classInfo, course_id: courseId, branch: course.branch, year: course.year, section: course.section });
+                        } else {
+                          setClassInfo({ ...classInfo, course_id: courseId });
+                        }
+                      }}
+                      style={{ padding: '12px', borderRadius: '10px', border: '1px solid var(--col-border)', width: '100%' }}
+                    >
+                      <option value="">Select a course...</option>
+                      {metadata.courses.map(c => (
+                        <option key={c.id} value={c.id}>{c.course_code} - {c.course_name} ({c.branch}-{c.year}-{c.section})</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', color: '#64748b', fontSize: '14px' }}>
+                      No courses assigned to you.
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="class-preview">
+              {/* Legacy fallback if no courses */}
+              {(!metadata?.courses || metadata.courses.length === 0) && (
+                <div className="class-form-grid" style={{ marginTop: '16px' }}>
+                  <div className="form-group">
+                    <label>Branch</label>
+                    <select value={classInfo.branch} onChange={e => setClassInfo({ ...classInfo, branch: e.target.value })}>
+                      {['CSE','ECE','ME','CE','EE'].map(b => <option key={b}>{b}</option>)}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Year</label>
+                    <select value={classInfo.year} onChange={e => setClassInfo({ ...classInfo, year: e.target.value })}>
+                      {[['1','1st Year'],['2','2nd Year'],['3','3rd Year'],['4','4th Year']].map(([v,l]) =>
+                        <option key={v} value={v}>{l}</option>)}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Section</label>
+                    <select value={classInfo.section} onChange={e => setClassInfo({ ...classInfo, section: e.target.value })}>
+                      {['A','B','C'].map(s => <option key={s}>{s}</option>)}
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              <div className="class-preview" style={{ marginTop: '16px' }}>
                 <HiAcademicCap style={{ width: 24, height: 24, color: '#4338ca', flexShrink: 0 }} />
                 <div>
                   <div className="class-preview-badge">
-                    {classInfo.branch} · Year {classInfo.year} · Section {classInfo.section}
+                    {classInfo.course_id && metadata?.courses ? 
+                      metadata.courses.find(c => c.id.toString() === classInfo.course_id)?.course_name : 
+                      `${classInfo.branch} · Year ${classInfo.year} · Section ${classInfo.section}`
+                    }
                   </div>
                   <div className="class-preview-text">Selected for attendance session</div>
                 </div>
