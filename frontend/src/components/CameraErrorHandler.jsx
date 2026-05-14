@@ -160,7 +160,7 @@ const CameraErrorHandler = ({ error, onRetry, onManualEntry }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onRetry}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-beach-primary hover:bg-beach-secondary text-white font-medium transition-colors"
           >
             <HiOutlineArrowPath className="h-5 w-5" />
             Try Again
@@ -188,8 +188,8 @@ const CameraErrorHandler = ({ error, onRetry, onManualEntry }) => {
       </div>
 
       {/* Info Banner */}
-      <div className="mt-6 p-3 rounded-lg bg-blue-900/20 border border-blue-700/50">
-        <p className="text-xs text-blue-100">
+      <div className="mt-6 p-3 rounded-lg bg-beach-bg/50 border border-beach-border">
+        <p className="text-xs text-beach-text">
           <span className="font-semibold">ℹ️ Note: </span>
           Ensure you have a stable internet connection. Face recognition works best in bright, even lighting.
         </p>

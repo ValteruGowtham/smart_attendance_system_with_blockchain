@@ -5,14 +5,19 @@ import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-import AdminHome from './pages/AdminHome_Premium';
+import AdminHome from './pages/AdminDashboard';
 import AddStudent from './pages/AddStudent';
 import AddFaculty from './pages/AddFaculty';
 import ViewStudents from './pages/ViewStudents';
 import ViewFaculty from './pages/ViewFaculty';
 import ViewAttendance from './pages/ViewAttendance';
-import FacultyDashboard from './pages/FacultyDashboard_Premium';
-import StudentDashboard from './pages/StudentDashboard_Premium';
+import FacultyDashboard from './pages/FacultyDashboard';
+import StudentDashboard from './pages/StudentDashboard';
+import AttendanceAlerts from './pages/AttendanceAlerts';
+import AttendanceCalendar from './pages/AttendanceCalendar';
+import StudentEnroll from './pages/StudentEnroll';
+import SessionReport from './pages/SessionReport';
+import NotificationsCenter from './pages/NotificationsCenter';
 import './index.css';
 
 function ProtectedRoute({ children, roles }) {
@@ -88,9 +93,14 @@ function AppRoutes() {
 
       {/* Faculty */}
       <Route path="/faculty/dashboard" element={<ProtectedRoute roles={['faculty']}><FacultyDashboard /></ProtectedRoute>} />
+      <Route path="/faculty/session-report" element={<ProtectedRoute roles={['faculty']}><SessionReport /></ProtectedRoute>} />
+      <Route path="/faculty/attendance-alerts" element={<ProtectedRoute roles={['faculty']}><AttendanceAlerts /></ProtectedRoute>} />
 
       {/* Student */}
       <Route path="/student/dashboard" element={<ProtectedRoute roles={['student']}><StudentDashboard /></ProtectedRoute>} />
+      <Route path="/student/attendance-calendar" element={<ProtectedRoute roles={['student']}><AttendanceCalendar /></ProtectedRoute>} />
+      <Route path="/student/enroll" element={<ProtectedRoute roles={['student']}><StudentEnroll /></ProtectedRoute>} />
+      <Route path="/student/notifications" element={<ProtectedRoute roles={['student']}><NotificationsCenter /></ProtectedRoute>} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" />} />

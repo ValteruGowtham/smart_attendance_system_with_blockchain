@@ -13,20 +13,20 @@ export const useTheme = () => {
     // Return a safe default theme instead of crashing
     console.warn('useTheme called outside ThemeProvider - returning default theme');
     return {
-      isDark: false,
+      isDark: false, // Default to light for beach/cream vibe
       toggleTheme: () => {},
       colors: {
         bg: {
-          primary: '#ffffff',
-          secondary: '#f8fafc',
-          tertiary: '#e2e8f0',
+          primary: '#FEFEFE',
+          secondary: '#F5F5F5',
+          tertiary: '#EEEEEE',
         },
         text: {
-          primary: '#1e293b',
-          secondary: '#64748b',
-          tertiary: '#94a3b8',
+          primary: '#212121',
+          secondary: '#757575',
+          tertiary: '#9E9E9E',
         },
-        border: '#e2e8f0',
+        border: '#E0E0E0',
         glass: 'rgba(255, 255, 255, 0.8)',
       },
     };
@@ -68,16 +68,16 @@ export const ThemeProvider = ({ children }) => {
     toggleTheme,
     colors: {
       bg: {
-        primary: isDark ? '#0f172a' : '#ffffff',
-        secondary: isDark ? '#1e293b' : '#f8fafc',
-        tertiary: isDark ? '#334155' : '#e2e8f0',
+        primary: isDark ? '#0f172a' : '#FEFEFE',
+        secondary: isDark ? '#1e293b' : '#F5F5F5',
+        tertiary: isDark ? '#334155' : '#EEEEEE',
       },
       text: {
-        primary: isDark ? '#f1f5f9' : '#1e293b',
-        secondary: isDark ? '#cbd5e1' : '#64748b',
-        tertiary: isDark ? '#94a3b8' : '#94a3b8',
+        primary: isDark ? '#f1f5f9' : '#212121',
+        secondary: isDark ? '#cbd5e1' : '#757575',
+        tertiary: isDark ? '#94a3b8' : '#9E9E9E',
       },
-      border: isDark ? '#334155' : '#e2e8f0',
+      border: isDark ? '#334155' : '#E0E0E0',
       glass: isDark
         ? 'rgba(30, 41, 59, 0.5)'
         : 'rgba(255, 255, 255, 0.8)',

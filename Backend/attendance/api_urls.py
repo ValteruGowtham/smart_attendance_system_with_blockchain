@@ -9,6 +9,9 @@ urlpatterns = [
 
     # Admin
     path('admin/stats/', api_views.api_admin_stats, name='api_admin_stats'),
+    
+    # Public Stats (for landing page)
+    path('public/stats/', api_views.api_public_stats, name='api_public_stats'),
 
     # Students
     path('students/', api_views.api_students_list, name='api_students_list'),

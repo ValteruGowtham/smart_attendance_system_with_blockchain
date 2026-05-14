@@ -232,6 +232,15 @@ def api_admin_stats(request):
     })
 
 
+def api_public_stats(request):
+    """Public stats for landing page - no auth required"""
+    return JsonResponse({
+        'total_students': Student.objects.count(),
+        'total_faculty': Faculty.objects.count(),
+        'total_attendance': Attendance.objects.count(),
+    })
+
+
 # ─── Students CRUD ───────────────────────────────────────────
 @api_login_required
 def api_students_list(request):

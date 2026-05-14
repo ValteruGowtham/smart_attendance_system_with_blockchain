@@ -27,6 +27,9 @@ export const logoutUser = () => API.post('/auth/logout/');
 // ─── Admin ────────────────────────────────────────────────────
 export const getAdminStats = () => API.get('/admin/stats/');
 
+// ─── Public ───────────────────────────────────────────────────
+export const getPublicStats = () => API.get('/public/stats/');
+
 // ─── Students CRUD ────────────────────────────────────────────────
 export const getStudents = () => API.get('/students/');
 export const addStudent = (formData) =>
