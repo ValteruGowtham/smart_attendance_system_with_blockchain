@@ -31,9 +31,9 @@ class Command(BaseCommand):
                 student = Student.objects.get(registration_id=reg_id)
                 self.stdout.write(f"Processing {student.registration_id}...")
                 if save_student_embedding(student):
-                    self.stdout.write(self.style.SUCCESS(f'✓ Generated embedding for {student.registration_id}'))
+                    self.stdout.write(self.style.SUCCESS(f'OK: Generated embedding for {student.registration_id}'))
                 else:
-                    self.stdout.write(self.style.ERROR(f'✗ Failed for {student.registration_id}'))
+                    self.stdout.write(self.style.ERROR(f'[FAIL] Failed for {student.registration_id}'))
             except Student.DoesNotExist:
                 self.stdout.write(self.style.ERROR(f'Student {reg_id} not found'))
             return
@@ -65,10 +65,10 @@ class Command(BaseCommand):
             
             # Generate embedding
             if save_student_embedding(student):
-                self.stdout.write(self.style.SUCCESS('✓'))
+                self.stdout.write(self.style.SUCCESS('OK'))
                 success += 1
             else:
-                self.stdout.write(self.style.ERROR('✗'))
+                self.stdout.write(self.style.ERROR('[FAIL]'))
                 failed += 1
 
         # Summary

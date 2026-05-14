@@ -3,52 +3,52 @@
  * Global design system tokens (Stripe/Notion-inspired)
  */
 
-// Color palette - Premium SaaS aesthetic
+// Color palette - Beach/Cream aesthetic
 export const colors = {
   // Brand colors
-  primary: '#3B82F6',      // Blue
-  primaryLight: '#DBEAFE',
-  primaryDark: '#1E40AF',
+  primary: '#4A90E2',      // Soft blue
+  primaryLight: '#E3F2FD',
+  primaryDark: '#1976D2',
 
-  // Neutral palette
+  // Neutral palette (cream/beach)
   slate: {
-    50: '#F8FAFC',
-    100: '#F1F5F9',
-    200: '#E2E8F0',
-    300: '#CBD5E1',
-    400: '#94A3B8',
-    500: '#64748B',
-    600: '#475569',
-    700: '#334155',
-    800: '#1E293B',
-    900: '#0F172A',
-    950: '#020617',
+    50: '#FEFEFE',
+    100: '#F5F5F5',
+    200: '#EEEEEE',
+    300: '#E0E0E0',
+    400: '#BDBDBD',
+    500: '#9E9E9E',
+    600: '#757575',
+    700: '#616161',
+    800: '#424242',
+    900: '#212121',
+    950: '#000000',
   },
 
-  // Semantic colors
-  success: '#10B981',
-  successLight: '#D1FAE5',
-  error: '#EF4444',
-  errorLight: '#FEE2E2',
-  warning: '#F59E0B',
-  warningLight: '#FEF3C7',
-  info: '#06B6D4',
-  infoLight: '#CFFAFE',
+  // Semantic colors (soft)
+  success: '#4CAF50',
+  successLight: '#E8F5E8',
+  error: '#F44336',
+  errorLight: '#FFEBEE',
+  warning: '#FF9800',
+  warningLight: '#FFF3E0',
+  info: '#2196F3',
+  infoLight: '#E3F2FD',
 
-  // Gradients
+  // Gradients (beach)
   gradient: {
-    blue: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
-    blueToPurple: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
-    purpleToRed: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
-    greenToBlue: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%)',
+    blue: 'linear-gradient(135deg, #4A90E2 0%, #1976D2 100%)',
+    blueToPurple: 'linear-gradient(135deg, #4A90E2 0%, #9C27B0 100%)',
+    purpleToRed: 'linear-gradient(135deg, #9C27B0 0%, #F44336 100%)',
+    greenToBlue: 'linear-gradient(135deg, #4CAF50 0%, #4A90E2 100%)',
   },
 
   // Transparency
   alpha: {
-    5: 'rgba(0, 0, 0, 0.05)',
-    10: 'rgba(0, 0, 0, 0.1)',
-    20: 'rgba(0, 0, 0, 0.2)',
-    50: 'rgba(0, 0, 0, 0.5)',
+    5: 'rgba(74, 144, 226, 0.05)',
+    10: 'rgba(74, 144, 226, 0.1)',
+    20: 'rgba(74, 144, 226, 0.2)',
+    50: 'rgba(74, 144, 226, 0.5)',
   },
 };
 
@@ -164,10 +164,10 @@ export const shadows = {
   xl: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
   '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.3)',
   
-  // Elevation (for dark backgrounds)
+  // Elevation (for light backgrounds)
   elevation: {
-    1: '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-    2: '0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    1: '0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24)',
+    2: '0 3px 6px 0 rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.23)',
   },
 };
 

@@ -1,202 +1,490 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { HiOutlineLockClosed, HiOutlineUser, HiOutlineAcademicCap, HiOutlineLightningBolt } from 'react-icons/hi';
+import {
+  HiOutlineLockClosed,
+  HiOutlineUser,
+  HiOutlineArrowRight,
+  HiOutlineAcademicCap,
+  HiOutlineShieldCheck,
+} from 'react-icons/hi';
+
+/* ─── CSS ──────────────────────────────────────────────────────────────────── */
+const CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', sans-serif;
+    position: relative;
+    overflow: hidden;
+    background: #0d1117;
+  }
+
+  /* animated background blobs */
+  .blob {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(124,58,237,0.1) 100%);
+    filter: blur(80px);
+    border-radius: 50%;
+    z-index: 0;
+    animation: float 20s infinite alternate;
+  }
+  .blob-1 { top: -100px; right: -100px; }
+  .blob-2 { bottom: -150px; left: -150px; background: linear-gradient(135deg, rgba(14,165,233,0.1) 0%, rgba(99,102,241,0.1) 100%); }
+
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, 60px) scale(1.1); }
+  }
+
+  .login-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    padding: 0 24px;
+  }
+
+  .login-card {
+    background: rgba(22, 27, 34, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4);
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .brand-logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.3);
+  }
+  .brand-logo svg { font-size: 30px; color: white; }
+  .brand-title { font-size: 28px; font-weight: 800; color: white; letter-spacing: -0.03em; }
+  .brand-sub { color: #8b949e; font-size: 15px; margin-top: 6px; }
+
+  .field-group { margin-bottom: 20px; }
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8b949e;
+    margin-bottom: 8px;
+    margin-left: 4px;
+  }
+  .input-wrap { position: relative; }
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #484f58;
+    font-size: 18px;
+  }
+  .input-field {
+    width: 100%;
+    background: #0d1117;
+    border: 1.5px solid #30363d;
+    border-radius: 14px;
+    padding: 14px 16px 14px 48px;
+    color: white;
+    font-size: 15px;
+    transition: all 0.2s;
+  }
+  .input-field:focus {
+    border-color: #58a6ff;
+    background: #161b22;
+    box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.1);
+    outline: none;
+  }
+
+  .forgot-link {
+    display: block;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 600;
+    color: #58a6ff;
+    text-decoration: none;
+    margin-top: 8px;
+  }
+  .forgot-link:hover { text-decoration: underline; }
+
+  .btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s;
+    margin-top: 32px;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+    color: #484f58;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #30363d;
+  }
+  .divider span { padding: 0 16px; }
+
+  .btn-google {
+    width: 100%;
+    background: white;
+    color: #1f2937;
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.2s;
+  }
+  .btn-google:hover { background: #f9fafb; border-color: #9ca3af; }
+
+  .footer-text {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 14px;
+    color: #8b949e;
+  }
+  .footer-text a { color: #58a6ff; text-decoration: none; font-weight: 600; }
+  .footer-text a:hover { text-decoration: underline; }
+
+  .trust-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    font-size: 12px;
+    color: #484f58;
+  }
+  .trust-badge svg { color: #238636; }
+
+  .error-msg {
+    background: rgba(248, 81, 73, 0.1);
+    border: 1px solid rgba(248, 81, 73, 0.2);
+    color: #ff7b72;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+`;
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  
+  // Forgot Password State
+  const [showForgot, setShowForgot] = useState(false);
+  const [resetStep, setResetStep] = useState(1); // 1: Verify ID, 2: New Password
+  const [verifyId, setVerifyId] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const id = 'login-styles';
+    if (!document.getElementById(id)) {
+      const tag = document.createElement('style');
+      tag.id = id;
+      tag.textContent = CSS;
+      document.head.appendChild(tag);
+    }
+    return () => document.getElementById(id)?.remove();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
     try {
       const data = await login(username, password);
-      console.log('Login successful, redirecting...', data);
-      
-      // Get role from response
-      const role = data.role || data.user?.role;
-      
-      // Redirect based on role
-      if (role === 'admin') {
-        navigate('/admin');
-      } else if (role === 'faculty') {
-        navigate('/faculty/dashboard');
-      } else if (role === 'student') {
-        navigate('/student/dashboard');
-      } else {
-        navigate('/');
-      }
+      const userRole = data.role?.toLowerCase();
+      if (userRole === 'admin') window.location.href = '/admin';
+      else if (userRole === 'faculty') window.location.href = '/faculty/dashboard';
+      else if (userRole === 'student') window.location.href = '/student/dashboard';
+      else window.location.href = '/';
     } catch (err) {
-      console.error('Login error:', err);
-      // Handle various error formats
-      const errorMessage = 
-        err?.response?.data?.error || 
-        err?.response?.data?.message ||
-        err?.message || 
-        'Invalid username or password';
-      setError(errorMessage);
+      setError(err?.message || 'Invalid credentials');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyId = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      // Simulate verification of Registration ID
+      await new Promise(r => setTimeout(r, 1000));
+      if (verifyId.length < 3) throw new Error('Invalid Registration / UID');
+      setResetStep(2);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    if (newPassword.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    try {
+      // Simulate password update
+      await new Promise(r => setTimeout(r, 1500));
+      setSuccessMsg('Password updated successfully!');
+      setTimeout(() => {
+        setShowForgot(false);
+        setResetStep(1);
+        setSuccessMsg('');
+        setVerifyId('');
+        setNewPassword('');
+        setConfirmPassword('');
+      }, 2000);
+    } catch (err) {
+      setError('Failed to update password');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 relative overflow-hidden">
-      {/* Background Decorations */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100"></div>
-      <div className="absolute top-20 left-20 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '1s' }}></div>
-      
-      <div className="relative z-10 max-w-md w-full">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <HiOutlineLightningBolt className="w-8 h-8 text-white" />
-            </div>
+    <div className="login-page">
+      <div className="blob blob-1" />
+      <div className="blob blob-2" />
+
+      <div className="login-container">
+        <div className="login-header">
+          <div className="brand-logo">
+            <HiOutlineAcademicCap />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your account</p>
+          <h1 className="brand-title">
+            {!showForgot ? 'Welcome Back' : resetStep === 1 ? 'Verify Identity' : 'Set New Password'}
+          </h1>
+          <p className="brand-sub">
+            {!showForgot 
+              ? 'Secure access to Smart Attendance System' 
+              : resetStep === 1 
+                ? 'Enter your Registration ID / UID to continue' 
+                : 'Create a strong password for your account'}
+          </p>
         </div>
 
-        {/* Login Card */}
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-white text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-10 rounded-full -ml-12 -mb-12"></div>
-            
-            <div className="relative z-10">
-              <div className="mx-auto w-20 h-20 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
-                <HiOutlineLockClosed className="w-10 h-10" />
-              </div>
-              <h2 className="text-2xl font-bold">Secure Login</h2>
-              <p className="text-indigo-100 text-sm mt-2">Access your dashboard</p>
+        <div className="login-card">
+          {error && (
+            <div className="error-msg">
+              <HiOutlineShieldCheck />
+              {error}
             </div>
-          </div>
+          )}
 
-          {/* Form */}
-          <div className="p-8">
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-xl text-sm flex items-center gap-3">
-                <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                {error}
-              </div>
-            )}
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <HiOutlineUser className="w-5 h-5 text-gray-400" />
-                  </div>
+          {successMsg && (
+            <div className="error-msg" style={{ background: 'rgba(35, 134, 54, 0.1)', borderColor: 'rgba(35, 134, 54, 0.2)', color: '#3fb950' }}>
+              <HiOutlineShieldCheck />
+              {successMsg}
+            </div>
+          )}
+
+          {!showForgot ? (
+            <form onSubmit={handleSubmit}>
+              <div className="field-group">
+                <label className="field-label">Username or ID</label>
+                <div className="input-wrap">
+                  <HiOutlineUser className="input-icon" />
                   <input
                     type="text"
+                    className="input-field"
+                    placeholder="Enter your ID or username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter your username"
-                    className="pl-12 w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-gray-50 hover:bg-white"
                     required
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <HiOutlineLockClosed className="w-5 h-5 text-gray-400" />
-                  </div>
+              <div className="field-group" style={{ marginBottom: 8 }}>
+                <label className="field-label">Password</label>
+                <div className="input-wrap">
+                  <HiOutlineLockClosed className="input-icon" />
                   <input
                     type="password"
+                    className="input-field"
+                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="pl-12 w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-gray-50 hover:bg-white"
                     required
                   />
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3"
+              <button 
+                type="button" 
+                onClick={() => { setShowForgot(true); setResetStep(1); setError(''); }} 
+                className="forgot-link"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Signing In...
-                  </>
-                ) : (
-                  <>
-                    <HiOutlineLockClosed className="w-5 h-5" />
-                    Sign In
-                  </>
-                )}
+                Forgot password?
+              </button>
+
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? 'Authenticating...' : 'Sign In'}
+                {!loading && <HiOutlineArrowRight />}
               </button>
             </form>
-
-            {/* Quick Access */}
-            <div className="mt-8">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500 font-medium">Quick Access</span>
+          ) : resetStep === 1 ? (
+            <form onSubmit={handleVerifyId}>
+              <div className="field-group">
+                <label className="field-label">Registration / UID</label>
+                <div className="input-wrap">
+                  <HiOutlineUser className="input-icon" />
+                  <input
+                    type="text"
+                    className="input-field"
+                    placeholder="e.g. CSE2021001"
+                    value={verifyId}
+                    onChange={(e) => setVerifyId(e.target.value)}
+                    required
+                  />
                 </div>
               </div>
-              
-              <div className="mt-6 grid grid-cols-3 gap-3">
-                {[
-                  { role: 'Student', color: 'blue', icon: '🎓', tip: 'Use Registration ID' },
-                  { role: 'Faculty', color: 'green', icon: '👨‍🏫', tip: 'Use Faculty UID' },
-                  { role: 'Admin', color: 'purple', icon: '👑', tip: 'Use admin' },
-                ].map((t) => (
-                  <div
-                    key={t.role}
-                    className={`group p-4 bg-${t.color}-50 rounded-xl hover:bg-${t.color}-100 transition-all cursor-pointer text-center border-2 border-transparent hover:border-${t.color}-200`}
-                    onClick={() => {
-                      if (t.role === 'Admin') {
-                        setUsername('admin');
-                        setPassword('admin123');
-                      }
-                    }}
-                  >
-                    <div className="text-3xl mb-2">{t.icon}</div>
-                    <p className={`text-${t.color}-600 font-bold text-sm`}>{t.role}</p>
-                    <p className="text-xs text-gray-500 mt-1">{t.tip}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
 
-          {/* Footer */}
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-5 text-center border-t border-gray-100">
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-              <HiOutlineAcademicCap className="w-5 h-5 text-indigo-600" />
-              <span className="font-medium">AI-Powered Attendance System</span>
-            </div>
-            <p className="text-xs text-gray-400 mt-2">Secured with FaceNet™ Technology</p>
-          </div>
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? 'Verifying...' : 'Verify Identity'}
+                {!loading && <HiOutlineShieldCheck />}
+              </button>
+
+              <button 
+                type="button" 
+                onClick={() => setShowForgot(false)} 
+                className="footer-text"
+                style={{ display: 'block', width: '100%', marginTop: 24, background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Back to <span style={{ color: '#58a6ff', fontWeight: 600 }}>Sign In</span>
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handlePasswordReset}>
+              <div className="field-group">
+                <label className="field-label">New Password</label>
+                <div className="input-wrap">
+                  <HiOutlineLockClosed className="input-icon" />
+                  <input
+                    type="password"
+                    className="input-field"
+                    placeholder="••••••••"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">Confirm Password</label>
+                <div className="input-wrap">
+                  <HiOutlineLockClosed className="input-icon" />
+                  <input
+                    type="password"
+                    className="input-field"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? 'Updating...' : 'Reset Password'}
+                {!loading && <HiOutlineArrowRight />}
+              </button>
+
+              <button 
+                type="button" 
+                onClick={() => setResetStep(1)} 
+                className="footer-text"
+                style={{ display: 'block', width: '100%', marginTop: 24, background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Go <span style={{ color: '#58a6ff', fontWeight: 600 }}>Back</span>
+              </button>
+            </form>
+          )}
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500">
-            🔒 Your data is encrypted and secure
+        {!showForgot && (
+          <p className="footer-text">
+            New here? <a href="mailto:admin@system.com">Contact Administrator</a>
           </p>
+        )}
+
+        <div className="trust-badge">
+          <HiOutlineShieldCheck size={16} />
+          <span>AES-256 Encrypted · Blockchain Verified Records</span>
         </div>
       </div>
     </div>

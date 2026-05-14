@@ -10,7 +10,7 @@ const API = axios.create({
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && token !== 'undefined' && token !== 'null') {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -26,6 +26,11 @@ export const logoutUser = () => API.post('/auth/logout/');
 
 // ─── Admin ────────────────────────────────────────────────────
 export const getAdminStats = () => API.get('/admin/stats/');
+
+// ─── Public ───────────────────────────────────────────────────
+export const getPublicStats = () => API.get('/public/stats/');
+export const getBlockchainInfo = () => API.get('/blockchain/info/');
+export const verifyTransaction = (hash) => API.get('/blockchain/verify/', { params: { hash } });
 
 // ─── Students CRUD ────────────────────────────────────────────────
 export const getStudents = () => API.get('/students/');

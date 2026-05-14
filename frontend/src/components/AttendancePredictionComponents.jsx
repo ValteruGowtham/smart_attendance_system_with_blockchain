@@ -100,9 +100,9 @@ export function AttendancePredictionCard({ studentId, targetPercentage = 75 }) {
       <div className={`p-3 rounded-lg mb-4 ${
         isDark
           ? 'bg-blue-950/30 border border-blue-700/30'
-          : 'bg-blue-50 border border-blue-200'
+          : 'bg-beach-bg border border-beach-border'
       }`}>
-        <p className={`text-sm font-semibold ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
+        <p className={`text-sm font-semibold ${isDark ? 'text-blue-300' : 'text-beach-text'}`}>
           📚 {prediction.classes_needed === 0 
             ? 'You are on track!' 
             : `Attend ${prediction.classes_needed} more classes to reach ${targetPercentage}%`
@@ -249,7 +249,7 @@ export function AttendancePredictionPanel({ studentId, targetPercentage = 75 }) 
           <p className={`text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
             To Reach Target ({targetPercentage}%)
           </p>
-          <p className={`text-3xl font-bold ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+          <p className={`text-3xl font-bold ${isDark ? 'text-blue-400' : 'text-beach-primary'}`}>
             {prediction.classes_needed} more classes
           </p>
           <p className={`text-sm mt-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -537,7 +537,7 @@ export function ManualPredictionCalculator({ targetPercentage = 75 }) {
         <button
           onClick={handleCalculate}
           disabled={loading}
-          className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="w-full px-4 py-2 bg-beach-primary text-white font-semibold rounded-lg hover:bg-beach-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {loading ? 'Calculating...' : 'Calculate Prediction'}
         </button>
@@ -557,7 +557,7 @@ export function ManualPredictionCalculator({ targetPercentage = 75 }) {
               Current Percentage: <span className="font-bold">{prediction.current_percentage}%</span>
             </p>
             <p className={isDark ? 'text-gray-300' : 'text-gray-700'}>
-              Classes Needed: <span className="font-bold text-blue-600">{prediction.classes_needed}</span>
+              Classes Needed: <span className="font-bold text-beach-primary">{prediction.classes_needed}</span>
             </p>
             <p className={`font-semibold ${
               prediction.risk_level.level === 'SAFE'
