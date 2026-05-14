@@ -231,3 +231,14 @@ INFO 2026-04-22 16:07:33,001 runserver 15376 4812 [mHTTP GET /api/admin/stats/ 
 INFO 2026-04-22 16:07:33,026 runserver 15376 4812 [mHTTP GET /api/admin/stats/ 200 [0.02, 127.0.0.1:56571][0m
 INFO 2026-04-22 16:07:46,441 runserver 15376 4812 [mHTTP GET /api/attendance/?search= 200 [0.04, 127.0.0.1:50214][0m
 INFO 2026-04-22 16:07:46,480 runserver 15376 4812 [mHTTP GET /api/attendance/?search= 200 [0.03, 127.0.0.1:61961][0m
+INFO 2026-05-03 21:01:37,539 autoreload 53234 8501221568 Watching for file changes with StatReloader
+INFO 2026-05-14 11:00:33,326 autoreload 90149 8501221568 Watching for file changes with StatReloader
+INFO 2026-05-14 11:03:16,829 autoreload 90149 8501221568 /Users/gowtham/Desktop/capstone/.venv/lib/python3.14/site-packages/asgiref/local.py changed, reloading.
+INFO 2026-05-14 11:03:17,073 autoreload 90336 8501221568 Watching for file changes with StatReloader
+INFO 2026-05-14 11:03:47,215 autoreload 90579 8501221568 Watching for file changes with StatReloader
+INFO 2026-05-14 11:03:51,185 server 90579 6154579968 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-05-14 11:03:51,186 server 90579 6154579968 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-05-14 11:03:51,186 server 90579 6154579968 Listening on TCP address 127.0.0.1:8000
+INFO 2026-05-14 11:04:21,803 runserver 90579 6154579968 [mHTTP GET / 200 [0.00, 127.0.0.1:57063][0m
+WARNING 2026-05-14 11:04:22,349 log 90579 6188232704 Not Found: /favicon.ico
+WARNING 2026-05-14 11:04:22,349 runserver 90579 6154579968 [33mHTTP GET /favicon.ico 404 [0.01, 127.0.0.1:57063][0m

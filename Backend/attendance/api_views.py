@@ -139,9 +139,10 @@ def api_login_required(view_func):
     return wrapper
 
 try:
-    from .recognizer import Recognizer
+    from .recognizer import Recognizer, MultiRecognizer
 except Exception:
     Recognizer = None
+    MultiRecognizer = None
 
 
 def api_user_info(request):
@@ -695,6 +696,174 @@ def api_mark_attendance(request):
         'period_time': get_period_time_label(period),
         'records': records,
         'summary': {'present': present, 'absent': absent, 'total': total, 'percentage': pct},
+    })
+
+
+@csrf_exempt
+@api_login_required
+@require_http_methods(["POST"])
+def api_mark_attendance_multi(request):
+    """Mark attendance for multiple recognized students simultaneously."""
+    faculty = getattr(request.user, 'faculty_profile', None)
+    if not faculty:
+        return JsonResponse({'error': 'Not a faculty member'}, status=403)
+
+    branch = request.POST.get('branch', '')
+    year = request.POST.get('year', '')
+    section = request.POST.get('section', '')
+    period = resolve_period(request)
+    face_image_data = request.POST.get('face_image_data', '')
+
+    period_start_time = get_period_start_time(period)
+    if not period_start_time:
+        return JsonResponse({'error': 'Current time is outside attendance periods (09:00 AM - 05:00 PM).'}, status=400)
+
+    if not face_image_data.strip():
+        return JsonResponse({'error': 'Please capture a face image before submitting.'}, status=400)
+
+    students = get_class_students(branch, year, section)
+    if not students.exists():
+        return JsonResponse({'error': f'No students found for {branch}-{year}-{section}.'}, status=400)
+
+    # Check if students have embeddings
+    students_with_embeddings = students.exclude(face_embedding__isnull=True).exclude(face_embedding='')
+    if not students_with_embeddings.exists():
+        return JsonResponse({
+            'error': 'No registered students with face embeddings found for this class. Please ensure student photos are uploaded.'
+        }, status=400)
+
+    cutoff = get_period_cutoff(period)
+    now = timezone.localtime(timezone.now()).replace(tzinfo=None)
+    if (not EXPO_SCREENSHOT_MODE) and cutoff and now > cutoff:
+        created_absent, final_records = close_attendance_window_and_mark_absent(
+            faculty, branch, year, section, period
+        )
+        return JsonResponse({
+            'error': 'Attendance window closed (cutoff reached).',
+            'period_time': get_period_time_label(period),
+            'absent_marked_now': created_absent,
+            'summary': {
+                'present': final_records.filter(status='Present').count(),
+                'absent': final_records.filter(status='Absent').count(),
+                'total': final_records.count(),
+            },
+        }, status=400)
+
+    # Use MultiRecognizer for multi-face detection
+    recognition_result = {'recognized_students': [], 'unknown_faces_count': 0, 'total_faces_detected': 0}
+    if MultiRecognizer and face_image_data:
+        try:
+            selected = {'branch': branch, 'year': year, 'section': section, 'period': period}
+            recognition_result = MultiRecognizer(selected, face_image_data)
+        except Exception as e:
+            print(f"Multi-recognition error: {e}")
+            return JsonResponse({
+                'success': False,
+                'error': f'Face recognition failed: {str(e)}',
+            }, status=500)
+
+    recognized_students_data = recognition_result.get('recognized_students', [])
+    unknown_faces_count = recognition_result.get('unknown_faces_count', 0)
+    total_faces_detected = recognition_result.get('total_faces_detected', 0)
+
+    if total_faces_detected == 0:
+        return JsonResponse({
+            'success': False,
+            'error': 'No faces detected in the image. Please ensure faces are clearly visible.',
+        }, status=400)
+
+    if len(recognized_students_data) == 0:
+        return JsonResponse({
+            'success': False,
+            'error': f'No registered students recognized. Detected {total_faces_detected} face(s) but none matched registered students.',
+            'unknown_faces_count': unknown_faces_count,
+            'total_faces_detected': total_faces_detected,
+        }, status=400)
+
+    # Mark attendance for all recognized students (atomic operation)
+    from django.db import transaction
+    
+    marked_students = []
+    try:
+        with transaction.atomic():
+            for student_data in recognized_students_data:
+                reg_id = student_data['registration_id']
+                confidence = student_data['confidence']
+                
+                recognized_student = students.filter(registration_id=reg_id).first()
+                if not recognized_student:
+                    continue
+                
+                record, created = Attendance.objects.get_or_create(
+                    faculty=faculty,
+                    student=recognized_student,
+                    date=date.today(),
+                    branch=branch,
+                    year=year,
+                    section=section,
+                    period=period,
+                    defaults={
+                        'time': period_start_time,
+                        'status': 'Present',
+                        'confidence_score': confidence,
+                    },
+                )
+
+                if not created and record.status != 'Present':
+                    record.status = 'Present'
+                    record.time = period_start_time
+                    record.confidence_score = confidence
+                    record.save(update_fields=['status', 'time', 'confidence_score'])
+                
+                marked_students.append({
+                    'registration_id': reg_id,
+                    'name': student_data['name'],
+                    'confidence': confidence,
+                    'already_marked': not created
+                })
+                
+                # Broadcast attendance update to WebSocket clients
+                try:
+                    broadcast_attendance_update_sync(record, recognized_student, faculty)
+                except Exception as e:
+                    print(f"WebSocket broadcast error: {str(e)}")
+    
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Failed to save attendance records: {str(e)}',
+        }, status=500)
+
+    # Return today's attendance for that class
+    today_records = get_today_class_records(faculty, branch, year, section, period).select_related('student', 'student__user')
+
+    records = [{
+        'time': get_period_time_label(a.period) or format_time_short(a.time),
+        'student_id': a.student.registration_id,
+        'student_name': f"{a.student.user.first_name} {a.student.user.last_name}",
+        'class_info': f"{a.branch}-{a.year}-{a.section}",
+        'period': a.period,
+        'period_time': get_period_time_label(a.period),
+        'status': a.status,
+        'confidence': a.confidence_score if hasattr(a, 'confidence_score') else None,
+    } for a in today_records]
+
+    present = today_records.filter(status='Present').count()
+    total = today_records.count()
+    absent = total - present
+    pct = round(present / total * 100, 2) if total > 0 else 0
+
+    return JsonResponse({
+        'success': True,
+        'multi_face': True,
+        'marked_students': marked_students,
+        'total_marked': len(marked_students),
+        'unknown_faces_count': unknown_faces_count,
+        'total_faces_detected': total_faces_detected,
+        'period_time': get_period_time_label(period),
+        'records': records,
+        'summary': {'present': present, 'absent': absent, 'total': total, 'percentage': pct},
+        'message': f'Successfully marked attendance for {len(marked_students)} student(s). {unknown_faces_count} unknown face(s) detected.' if unknown_faces_count > 0 else f'Successfully marked attendance for {len(marked_students)} student(s).'
     })
 
 
