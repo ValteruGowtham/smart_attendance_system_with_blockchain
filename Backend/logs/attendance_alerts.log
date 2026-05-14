@@ -638,3 +638,226 @@ INFO 2026-05-14 10:24:14,740 runserver 19384 3136 [mHTTP GET /api/student/dashb
 INFO 2026-05-14 10:24:14,792 runserver 19384 3136 [mHTTP GET /api/student/dashboard/ 200 [0.05, 127.0.0.1:55130][0m
 INFO 2026-05-14 10:24:25,627 runserver 19384 3136 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:57218][0m
 INFO 2026-05-14 10:24:25,648 runserver 19384 3136 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:57220][0m
+INFO 2026-05-14 11:16:26,599 autoreload 18492 17096 Watching for file changes with StatReloader
+INFO 2026-05-14 11:16:26,816 server 18492 10152 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-05-14 11:16:26,817 server 18492 10152 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-05-14 11:16:26,819 server 18492 10152 Listening on TCP address 127.0.0.1:8000
+INFO 2026-05-14 11:16:27,973 runserver 18492 10152 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:59758][0m
+INFO 2026-05-14 11:16:28,010 runserver 18492 10152 [mHTTP GET /api/auth/user/ 200 [0.03, 127.0.0.1:59760][0m
+INFO 2026-05-14 11:16:31,633 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.03, 127.0.0.1:59764][0m
+INFO 2026-05-14 11:16:32,034 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.03, 127.0.0.1:50793][0m
+INFO 2026-05-14 11:16:32,067 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.03, 127.0.0.1:50793][0m
+INFO 2026-05-14 11:16:35,753 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.79, 127.0.0.1:62278][0m
+WARNING 2026-05-14 11:17:26,918 log 18492 15848 Bad Request: /api/attendance/window/open/
+WARNING 2026-05-14 11:17:26,919 runserver 18492 10152 [31;1mHTTP POST /api/attendance/window/open/ 400 [0.05, 127.0.0.1:50850][0m
+INFO 2026-05-14 11:17:30,271 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.02, 127.0.0.1:49372][0m
+INFO 2026-05-14 11:17:30,333 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:50793][0m
+INFO 2026-05-14 11:17:30,348 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:53938][0m
+INFO 2026-05-14 11:17:33,764 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.55, 127.0.0.1:57280][0m
+INFO 2026-05-14 11:17:46,039 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.01, 127.0.0.1:65261][0m
+INFO 2026-05-14 11:17:46,062 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.02, 127.0.0.1:63248][0m
+INFO 2026-05-14 11:18:09,978 runserver 18492 10152 [mHTTP POST /api/students/1/update/ 200 [0.04, 127.0.0.1:62784][0m
+INFO 2026-05-14 11:18:10,018 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.02, 127.0.0.1:65532][0m
+INFO 2026-05-14 11:18:12,391 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.04, 127.0.0.1:59738][0m
+INFO 2026-05-14 11:18:12,473 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.03, 127.0.0.1:53938][0m
+INFO 2026-05-14 11:18:12,503 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.03, 127.0.0.1:50793][0m
+INFO 2026-05-14 11:18:18,098 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.65, 127.0.0.1:53579][0m
+INFO 2026-05-14 11:18:23,115 runserver 18492 10152 [mHTTP POST /api/attendance/window/open/ 200 [0.03, 127.0.0.1:51782][0m
+INFO 2026-05-14 11:18:41,392 runserver 18492 10152 [mHTTP POST /api/attendance/mark/ 200 [5.40, 127.0.0.1:52676][0m
+INFO 2026-05-14 11:18:53,253 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.04, 127.0.0.1:54749][0m
+INFO 2026-05-14 11:18:53,330 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:50793][0m
+INFO 2026-05-14 11:18:53,343 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:53938][0m
+INFO 2026-05-14 11:19:17,912 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.77, 127.0.0.1:64982][0m
+INFO 2026-05-14 11:19:42,317 runserver 18492 10152 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:55296][0m
+INFO 2026-05-14 11:19:42,345 runserver 18492 10152 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:55298][0m
+WARNING 2026-05-14 11:25:33,429 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:25:33,430 log 18492 8756 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:25:33,430 log 18492 15848 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:25:33,430 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.09, 127.0.0.1:63848][0m
+WARNING 2026-05-14 11:25:33,431 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.08, 127.0.0.1:61262][0m
+WARNING 2026-05-14 11:25:33,432 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.09, 127.0.0.1:61260][0m
+WARNING 2026-05-14 11:25:33,473 log 18492 8756 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:25:33,474 log 18492 15848 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:25:33,475 log 18492 8756 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:25:33,475 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.03, 127.0.0.1:63454][0m
+WARNING 2026-05-14 11:25:33,478 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.03, 127.0.0.1:63458][0m
+WARNING 2026-05-14 11:25:33,480 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.03, 127.0.0.1:63456][0m
+WARNING 2026-05-14 11:27:40,119 log 18492 8 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:27:40,122 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.06, 127.0.0.1:61595][0m
+WARNING 2026-05-14 11:27:40,122 log 18492 15848 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:27:40,125 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.07, 127.0.0.1:61592][0m
+WARNING 2026-05-14 11:27:40,126 log 18492 16960 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:27:40,131 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.06, 127.0.0.1:61594][0m
+WARNING 2026-05-14 11:27:49,073 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:27:49,074 log 18492 15848 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:27:49,074 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.03, 127.0.0.1:62975][0m
+WARNING 2026-05-14 11:27:49,074 log 18492 16960 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:27:49,076 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.03, 127.0.0.1:62976][0m
+WARNING 2026-05-14 11:27:49,077 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.03, 127.0.0.1:62978][0m
+WARNING 2026-05-14 11:27:55,296 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:27:55,298 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.06, 127.0.0.1:57552][0m
+WARNING 2026-05-14 11:27:55,300 log 18492 8 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:27:55,301 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.05, 127.0.0.1:57554][0m
+WARNING 2026-05-14 11:27:55,307 log 18492 15848 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:27:55,309 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.06, 127.0.0.1:57556][0m
+WARNING 2026-05-14 11:29:22,015 log 18492 16960 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:29:22,015 log 18492 8 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:29:22,019 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.05, 127.0.0.1:56926][0m
+WARNING 2026-05-14 11:29:22,020 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.05, 127.0.0.1:56925][0m
+WARNING 2026-05-14 11:29:22,021 log 18492 15848 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:29:22,026 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.06, 127.0.0.1:56927][0m
+WARNING 2026-05-14 11:29:22,105 log 18492 8 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:29:22,106 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.06, 127.0.0.1:59658][0m
+WARNING 2026-05-14 11:29:22,109 log 18492 8756 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:29:22,109 log 18492 8 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:29:22,111 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.06, 127.0.0.1:59660][0m
+WARNING 2026-05-14 11:29:22,112 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.06, 127.0.0.1:59661][0m
+WARNING 2026-05-14 11:29:23,076 log 18492 15848 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:29:23,077 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:29:23,080 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.07, 127.0.0.1:49185][0m
+WARNING 2026-05-14 11:29:23,080 log 18492 19976 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:29:23,081 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.07, 127.0.0.1:49183][0m
+WARNING 2026-05-14 11:29:23,085 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.07, 127.0.0.1:49184][0m
+WARNING 2026-05-14 11:29:23,170 log 18492 8756 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:29:23,172 log 18492 19976 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:29:23,174 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.07, 127.0.0.1:60223][0m
+WARNING 2026-05-14 11:29:23,176 log 18492 16960 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:29:23,179 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.07, 127.0.0.1:60221][0m
+WARNING 2026-05-14 11:29:23,183 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.08, 127.0.0.1:60220][0m
+WARNING 2026-05-14 11:29:24,990 log 18492 19976 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:29:24,990 log 18492 8756 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:29:24,992 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.05, 127.0.0.1:61002][0m
+WARNING 2026-05-14 11:29:24,994 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.05, 127.0.0.1:61004][0m
+WARNING 2026-05-14 11:29:24,995 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:29:24,999 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.06, 127.0.0.1:61003][0m
+WARNING 2026-05-14 11:29:25,512 log 18492 15848 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:29:25,533 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.07, 127.0.0.1:49214][0m
+WARNING 2026-05-14 11:29:25,542 log 18492 16960 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:29:25,544 log 18492 8 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:29:25,545 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.08, 127.0.0.1:49216][0m
+WARNING 2026-05-14 11:29:25,550 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.09, 127.0.0.1:49215][0m
+WARNING 2026-05-14 11:29:25,838 log 18492 8 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:29:25,839 log 18492 8756 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:29:25,840 log 18492 8 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:29:25,841 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.08, 127.0.0.1:59557][0m
+WARNING 2026-05-14 11:29:25,843 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.08, 127.0.0.1:59558][0m
+WARNING 2026-05-14 11:29:25,844 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.07, 127.0.0.1:59559][0m
+WARNING 2026-05-14 11:29:32,991 log 18492 8756 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:29:32,992 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.03, 127.0.0.1:61994][0m
+WARNING 2026-05-14 11:29:32,992 log 18492 8756 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:29:32,993 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.03, 127.0.0.1:61995][0m
+WARNING 2026-05-14 11:29:32,995 log 18492 15848 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:29:32,996 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.03, 127.0.0.1:61996][0m
+INFO 2026-05-14 11:32:12,509 runserver 18492 10152 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:58684][0m
+INFO 2026-05-14 11:32:12,529 runserver 18492 10152 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:58686][0m
+WARNING 2026-05-14 11:32:12,555 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:32:12,555 log 18492 15848 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:32:12,555 log 18492 10340 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:32:12,556 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.03, 127.0.0.1:58690][0m
+WARNING 2026-05-14 11:32:12,558 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.03, 127.0.0.1:58691][0m
+WARNING 2026-05-14 11:32:12,558 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.03, 127.0.0.1:58692][0m
+WARNING 2026-05-14 11:32:12,609 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:32:12,611 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.04, 127.0.0.1:55588][0m
+WARNING 2026-05-14 11:32:12,611 log 18492 16960 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:32:12,615 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.04, 127.0.0.1:62385][0m
+WARNING 2026-05-14 11:32:12,615 log 18492 19976 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:32:12,619 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.04, 127.0.0.1:62383][0m
+INFO 2026-05-14 11:32:15,709 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.04, 127.0.0.1:61389][0m
+INFO 2026-05-14 11:32:16,075 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:51452][0m
+INFO 2026-05-14 11:32:16,087 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:51452][0m
+INFO 2026-05-14 11:32:19,824 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.55, 127.0.0.1:50896][0m
+INFO 2026-05-14 11:32:22,465 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.03, 127.0.0.1:59308][0m
+INFO 2026-05-14 11:32:22,517 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.04, 127.0.0.1:51452][0m
+INFO 2026-05-14 11:32:22,536 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:60737][0m
+INFO 2026-05-14 11:32:26,270 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.71, 127.0.0.1:53347][0m
+INFO 2026-05-14 11:32:33,225 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.03, 127.0.0.1:50178][0m
+INFO 2026-05-14 11:32:33,270 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:60737][0m
+INFO 2026-05-14 11:32:33,281 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:51452][0m
+INFO 2026-05-14 11:32:37,618 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.67, 127.0.0.1:60467][0m
+WARNING 2026-05-14 11:32:37,685 log 18492 8756 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:32:37,686 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.04, 127.0.0.1:61199][0m
+WARNING 2026-05-14 11:32:37,686 log 18492 15848 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:32:37,688 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.04, 127.0.0.1:61197][0m
+WARNING 2026-05-14 11:32:37,693 log 18492 8 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:32:37,696 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.05, 127.0.0.1:61198][0m
+WARNING 2026-05-14 11:32:37,740 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:32:37,741 log 18492 8 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:32:37,742 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.04, 127.0.0.1:58866][0m
+WARNING 2026-05-14 11:32:37,743 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.05, 127.0.0.1:63692][0m
+WARNING 2026-05-14 11:32:37,747 log 18492 10340 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:32:37,748 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.04, 127.0.0.1:58868][0m
+INFO 2026-05-14 11:41:54,471 runserver 18492 10152 [mHTTP GET /api/auth/user/ 200 [0.02, 127.0.0.1:49674][0m
+INFO 2026-05-14 11:41:54,488 runserver 18492 10152 [mHTTP GET /api/auth/user/ 200 [0.01, 127.0.0.1:49676][0m
+WARNING 2026-05-14 11:41:54,527 log 18492 10340 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:41:54,528 log 18492 16960 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:41:54,528 log 18492 8 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:41:54,529 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.03, 127.0.0.1:56982][0m
+WARNING 2026-05-14 11:41:54,531 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.04, 127.0.0.1:53336][0m
+WARNING 2026-05-14 11:41:54,532 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.03, 127.0.0.1:56984][0m
+WARNING 2026-05-14 11:41:54,590 log 18492 10400 Not Found: /api/attendance/overview/
+WARNING 2026-05-14 11:41:54,591 log 18492 16960 Not Found: /api/attendance/heatmap/
+WARNING 2026-05-14 11:41:54,591 log 18492 8 Not Found: /api/attendance/subjects/
+WARNING 2026-05-14 11:41:54,592 runserver 18492 10152 [33mHTTP GET /api/attendance/overview/ 404 [0.05, 127.0.0.1:50534][0m
+WARNING 2026-05-14 11:41:54,592 runserver 18492 10152 [33mHTTP GET /api/attendance/heatmap/ 404 [0.05, 127.0.0.1:50533][0m
+WARNING 2026-05-14 11:41:54,594 runserver 18492 10152 [33mHTTP GET /api/attendance/subjects/ 404 [0.05, 127.0.0.1:50530][0m
+INFO 2026-05-14 11:51:59,017 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:51020][0m
+INFO 2026-05-14 11:51:59,036 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:51022][0m
+INFO 2026-05-14 11:52:12,788 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:56007][0m
+INFO 2026-05-14 11:52:12,852 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:56009][0m
+INFO 2026-05-14 11:52:47,345 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:52278][0m
+INFO 2026-05-14 11:52:47,386 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:52278][0m
+INFO 2026-05-14 11:53:00,093 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:60048][0m
+INFO 2026-05-14 11:53:00,138 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.04, 127.0.0.1:57776][0m
+INFO 2026-05-14 11:53:03,783 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:52278][0m
+INFO 2026-05-14 11:53:03,799 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:60421][0m
+INFO 2026-05-14 11:53:30,489 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.97, 127.0.0.1:52010][0m
+INFO 2026-05-14 11:53:41,380 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.02, 127.0.0.1:56988][0m
+INFO 2026-05-14 11:53:41,403 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.02, 127.0.0.1:56966][0m
+INFO 2026-05-14 11:53:46,064 runserver 18492 10152 [mHTTP GET /api/faculty/ 200 [0.02, 127.0.0.1:59371][0m
+INFO 2026-05-14 11:53:46,089 runserver 18492 10152 [mHTTP GET /api/faculty/ 200 [0.02, 127.0.0.1:56545][0m
+INFO 2026-05-14 11:53:53,973 runserver 18492 10152 [mHTTP GET /api/attendance/?search= 200 [0.06, 127.0.0.1:54737][0m
+INFO 2026-05-14 11:53:54,012 runserver 18492 10152 [mHTTP GET /api/attendance/?search= 200 [0.03, 127.0.0.1:56876][0m
+INFO 2026-05-14 11:54:18,403 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.02, 127.0.0.1:65369][0m
+INFO 2026-05-14 11:54:18,426 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.01, 127.0.0.1:49674][0m
+INFO 2026-05-14 11:54:29,775 runserver 18492 10152 [mHTTP GET /api/faculty/ 200 [0.01, 127.0.0.1:59357][0m
+INFO 2026-05-14 11:54:29,801 runserver 18492 10152 [mHTTP GET /api/faculty/ 200 [0.02, 127.0.0.1:61056][0m
+INFO 2026-05-14 11:54:37,155 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.02, 127.0.0.1:65523][0m
+INFO 2026-05-14 11:54:37,209 runserver 18492 10152 [mHTTP GET /api/students/ 200 [0.04, 127.0.0.1:57446][0m
+INFO 2026-05-14 11:54:48,152 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.04, 127.0.0.1:59128][0m
+INFO 2026-05-14 11:54:48,515 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:52554][0m
+INFO 2026-05-14 11:54:48,530 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:52554][0m
+INFO 2026-05-14 11:55:18,139 runserver 18492 10152 [mHTTP POST /api/auth/login/ 200 [0.96, 127.0.0.1:56186][0m
+INFO 2026-05-14 11:55:51,946 runserver 18492 10152 [mHTTP POST /api/auth/logout/ 200 [0.05, 127.0.0.1:61904][0m
+INFO 2026-05-14 11:55:52,331 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.03, 127.0.0.1:54250][0m
+INFO 2026-05-14 11:55:52,350 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.01, 127.0.0.1:54250][0m
+INFO 2026-05-14 12:02:35,151 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.03, 127.0.0.1:59800][0m
+INFO 2026-05-14 12:02:35,180 runserver 18492 10152 [mHTTP GET /api/public/stats/ 200 [0.02, 127.0.0.1:62595][0m
+INFO 2026-05-14 12:14:41,553 autoreload 18492 17096 C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\attendance\api_urls.py changed, reloading.
+INFO 2026-05-14 12:14:53,657 autoreload 9516 24364 Watching for file changes with StatReloader
+INFO 2026-05-14 12:15:23,865 autoreload 9516 24364 C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\attendance\api_views.py changed, reloading.
+INFO 2026-05-14 12:15:30,435 autoreload 23612 15400 Watching for file changes with StatReloader
+INFO 2026-05-14 12:15:30,697 server 23612 3764 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-05-14 12:15:30,697 server 23612 3764 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-05-14 12:15:30,699 server 23612 3764 Listening on TCP address 127.0.0.1:8000
+INFO 2026-05-14 12:15:50,715 autoreload 23612 15400 C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\attendance\embedding_utils.py changed, reloading.
+INFO 2026-05-14 12:15:56,828 autoreload 26012 26444 Watching for file changes with StatReloader
+INFO 2026-05-14 12:15:57,075 server 26012 764 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-05-14 12:15:57,076 server 26012 764 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-05-14 12:15:57,078 server 26012 764 Listening on TCP address 127.0.0.1:8000
+INFO 2026-05-14 12:16:14,692 autoreload 26012 26444 C:\Users\hp\OneDrive\Desktop\certificates\CV\Research papers\Smart_Attendance_System_With_Blockchain\Backend\attendance\recognizer.py changed, reloading.
+INFO 2026-05-14 12:16:19,889 autoreload 18512 22240 Watching for file changes with StatReloader
+INFO 2026-05-14 12:16:19,990 server 18512 18840 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-05-14 12:16:19,991 server 18512 18840 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-05-14 12:16:19,992 server 18512 18840 Listening on TCP address 127.0.0.1:8000
+WARNING 2026-05-14 12:16:50,813 log 18512 17096 Not Found: /api/public/stats/
+WARNING 2026-05-14 12:16:50,815 runserver 18512 18840 [33mHTTP GET /api/public/stats/ 404 [0.07, 127.0.0.1:60072][0m
+WARNING 2026-05-14 12:16:50,889 log 18512 17096 Not Found: /api/public/stats/
+WARNING 2026-05-14 12:16:50,893 runserver 18512 18840 [33mHTTP GET /api/public/stats/ 404 [0.05, 127.0.0.1:60074][0m
+INFO 2026-05-14 12:17:09,658 autoreload 11928 22000 Watching for file changes with StatReloader
+INFO 2026-05-14 12:17:09,777 server 11928 7292 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+INFO 2026-05-14 12:17:09,777 server 11928 7292 Configuring endpoint tcp:port=8000:interface=127.0.0.1
+INFO 2026-05-14 12:17:09,778 server 11928 7292 Listening on TCP address 127.0.0.1:8000
+WARNING 2026-05-14 12:17:14,176 log 11928 18240 Not Found: /api/public/stats/
+WARNING 2026-05-14 12:17:14,177 runserver 11928 7292 [33mHTTP GET /api/public/stats/ 404 [0.05, 127.0.0.1:65236][0m
+WARNING 2026-05-14 12:17:14,354 log 11928 18240 Not Found: /api/public/stats/
+WARNING 2026-05-14 12:17:14,450 runserver 11928 7292 [33mHTTP GET /api/public/stats/ 404 [0.26, 127.0.0.1:65238][0m
